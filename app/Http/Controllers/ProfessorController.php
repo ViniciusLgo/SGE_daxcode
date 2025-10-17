@@ -45,6 +45,11 @@ class ProfessorController extends Controller
             'especializacao' => ['nullable', 'string', 'max:255'],
         ]);
 
+        if ($request->hasFile('foto_perfil')) {
+            $data['foto_perfil'] = $request->file('foto_perfil')->store('avatars/professores', 'public');
+        }
+
+
         Professor::create($validated);
 
         return redirect()
@@ -75,6 +80,10 @@ class ProfessorController extends Controller
             'telefone' => ['nullable', 'string', 'max:20'],
             'especializacao' => ['nullable', 'string', 'max:255'],
         ]);
+        if ($request->hasFile('foto_perfil')) {
+            $data['foto_perfil'] = $request->file('foto_perfil')->store('avatars/professores', 'public');
+        }
+
 
         $professor->update($validated);
 
