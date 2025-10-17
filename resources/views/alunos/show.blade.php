@@ -12,6 +12,22 @@
     <div class="row g-3">
         <div class="col-lg-6">
             <div class="card shadow-sm border-0 h-100">
+                <div class="text-center mb-3">
+                    @if($aluno->foto_perfil)
+                        <img src="{{ asset('storage/'.$aluno->foto_perfil) }}"
+                             alt="Foto de {{ $aluno->nome }}"
+                             class="rounded-circle shadow-sm border"
+                             width="130" height="130"
+                             style="object-fit: cover;">
+                    @else
+                        <img src="{{ asset('images/default-avatar.png') }}"
+                             alt="Sem foto"
+                             class="rounded-circle shadow-sm border"
+                             width="130" height="130"
+                             style="object-fit: cover;">
+                    @endif
+                </div>
+
                 <div class="card-body">
                     <h5 class="card-title">Informações pessoais</h5>
                     <dl class="row mb-0">
