@@ -20,6 +20,8 @@
             left: 0;
             background: #fff;
             border-right: 1px solid #dee2e6;
+            display: flex;
+            flex-direction: column;
         }
         .sidebar a {
             color: #333;
@@ -39,26 +41,40 @@
     </style>
 </head>
 <body>
+    @php
+        $navigation = [
+            ['label' => 'Dashboard', 'route' => 'dashboard', 'pattern' => 'dashboard'],
+            ['label' => 'Alunos', 'route' => 'admin.alunos.index', 'pattern' => 'admin.alunos.*'],
+            ['label' => 'Professores', 'route' => 'admin.professores.index', 'pattern' => 'admin.professores.*'],
+            ['label' => 'Disciplinas', 'route' => 'admin.disciplinas.index', 'pattern' => 'admin.disciplinas.*'],
+            ['label' => 'Turmas', 'route' => 'admin.turmas.index', 'pattern' => 'admin.turmas.*'],
+        ];
+    @endphp
+
     {{-- Sidebar --}}
     <div class="sidebar">
         <h5 class="text-center mt-3 mb-4 fw-bold text-primary">SGE DaxCode</h5>
-        <a href="{{ url('/dashboard') }}" class="active">🏠 Dashboard</a>
-        <a href="#">👩‍🎓 Alunos</a>
-        <a href="#">👨‍🏫 Professores</a>
-        <a href="#">📚 Disciplinas</a>
-        <a href="#">🏫 Turmas</a>
-        <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">🚪 Sair</a>
+        @foreach($navigation as $item)
+            <a href="{{ route($item['route']) }}" class="{{ request()->routeIs($item['pattern']) ? 'active' : '' }}">
+                {{ $item['label'] }}
+            </a>
+        @endforeach
+        <a href="#" class="mt-auto" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+            Sair
+        </a>
         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
     </div>
 
-    {{-- Conteúdo principal --}}
+    {{-- Conteudo principal --}}
     <div class="content">
         <nav class="navbar navbar-light bg-white shadow-sm mb-4 rounded">
             <div class="container-fluid">
                 <span class="navbar-brand fw-semibold">Painel Administrativo</span>
-                <span class="text-muted">{{ Auth::user()->name ?? 'Usuário' }}</span>
+                <span class="text-muted">{{ auth()->user()->name ?? 'Usuario' }}</span>
             </div>
         </nav>
+
+        @include('partials.flash')
 
         @yield('content')
     </div>

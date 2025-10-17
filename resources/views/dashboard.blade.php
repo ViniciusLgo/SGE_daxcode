@@ -1,46 +1,33 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid">
-    <h4 class="mb-4">Bem-vindo, {{ Auth::user()->name }}!</h4>
+    @php
+        $metrics = [
+            ['label' => 'Alunos', 'value' => $totalAlunos, 'description' => 'Cadastrados'],
+            ['label' => 'Professores', 'value' => $totalProfessores, 'description' => 'Ativos'],
+            ['label' => 'Disciplinas', 'value' => $totalDisciplinas, 'description' => 'Registradas'],
+            ['label' => 'Turmas', 'value' => $totalTurmas, 'description' => 'Em andamento'],
+        ];
+    @endphp
 
-    <div class="row g-3">
-        <div class="col-md-3">
-            <div class="card shadow-sm border-0">
-                <div class="card-body text-center">
-                    <h5 class="card-title">🎓 Alunos</h5>
-                    <h2>128</h2>
-                    <p class="text-muted mb-0">Cadastrados</p>
-                </div>
-            </div>
+    <div class="d-flex flex-column gap-4">
+        <div>
+            <h4 class="mb-1">Bem-vindo, {{ auth()->user()->name }}!</h4>
+            <p class="text-muted mb-0">Acompanhe os indicadores gerais do sistema.</p>
         </div>
-        <div class="col-md-3">
-            <div class="card shadow-sm border-0">
-                <div class="card-body text-center">
-                    <h5 class="card-title">👨‍🏫 Professores</h5>
-                    <h2>12</h2>
-                    <p class="text-muted mb-0">Ativos</p>
+
+        <div class="row g-3">
+            @foreach($metrics as $metric)
+                <div class="col-sm-6 col-lg-3">
+                    <div class="card shadow-sm border-0 h-100">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">{{ $metric['label'] }}</h5>
+                            <h2 class="display-6">{{ number_format($metric['value'], 0, ',', '.') }}</h2>
+                            <p class="text-muted mb-0">{{ $metric['description'] }}</p>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card shadow-sm border-0">
-                <div class="card-body text-center">
-                    <h5 class="card-title">📚 Disciplinas</h5>
-                    <h2>24</h2>
-                    <p class="text-muted mb-0">Registradas</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card shadow-sm border-0">
-                <div class="card-body text-center">
-                    <h5 class="card-title">🏫 Turmas</h5>
-                    <h2>8</h2>
-                    <p class="text-muted mb-0">Em andamento</p>
-                </div>
-            </div>
+            @endforeach
         </div>
     </div>
-</div>
 @endsection
