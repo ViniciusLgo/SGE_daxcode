@@ -15,13 +15,13 @@ class DisciplinaController extends Controller
         $search = trim((string) $request->input('search'));
 
         $disciplinas = Disciplina::query()
-            ->with('professor')
+            ->with('professores')
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($subQuery) use ($search) {
                     $subQuery
                         ->where('nome', 'like', "%{$search}%")
                         ->orWhere('descricao', 'like', "%{$search}%")
-                        ->orWhereHas('professor', function ($professorQuery) use ($search) {
+                        ->orWhereHas('professores', function ($professorQuery) use ($search) {
                             $professorQuery->where('nome', 'like', "%{$search}%");
                         });
                 });
@@ -59,7 +59,7 @@ class DisciplinaController extends Controller
 
     public function show(Disciplina $disciplina)
     {
-        $disciplina->load('professor');
+        $disciplina->load('professores');
 
         return view('disciplinas.show', compact('disciplina'));
     }

@@ -51,15 +51,17 @@ class TurmaController extends Controller
             ->with('status', 'Turma criada com sucesso.');
     }
 
-    public function show(Turma $turma)
+    public function show($id)
     {
-        $alunos = $turma->alunos()
-            ->orderBy('nome')
-            ->paginate(self::PER_PAGE)
-            ->withQueryString();
+        $turma = \App\Models\Turma::with([
+            'disciplinas',
+            'disciplinas.professores' // cada disciplina tem professores via pivot
+        ])->findOrFail($id);
 
-        return view('turmas.show', compact('turma', 'alunos'));
+        return view('admin.turmas.show', compact('turma'));
     }
+
+
 
     public function edit(Turma $turma)
     {
