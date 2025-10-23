@@ -22,6 +22,12 @@ class Professor extends Model
 
     ];
 
+    public function disciplinaTurmas()
+    {
+        return $this->belongsToMany(DisciplinaTurma::class, 'disciplina_turma_professor')
+            ->withTimestamps();
+    }
+
     public function disciplinas()
     {
         return $this->hasMany(Disciplina::class);

@@ -16,8 +16,15 @@ class Disciplina extends Model
         'descricao',
     ];
 
-    public function professor()
+    public function professores()
     {
-        return $this->belongsTo(Professor::class);
+        return $this->belongsToMany(
+            \App\Models\Professor::class,
+            'disciplina_professor', // nome da tabela pivô
+            'disciplina_id',
+            'professor_id'
+        );
     }
+
+
 }
