@@ -9,17 +9,21 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 
+
     <style>
         :root {
-            --dax-yellow: #F5C518;
-            --dax-dark: #2E2E2E;
-            --dax-light: #f8f9fa;
+            --dax-yellow: #FFD54F;
+            --dax-dark: #1E1E1E;
+            --dax-gray: #2C2C2C;
+            --dax-light: #F8F9FA;
+            --dax-border: #E0E0E0;
             --sidebar-width: 240px;
         }
 
         body {
             font-family: "Inter", sans-serif;
             background-color: var(--dax-light);
+            color: #222;
             transition: all 0.3s ease;
         }
 
@@ -30,35 +34,36 @@
             position: fixed;
             top: 0;
             left: 0;
-            background: #fff;
-            border-right: 1px solid #dee2e6;
+            background: var(--dax-dark);
+            color: #fff;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             overflow-y: auto;
             scrollbar-width: thin;
-            scrollbar-color: #ccc transparent;
+            scrollbar-color: #555 transparent;
             z-index: 100;
+            transition: 0.3s;
         }
 
         .sidebar::-webkit-scrollbar {
             width: 6px;
         }
         .sidebar::-webkit-scrollbar-thumb {
-            background: #bbb;
+            background: #444;
             border-radius: 4px;
         }
 
         .sidebar-header {
             text-align: center;
             padding: 1rem 0;
-            border-bottom: 1px solid #eee;
-            background: linear-gradient(90deg, #fff, #f8f9fa);
+            border-bottom: 1px solid #333;
+            background: var(--dax-gray);
         }
 
         .sidebar h5 {
             font-weight: 800;
-            color: var(--dax-dark);
+            color: var(--dax-yellow);
             margin: 0;
         }
 
@@ -66,7 +71,7 @@
             text-transform: uppercase;
             font-size: 0.7rem;
             font-weight: 700;
-            color: #888;
+            color: #bbb;
             margin: 1rem 1rem 0.4rem;
         }
 
@@ -75,7 +80,7 @@
             align-items: center;
             gap: 0.8rem;
             padding: 0.6rem 1rem;
-            color: #444;
+            color: #ccc;
             text-decoration: none;
             border-radius: 0.5rem;
             font-weight: 500;
@@ -83,18 +88,19 @@
         }
 
         .sidebar a:hover {
-            background-color: rgba(13,110,253,0.1);
-            color: #0d6efd;
+            background-color: #333;
+            color: var(--dax-yellow);
             transform: translateX(3px);
         }
 
         .sidebar a.active {
-            background-color: #0d6efd;
-            color: #fff;
+            background-color: var(--dax-yellow);
+            color: #000;
+            font-weight: 600;
         }
 
         .sidebar a.active i {
-            color: #fff;
+            color: #000;
         }
 
         .submenu {
@@ -112,21 +118,21 @@
         .submenu a {
             font-size: 0.9rem;
             padding: 0.4rem 0.6rem;
-            color: #555;
+            color: #aaa;
         }
 
         .submenu a:hover {
-            color: #0d6efd;
+            color: var(--dax-yellow);
         }
 
         .sidebar-footer {
-            border-top: 1px solid #eee;
+            border-top: 1px solid #333;
             padding: 0.8rem 1rem;
-            background: #fafafa;
+            background: var(--dax-gray);
         }
 
         .sidebar-footer a {
-            color: #dc3545;
+            color: #f66;
             font-weight: 600;
             display: flex;
             align-items: center;
@@ -143,27 +149,47 @@
         .navbar {
             background: #fff;
             border-radius: 10px;
+            border: 1px solid var(--dax-border);
+        }
+
+        /* ===== DASHBOARD CARDS ===== */
+        .card {
+            border-radius: 12px;
+            border: 1px solid var(--dax-border);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            transition: 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+
+        .btn-primary {
+            background-color: var(--dax-yellow);
+            border-color: var(--dax-yellow);
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            background-color: #ffcc33;
+            border-color: #ffcc33;
+            color: #000;
         }
 
         /* ===== DARK MODE ===== */
         .dark-mode {
-            background-color: #1e1e1e !important;
-            color: #ddd !important;
+            background-color: var(--dax-dark);
+            color: #eee !important;
         }
+
         .dark-mode .sidebar {
-            background-color: #2c2c2c !important;
-            border-color: #444;
+            background-color: #000 !important;
         }
-        .dark-mode .sidebar a {
-            color: #ccc;
-        }
-        .dark-mode .sidebar a.active {
-            background-color: var(--dax-yellow);
-            color: #222 !important;
-        }
-        .dark-mode .sidebar a:hover {
-            background-color: #444;
-            color: var(--dax-yellow);
+
+        .dark-mode .navbar {
+            background-color: #111 !important;
+            color: #eee;
         }
 
         footer {
@@ -177,8 +203,14 @@
             padding: 0.6rem;
             font-size: 0.8rem;
         }
-        footer span { color: var(--dax-yellow); font-weight: 600; }
+
+        footer span {
+            color: var(--dax-yellow);
+            font-weight: 600;
+        }
     </style>
+
+
 </head>
 
 <body>
@@ -199,7 +231,17 @@
             <a href="{{ route('admin.professores.index') }}" class="{{ request()->routeIs('admin.professores.*') ? 'active' : '' }}">👨‍🏫 Professores</a>
             <a href="{{ route('admin.disciplinas.index') }}" class="{{ request()->routeIs('admin.disciplinas.*') ? 'active' : '' }}">📘 Disciplinas</a>
             <a href="{{ route('admin.turmas.index') }}" class="{{ request()->routeIs('admin.turmas.*') ? 'active' : '' }}">🏫 Turmas</a>
+
+            <li class="nav-item">
+                <a href="{{ route('aluno_registros.index') }}"
+                   class="nav-link {{ request()->is('admin/aluno_registros*') ? 'active bg-light text-primary' : 'text-white' }}">
+                    <i class="bi bi-folder2-open me-2"></i> 📄 Registros
+                </a>
+            </li>
+
         </div>
+
+
 
         {{-- ======= Gestão Pedagógica ======= --}}
         <a href="javascript:void(0)" class="toggle-menu" data-target="#menu-gestao">

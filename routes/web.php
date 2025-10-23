@@ -33,8 +33,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     | Dashboard (Visão Geral)
     |-----------------------------------
     */
-    Route::get('/dashboard', DashboardController::class)->name('dashboard');
-
+    Route::get('/dashboard', [DashboardController::class, 'index'])
+        ->name('dashboard')
+        ->middleware('auth');
     /*
     |-----------------------------------
     | Módulo Administrativo (/admin)
@@ -56,6 +57,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // CRUD de Turmas
         Route::resource('turmas', TurmaController::class);
     });
+
+    Route::prefix('admin')->middleware(['auth'])->group(function () {
+        Route::resource('aluno_registros', App\Http\Controllers\Admin\AlunoRegistroController::class);
+    });
+
 });
 
 /*
@@ -65,10 +71,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
 | Tela de "Configurações" no menu lateral, onde se define
 | nome da instituição, logo, e-mail, telefone etc.
 */
-Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
-    Route::get('/settings', [SettingController::class, 'edit'])->name('settings.edit');
-    Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
+
+Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () {
+    Route::get('/settings/edit', [SettingController::class, 'edit'])->name('settings.edit');
+    Route::post('/settings/update', [SettingController::class, 'update'])->name('settings.update');
 });
+
+Route::get('/admin/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])
+    ->name('dashboard');
+
+Route::resource('disciplina-turma', App\Http\Controllers\DisciplinaTurmaController::class)
+    ->names('admin.disciplina_turma');
 
 /*
 |--------------------------------------------------------------------------

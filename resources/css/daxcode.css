@@ -1,0 +1,85 @@
+/* 🎨 Tema DaxCode — Padrão Visual */
+
+:root {
+    --dax-yellow: #FFD54F;
+    --dax-dark: #1E1E1E;
+    --dax-gray: #2C2C2C;
+    --dax-light: #F5F5F5;
+    --dax-blue: #4F83CC;
+    --dax-green: #81C784;
+    --dax-red: #E57373;
+    --dax-border: #E0E0E0;
+}
+
+/* SIDEBAR */
+.sidebar {
+    background-color: var(--dax-dark) !important;
+    color: #fff;
+    min-height: 100vh;
+    transition: all 0.3s;
+}
+
+.sidebar .nav-link {
+    color: #ccc !important;
+    padding: 0.65rem 1rem;
+    border-radius: 8px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    transition: 0.2s;
+}
+
+.sidebar .nav-link:hover,
+.sidebar .nav-link.active {
+    color: var(--dax-yellow) !important;
+    background-color: var(--dax-gray);
+}
+
+/* Ícones no sidebar */
+.sidebar i {
+    color: var(--dax-yellow);
+}
+
+/* HEADER / NAVBAR */
+.navbar {
+    background-color: #fff !important;
+    border-bottom: 1px solid var(--dax-border);
+}
+
+.navbar-dark {
+    background-color: var(--dax-dark) !important;
+}
+
+.navbar-brand span {
+    color: var(--dax-yellow);
+    font-weight: 700;
+}
+
+/* DASHBOARD CARDS */
+.card {
+    border-radius: 12px;
+    border: 1px solid var(--dax-border);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.card h5, .card h4 {
+    font-weight: 600;
+}
+
+.btn-primary {
+    background-color: var(--dax-yellow);
+    border-color: var(--dax-yellow);
+    color: #000;
+}
+
+.btn-primary:hover {
+    background-color: #ffcc33;
+    border-color: #ffcc33;
+}
+
+/* DARK MODE (opcional para futura ativação automática) */
+body.dark-mode {
+    background-color: var(--dax-dark);
+    color: #eee;
+}
