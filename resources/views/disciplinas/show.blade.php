@@ -42,29 +42,34 @@
         <div class="col-lg-6">
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body">
-                    <h5 class="card-title">Professor responsável</h5>
-                    @if($disciplina->professor)
-                        <dl class="row mb-0">
-                            <dt class="col-sm-5">Nome</dt>
-                            <dd class="col-sm-7">{{ $disciplina->professor->nome }}</dd>
+                    <h5 class="card-title">Professores responsáveis</h5>
 
-                            <dt class="col-sm-5">E-mail</dt>
-                            <dd class="col-sm-7">{{ $disciplina->professor->email }}</dd>
-
-                            <dt class="col-sm-5">Telefone</dt>
-                            <dd class="col-sm-7">{{ $disciplina->professor->telefone ?? '—' }}</dd>
-
-                            <dt class="col-sm-5">Especialização</dt>
-                            <dd class="col-sm-7">{{ $disciplina->professor->especializacao ?? '—' }}</dd>
-                        </dl>
-                        <div class="mt-3">
-                            <a href="{{ route('admin.professores.show', $disciplina->professor) }}" class="btn btn-outline-primary btn-sm">Ver perfil do professor</a>
-                        </div>
+                    @if($disciplina->professores->isNotEmpty())
+                        <ul class="list-unstyled mb-0">
+                            @foreach($disciplina->professores as $professor)
+                                <li class="mb-2">
+                                    <strong>{{ $professor->nome }}</strong><br>
+                                    <small class="text-muted">
+                                        {{ $professor->email }} — {{ $professor->telefone ?? 'sem telefone' }}
+                                    </small>
+                                    @if($professor->especializacao)
+                                        <br><small><em>{{ $professor->especializacao }}</em></small>
+                                    @endif
+                                    <br>
+                                    <a href="{{ route('admin.professores.show', $professor) }}"
+                                       class="btn btn-outline-primary btn-sm mt-1">
+                                        Ver perfil
+                                    </a>
+                                </li>
+                            @endforeach
+                        </ul>
                     @else
                         <p class="text-muted mb-0">Nenhum professor vinculado.</p>
                     @endif
                 </div>
             </div>
         </div>
+
+
     </div>
 @endsection

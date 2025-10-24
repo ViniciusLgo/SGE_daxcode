@@ -1,23 +1,23 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="mb-4">
-        <h4 class="mb-1">Editar professor</h4>
-        <p class="text-muted mb-0">Atualize os dados do professor selecionado.</p>
-    </div>
+    <div class="container">
+        <h4 class="mb-3">Editar Professor</h4>
 
-    <div class="card shadow-sm border-0">
-        <div class="card-body">
-            @if($errors->any())
-                <div class="alert alert-danger">
-                    <strong>Ops!</strong> Verifique os campos destacados.
-                </div>
-            @endif
+        @if ($errors->any())
+            <div class="alert alert-danger">Verifique os campos abaixo.</div>
+        @endif
 
-            <form action="{{ route('admin.professores.update', $professor) }}" method="POST" class="needs-validation" novalidate>
-                @method('PUT')
-                @include('professores._form')
-            </form>
-        </div>
+        <form action="{{ route('admin.professores.update', $professor) }}" method="POST">
+            @csrf
+            @method('PUT')
+
+            @include('professores._form')
+
+            <div class="mt-3">
+                <button type="submit" class="btn btn-primary">Salvar</button>
+                <a href="{{ route('admin.professores.index') }}" class="btn btn-secondary">Voltar</a>
+            </div>
+        </form>
     </div>
 @endsection

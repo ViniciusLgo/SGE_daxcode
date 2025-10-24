@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Aluno;
 use App\Models\Turma;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class AlunoController extends Controller
@@ -55,11 +55,22 @@ class AlunoController extends Controller
         return redirect()->route('admin.alunos.index')->with('success', 'Aluno cadastrado com sucesso!');
     }
 
-    public function edit(Aluno $aluno)
+
+    public function show($id)
     {
+        $aluno = Aluno::with(['turma'])->findOrFail($id);
+        return view('admin.alunos.show', compact('aluno'));
+    }
+
+
+    public function edit($id)
+    {
+        $aluno = Aluno::findOrFail($id);
         $turmas = Turma::orderBy('nome')->get();
         return view('admin.alunos.edit', compact('aluno', 'turmas'));
     }
+
+
 
     public function update(Request $request, Aluno $aluno)
     {

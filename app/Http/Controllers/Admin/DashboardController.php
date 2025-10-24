@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Models\Aluno;
-use App\Models\Professor;
 use App\Models\Disciplina;
+use App\Models\Professor;
 use App\Models\Turma;
 
 class DashboardController extends Controller

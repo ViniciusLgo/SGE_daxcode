@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('aluno_registros', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('aluno_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('aluno_id')->constrained('alunos')->onDelete('cascade');
             $table->foreignId('turma_id')->nullable()->constrained('turmas')->nullOnDelete();
             $table->foreignId('responsavel_id')->nullable()->constrained('users')->nullOnDelete(); // quem cadastrou (admin/professor)
 

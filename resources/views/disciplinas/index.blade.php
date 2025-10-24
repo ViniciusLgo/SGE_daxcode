@@ -26,40 +26,52 @@
 
     <div class="card shadow-sm border-0">
         <div class="table-responsive">
-            <table class="table table-hover mb-0">
-                <thead class="table-light">
-                    <tr>
-                        <th>Nome</th>
-                        <th>Professor</th>
-                        <th>Carga horária</th>
-                        <th class="text-end">Ações</th>
-                    </tr>
+            <table class="table table-striped align-middle mb-0">
+                <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Professores</th>
+                    <th>Carga horária</th>
+                    <th class="text-end">Ações</th>
+                </tr>
                 </thead>
                 <tbody>
-                    @forelse($disciplinas as $disciplina)
-                        <tr>
-                            <td>{{ $disciplina->nome }}</td>
-                            <td>{{ $disciplina->professor->nome ?? '—' }}</td>
-                            <td>{{ $disciplina->carga_horaria ? $disciplina->carga_horaria . 'h' : '—' }}</td>
-                            <td class="text-end">
-                                <div class="btn-group btn-group-sm" role="group">
-                                    <a href="{{ route('admin.disciplinas.show', $disciplina) }}" class="btn btn-outline-secondary">Detalhes</a>
-                                    <a href="{{ route('admin.disciplinas.edit', $disciplina) }}" class="btn btn-outline-primary">Editar</a>
-                                    <form action="{{ route('admin.disciplinas.destroy', $disciplina) }}" method="POST" onsubmit="return confirm('Deseja realmente excluir esta disciplina?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-outline-danger">Excluir</button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="4" class="text-center text-muted py-4">Nenhuma disciplina encontrada.</td>
-                        </tr>
-                    @endforelse
+                @forelse ($disciplinas as $disciplina)
+                    <tr>
+                        <td>{{ $disciplina->nome }}</td>
+
+                        {{-- Professores vinculados --}}
+                        <td>
+                            @if($disciplina->professores->isNotEmpty())
+                                {{ $disciplina->professores->pluck('nome')->join(', ') }}
+                            @else
+                                <span class="text-muted">—</span>
+                            @endif
+                        </td>
+
+                        <td>{{ $disciplina->carga_horaria ? $disciplina->carga_horaria . 'h' : '—' }}</td>
+
+                        <td class="text-end">
+                            <a href="{{ route('admin.disciplinas.show', $disciplina) }}" class="btn btn-outline-primary btn-sm">Detalhes</a>
+                            <a href="{{ route('admin.disciplinas.edit', $disciplina) }}" class="btn btn-outline-warning btn-sm">Editar</a>
+                            <form action="{{ route('admin.disciplinas.destroy', $disciplina) }}" method="POST" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-outline-danger btn-sm"
+                                        onclick="return confirm('Tem certeza que deseja excluir esta disciplina?')">
+                                    Excluir
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="4" class="text-center text-muted py-4">Nenhuma disciplina encontrada.</td>
+                    </tr>
+                @endforelse
                 </tbody>
             </table>
+
         </div>
 
         @if($disciplinas->hasPages())

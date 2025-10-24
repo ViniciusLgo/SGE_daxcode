@@ -6,8 +6,9 @@
             <h4 class="mb-0">📄 Registros de Alunos</h4>
             <small class="text-muted">Gerencie atestados, declarações e ocorrências dos alunos.</small>
         </div>
-        <a href="{{ route('aluno_registros.create') }}" class="btn btn-primary">
-            <i class="bi bi-plus-circle"></i> Novo Registro
+
+        <a href="{{ route('admin.aluno_registros.create') }}" class="btn btn-warning shadow-sm">
+            <i class="bi bi-plus-circle me-1"></i> Novo Registro
         </a>
     </div>
 
@@ -63,7 +64,7 @@
                 <tbody>
                 @forelse($registros as $r)
                     <tr>
-                        <td>{{ $r->aluno->name ?? '-' }}</td>
+                        <td>{{ $r->aluno->nome ?? '-' }}</td>
                         <td>{{ $r->tipo }}</td>
                         <td>{{ $r->categoria ?? '-' }}</td>
                         <td>{{ $r->data_evento ? \Carbon\Carbon::parse($r->data_evento)->format('d/m/Y') : '-' }}</td>
@@ -78,9 +79,9 @@
                         </td>
                         <td>{{ $r->turma->nome ?? '-' }}</td>
                         <td class="text-end">
-                            <a href="{{ route('aluno_registros.show', $r->id) }}" class="btn btn-sm btn-outline-info"><i class="bi bi-eye"></i></a>
-                            <a href="{{ route('aluno_registros.edit', $r->id) }}" class="btn btn-sm btn-outline-warning"><i class="bi bi-pencil"></i></a>
-                            <form action="{{ route('aluno_registros.destroy', $r->id) }}" method="POST" class="d-inline">
+                            <a href="{{ route('admin.aluno_registros.show', $r->id) }}" class="btn btn-sm btn-outline-info"><i class="bi bi-eye"></i></a>
+                            <a href="{{ route('admin.aluno_registros.edit', $r->id) }}" class="btn btn-sm btn-outline-warning"><i class="bi bi-pencil"></i></a>
+                            <form action="{{ route('admin.aluno_registros.destroy', $r->id) }}" method="POST" class="d-inline">
                                 @csrf @method('DELETE')
                                 <button class="btn btn-sm btn-outline-danger" onclick="return confirm('Excluir este registro?')">
                                     <i class="bi bi-trash"></i>

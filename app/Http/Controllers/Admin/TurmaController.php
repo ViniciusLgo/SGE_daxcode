@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Turma;
 use Illuminate\Http\Request;
 
@@ -63,6 +64,7 @@ class TurmaController extends Controller
 
 
 
+
     public function edit(Turma $turma)
     {
         return view('turmas.edit', compact('turma'));
@@ -92,4 +94,46 @@ class TurmaController extends Controller
             ->route('admin.turmas.index')
             ->with('status', 'Turma removida com sucesso.');
     }
+
+    public function adicionarDisciplina(Request $request, $turmaId)
+    {
+        $request->validate([
+            'disciplina_id' => 'required|exists:disciplinas,id',
+            'professores' => 'nullable|array|max:4',
+            'professores.*' => 'exists:professores,id',
+            'ano_letivo' => 'nullable|string|max:10',
+            'observacao' => 'nullable|string|max:255'
+        ]);
+
+        $vinculo = \App\Models\DisciplinaTurma::create([
+            'turma_id' => $turmaId,
+            'disciplina_id' => $request->disciplina_id,
+            'ano_letivo' => $request->ano_letivo ?? date('Y'),
+            'observacao' => $request->observacao,
+        ]);
+
+        if ($request->filled('professores')) {
+            foreach ($request->professores as $profId) {
+                \App\Models\DisciplinaTurmaProfessor::create([
+                    'disciplina_turma_id' => $vinculo->id,
+                    'professor_id' => $profId
+                ]);
+            }
+        }
+
+        return redirect()->route('admin.turmas.show', $turmaId)
+            ->with('success', 'Disciplina vinculada com sucesso!');
+    }
+
+    // --- Remover disciplina da turma ---
+    public function removerDisciplina($turmaId, $vinculoId)
+    {
+        $vinculo = \App\Models\DisciplinaTurma::findOrFail($vinculoId);
+        $vinculo->professores()->detach();
+        $vinculo->delete();
+
+        return redirect()->route('admin.turmas.show', $turmaId)
+            ->with('success', 'Vínculo removido com sucesso!');
+    }
+
 }

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Professor;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -10,6 +11,9 @@ class ProfessorController extends Controller
 {
     private const PER_PAGE = 10;
 
+    /**
+     * Listagem de professores com busca.
+     */
     public function index(Request $request)
     {
         $search = trim((string) $request->input('search'));
@@ -31,11 +35,17 @@ class ProfessorController extends Controller
         return view('professores.index', compact('professores', 'search'));
     }
 
+    /**
+     * Formulário de criação.
+     */
     public function create()
     {
         return view('professores.create');
     }
 
+    /**
+     * Armazena um novo professor.
+     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -46,9 +56,8 @@ class ProfessorController extends Controller
         ]);
 
         if ($request->hasFile('foto_perfil')) {
-            $data['foto_perfil'] = $request->file('foto_perfil')->store('avatars/professores', 'public');
+            $validated['foto_perfil'] = $request->file('foto_perfil')->store('avatars/professores', 'public');
         }
-
 
         Professor::create($validated);
 
@@ -57,6 +66,9 @@ class ProfessorController extends Controller
             ->with('status', 'Professor cadastrado com sucesso.');
     }
 
+    /**
+     * Exibe detalhes do professor.
+     */
     public function show(Professor $professor)
     {
         $disciplinas = $professor->disciplinas()
@@ -67,11 +79,17 @@ class ProfessorController extends Controller
         return view('professores.show', compact('professor', 'disciplinas'));
     }
 
+    /**
+     * Formulário de edição.
+     */
     public function edit(Professor $professor)
     {
         return view('professores.edit', compact('professor'));
     }
 
+    /**
+     * Atualiza o registro do professor.
+     */
     public function update(Request $request, Professor $professor)
     {
         $validated = $request->validate([
@@ -80,10 +98,10 @@ class ProfessorController extends Controller
             'telefone' => ['nullable', 'string', 'max:20'],
             'especializacao' => ['nullable', 'string', 'max:255'],
         ]);
-        if ($request->hasFile('foto_perfil')) {
-            $data['foto_perfil'] = $request->file('foto_perfil')->store('avatars/professores', 'public');
-        }
 
+        if ($request->hasFile('foto_perfil')) {
+            $validated['foto_perfil'] = $request->file('foto_perfil')->store('avatars/professores', 'public');
+        }
 
         $professor->update($validated);
 
@@ -92,6 +110,9 @@ class ProfessorController extends Controller
             ->with('status', 'Dados do professor atualizados com sucesso.');
     }
 
+    /**
+     * Remove o professor.
+     */
     public function destroy(Professor $professor)
     {
         $professor->delete();

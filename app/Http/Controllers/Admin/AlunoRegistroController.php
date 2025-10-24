@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\AlunoRegistro;
-use App\Models\User;
 use App\Models\Turma;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -18,7 +18,7 @@ class AlunoRegistroController extends Controller
     {
         $query = AlunoRegistro::with(['aluno', 'turma', 'responsavel']);
 
-        // Filtros dinâmicos
+        // 🔍 Filtros dinâmicos
         if ($request->filled('tipo')) {
             $query->where('tipo', $request->tipo);
         }
@@ -43,11 +43,11 @@ class AlunoRegistroController extends Controller
      */
     public function create()
     {
-        $alunos = \App\Models\User::orderBy('name')->get();
+        $alunos = \App\Models\Aluno::orderBy('nome')->get();
         $turmas = \App\Models\Turma::orderBy('nome')->get();
+
         return view('admin.aluno_registros.create', compact('alunos', 'turmas'));
     }
-
 
     /**
      * Salvar novo registro
@@ -55,7 +55,7 @@ class AlunoRegistroController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'aluno_id' => 'required|exists:users,id',
+            'aluno_id' => 'required|exists:alunos,id',
             'tipo' => 'required|string|max:255',
             'categoria' => 'nullable|string|max:255',
             'descricao' => 'nullable|string',
@@ -66,6 +66,7 @@ class AlunoRegistroController extends Controller
         $data = $request->all();
         $data['responsavel_id'] = auth()->id();
 
+        // 📁 Upload do arquivo (se existir)
         if ($request->hasFile('arquivo')) {
             $path = $request->file('arquivo')->store('public/alunos/registros');
             $data['arquivo'] = str_replace('public/', 'storage/', $path);
@@ -73,7 +74,8 @@ class AlunoRegistroController extends Controller
 
         AlunoRegistro::create($data);
 
-        return redirect()->route('aluno_registros.index')->with('success', 'Registro adicionado com sucesso!');
+        return redirect()->route('admin.aluno_registros.index')
+            ->with('success', 'Registro adicionado com sucesso!');
     }
 
     /**
@@ -89,8 +91,12 @@ class AlunoRegistroController extends Controller
      */
     public function edit(AlunoRegistro $aluno_registro)
     {
-        $alunos = User::where('tipo', 'aluno')->orderBy('name')->get();
+        $alunos = User::where('tipo', 'aluno')
+            ->orderBy('name')
+            ->pluck('name', 'id');
+
         $turmas = Turma::orderBy('nome')->get();
+
         return view('admin.aluno_registros.edit', compact('aluno_registro', 'alunos', 'turmas'));
     }
 
@@ -100,7 +106,7 @@ class AlunoRegistroController extends Controller
     public function update(Request $request, AlunoRegistro $aluno_registro)
     {
         $request->validate([
-            'aluno_id' => 'required|exists:users,id',
+            'aluno_id' => 'required|exists:alunos,id',
             'tipo' => 'required|string|max:255',
             'categoria' => 'nullable|string|max:255',
             'descricao' => 'nullable|string',
@@ -111,8 +117,8 @@ class AlunoRegistroController extends Controller
 
         $data = $request->all();
 
+        // 📁 Substituir arquivo antigo, se houver novo upload
         if ($request->hasFile('arquivo')) {
-            // Deleta o arquivo antigo
             if ($aluno_registro->arquivo && Storage::exists(str_replace('storage/', 'public/', $aluno_registro->arquivo))) {
                 Storage::delete(str_replace('storage/', 'public/', $aluno_registro->arquivo));
             }
@@ -123,7 +129,8 @@ class AlunoRegistroController extends Controller
 
         $aluno_registro->update($data);
 
-        return redirect()->route('aluno_registros.index')->with('success', 'Registro atualizado com sucesso!');
+        return redirect()->route('admin.aluno_registros.index')
+            ->with('success', 'Registro atualizado com sucesso!');
     }
 
     /**
@@ -131,12 +138,14 @@ class AlunoRegistroController extends Controller
      */
     public function destroy(AlunoRegistro $aluno_registro)
     {
+        // 🗑️ Remove o arquivo associado
         if ($aluno_registro->arquivo && Storage::exists(str_replace('storage/', 'public/', $aluno_registro->arquivo))) {
             Storage::delete(str_replace('storage/', 'public/', $aluno_registro->arquivo));
         }
 
         $aluno_registro->delete();
 
-        return redirect()->route('aluno_registros.index')->with('success', 'Registro excluído com sucesso!');
+        return redirect()->route('admin.aluno_registros.index')
+            ->with('success', 'Registro excluído com sucesso!');
     }
 }
