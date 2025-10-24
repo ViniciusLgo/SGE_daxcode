@@ -233,7 +233,7 @@
             <a href="{{ route('admin.turmas.index') }}" class="{{ request()->routeIs('admin.turmas.*') ? 'active' : '' }}">🏫 Turmas</a>
 
             <li class="nav-item">
-                <a href="{{ route('aluno_registros.index') }}"
+                <a href="{{ route('admin.aluno_registros.index') }}"
                    class="nav-link {{ request()->is('admin/aluno_registros*') ? 'active bg-light text-primary' : 'text-white' }}">
                     <i class="bi bi-folder2-open me-2"></i> 📄 Registros
                 </a>
