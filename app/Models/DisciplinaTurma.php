@@ -14,7 +14,6 @@ class DisciplinaTurma extends Model
     protected $fillable = [
         'disciplina_id',
         'turma_id',
-        'professor_id',
         'ano_letivo',
         'observacao',
     ];
@@ -29,14 +28,9 @@ class DisciplinaTurma extends Model
         return $this->belongsTo(Turma::class);
     }
 
-    public function professor()
-    {
-        return $this->belongsTo(Professor::class);
-    }
     public function professores()
     {
-        return $this->belongsToMany(Professor::class, 'disciplina_turma_professor')
+        return $this->belongsToMany(Professor::class, 'disciplina_turma_professor', 'disciplina_turma_id', 'professor_id')
             ->withTimestamps();
     }
-
 }

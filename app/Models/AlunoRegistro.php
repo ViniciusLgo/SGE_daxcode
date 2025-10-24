@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,28 +12,27 @@ class AlunoRegistro extends Model
     protected $fillable = [
         'aluno_id',
         'turma_id',
-        'responsavel_id',
         'tipo',
         'categoria',
+        'data_evento',
         'descricao',
         'arquivo',
-        'data_evento',
         'status',
+        'responsavel_id',
     ];
 
-    // 🔗 Relações
     public function aluno()
     {
-        return $this->belongsTo(User::class, 'aluno_id');
+        return $this->belongsTo(\App\Models\Aluno::class, 'aluno_id');
     }
 
     public function turma()
     {
-        return $this->belongsTo(Turma::class);
+        return $this->belongsTo(\App\Models\Turma::class, 'turma_id');
     }
 
     public function responsavel()
     {
-        return $this->belongsTo(User::class, 'responsavel_id');
+        return $this->belongsTo(\App\Models\User::class, 'responsavel_id');
     }
 }

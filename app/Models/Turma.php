@@ -23,11 +23,13 @@ class Turma extends Model
 
     public function disciplinas()
     {
-        return $this->belongsToMany(Disciplina::class, 'disciplina_turmas', 'turma_id', 'disciplina_id');
+        return $this->belongsToMany(Disciplina::class, 'disciplina_turmas', 'turma_id', 'disciplina_id')
+            ->withPivot(['id', 'ano_letivo', 'observacao'])
+            ->withTimestamps();
     }
 
-    public function professores()
+    public function disciplinaTurmas()
     {
-        return $this->belongsToMany(Professor::class, 'disciplina_turma_professor', 'turma_id', 'professor_id');
+        return $this->hasMany(DisciplinaTurma::class, 'turma_id');
     }
 }

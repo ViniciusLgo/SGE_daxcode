@@ -19,6 +19,8 @@ class Professor extends Model
         'departamento',
         'user_id',
         'foto_perfil',
+        'telefone',
+        'especializacao'
 
     ];
 
@@ -30,6 +32,7 @@ class Professor extends Model
 
     public function disciplinas()
     {
-        return $this->hasMany(Disciplina::class);
+        return $this->belongsToMany(Disciplina::class, 'disciplina_professor', 'professor_id', 'disciplina_id')
+            ->withTimestamps();
     }
 }
