@@ -2,21 +2,23 @@
 
 @section('content')
     <div class="mb-4">
-        <h4 class="mb-1">Novo professor</h4>
-        <p class="text-muted mb-0">Cadastre um novo professor e defina seus dados principais.</p>
+        <h4><i class="bi bi-person-plus-fill text-success"></i> Cadastrar Responsável</h4>
+        <p class="text-muted">Preencha os dados abaixo para adicionar um novo responsável.</p>
     </div>
 
-    <div class="card shadow-sm border-0">
-        <div class="card-body">
-            @if($errors->any())
-                <div class="alert alert-danger">
-                    <strong>Ops!</strong> Verifique os campos destacados.
-                </div>
-            @endif
-
-            <form action="{{ route('admin.professores.store') }}" method="POST" class="needs-validation" novalidate>
-                @include('professores._form')
-            </form>
+    @if($errors->any())
+        <div class="alert alert-danger">
+            <strong>Ops!</strong> Corrija os erros abaixo.
+            <ul class="mt-2 mb-0">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
         </div>
-    </div>
+    @endif
+
+    <form action="{{ route('admin.responsaveis.store') }}" method="POST">
+        @csrf
+        @include('admin.responsaveis._form', ['responsavel' => null])
+    </form>
 @endsection

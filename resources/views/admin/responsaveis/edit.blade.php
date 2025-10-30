@@ -1,23 +1,25 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
-        <h4 class="mb-3">Editar Professor</h4>
-
-        @if ($errors->any())
-            <div class="alert alert-danger">Verifique os campos abaixo.</div>
-        @endif
-
-        <form action="{{ route('admin.professores.update', $professor) }}" method="POST">
-            @csrf
-            @method('PUT')
-
-            @include('professores._form')
-
-            <div class="mt-3">
-                <button type="submit" class="btn btn-primary">Salvar</button>
-                <a href="{{ route('admin.professores.index') }}" class="btn btn-secondary">Voltar</a>
-            </div>
-        </form>
+    <div class="mb-4">
+        <h4><i class="bi bi-pencil-square text-warning"></i> Editar Responsável</h4>
+        <p class="text-muted">Atualize as informações do responsável.</p>
     </div>
+
+    @if($errors->any())
+        <div class="alert alert-danger">
+            <strong>Ops!</strong> Corrija os erros abaixo.
+            <ul class="mt-2 mb-0">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <form action="{{ route('admin.responsaveis.update', $responsavel->id) }}" method="POST">
+        @csrf
+        @method('PUT')
+        @include('admin.responsaveis._form')
+    </form>
 @endsection

@@ -1,30 +1,39 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>SGE DaxCode — Login</title>
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
 
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
-            <div>
-                <a href="/">
-                    <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
-                </a>
-            </div>
+<body class="bg-gradient-to-br from-[#004AAD] via-[#0076D4] to-[#00BFA6] flex items-center justify-center min-h-screen font-inter text-gray-900">
+<div class="w-full max-w-5xl bg-white/10 backdrop-blur-xl rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row border border-white/20">
 
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
-                {{ $slot }}
-            </div>
+    <!-- Lado esquerdo -->
+    <div class="md:w-1/2 bg-gradient-to-b from-[#004AAD] to-[#00BFA6] text-white flex flex-col justify-center items-center p-10">
+        <i class="bi bi-mortarboard-fill text-7xl mb-4 text-white drop-shadow-md"></i>
+        <h1 class="text-4xl font-bold tracking-tight mb-2">SGE DaxCode</h1>
+        <p class="text-[#D7FDF3] text-center text-sm leading-relaxed max-w-xs">
+            Sistema de Gestão Escolar Inteligente<br>
+            conectando escola, professores e famílias.
+        </p>
+    </div>
+
+    <!-- Lado direito (formulário) -->
+    <div class="md:w-1/2 w-full p-8 md:p-12 bg-[#F8FAFC]">
+        <div class="w-full max-w-md mx-auto">
+            {{ $slot }}
         </div>
-    </body>
+    </div>
+</div>
+
+<footer class="absolute bottom-4 text-center text-white/70 text-xs">
+    © {{ date('Y') }} DaxCode Tecnologia — Todos os direitos reservados.
+</footer>
+</body>
 </html>

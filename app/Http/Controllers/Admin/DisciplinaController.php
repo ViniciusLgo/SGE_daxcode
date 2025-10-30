@@ -31,14 +31,14 @@ class DisciplinaController extends Controller
             ->paginate(self::PER_PAGE)
             ->withQueryString();
 
-        return view('disciplinas.index', compact('disciplinas', 'search'));
+        return view('admin.disciplinas.index', compact('disciplinas', 'search'));
     }
 
     public function create()
     {
         $professores = Professor::orderBy('nome')->pluck('nome', 'id');
 
-        return view('disciplinas.create', compact('professores'));
+        return view('admin.disciplinas.create', compact('professores'));
     }
 
     public function store(Request $request)

@@ -16,31 +16,30 @@ class ProfessorController extends Controller
      */
     public function index(Request $request)
     {
-        $search = trim((string) $request->input('search'));
+        $search = $request->get('search');
 
-        $professores = Professor::query()
-            ->when($search, function ($query) use ($search) {
-                $query->where(function ($subQuery) use ($search) {
-                    $subQuery
-                        ->where('nome', 'like', "%{$search}%")
-                        ->orWhere('email', 'like', "%{$search}%")
-                        ->orWhere('especializacao', 'like', "%{$search}%");
-                });
-            })
+        $query = \App\Models\Professor::query();
+
+        if ($search) {
+            $query->where('nome', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%");
+        }
+
+        $professores = $query
             ->withCount('disciplinas')
             ->orderBy('nome')
-            ->paginate(self::PER_PAGE)
-            ->withQueryString();
+            ->paginate(10);
 
-        return view('professores.index', compact('professores', 'search'));
+        return view('admin.professores.index', compact('professores', 'search'));
     }
+
 
     /**
      * Formulário de criação.
      */
     public function create()
     {
-        return view('professores.create');
+        return view('admin.professores.create');
     }
 
     /**
@@ -73,11 +72,11 @@ class ProfessorController extends Controller
     {
         $disciplinas = $professor->disciplinas()
             ->orderBy('nome')
-            ->paginate(self::PER_PAGE)
-            ->withQueryString();
+            ->paginate(10);
 
-        return view('professores.show', compact('professor', 'disciplinas'));
+        return view('admin.professores.show', compact('professor', 'disciplinas'));
     }
+
 
     /**
      * Formulário de edição.

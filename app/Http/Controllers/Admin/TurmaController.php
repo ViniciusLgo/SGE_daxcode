@@ -28,12 +28,12 @@ class TurmaController extends Controller
             ->paginate(self::PER_PAGE)
             ->withQueryString();
 
-        return view('turmas.index', compact('turmas', 'search'));
+        return view('admin.turmas.index', compact('turmas', 'search'));
     }
 
     public function create()
     {
-        return view('turmas.create');
+        return view('admin.turmas.create');
     }
 
     public function store(Request $request)
@@ -67,7 +67,7 @@ class TurmaController extends Controller
 
     public function edit(Turma $turma)
     {
-        return view('turmas.edit', compact('turma'));
+        return view('admin.turmas.edit', compact('turma'));
     }
 
     public function update(Request $request, Turma $turma)

@@ -7,6 +7,7 @@ use App\Models\Aluno;
 use App\Models\Disciplina;
 use App\Models\Professor;
 use App\Models\Turma;
+use App\Models\Setting;
 
 class DashboardController extends Controller
 {
@@ -17,6 +18,9 @@ class DashboardController extends Controller
         $professoresCount = Professor::count();
         $disciplinasCount = Disciplina::count();
         $turmasCount = Turma::count();
+
+        // Configurações do sistema
+        $settings = Setting::first();
 
         // Alunos por turma (para gráfico de pizza)
         $alunosPorTurma = Turma::withCount('alunos')
@@ -35,9 +39,9 @@ class DashboardController extends Controller
             ->pluck('total', 'mes');
 
         // Alunos recentes
-        $recentAlunos = Aluno::latest()->take(3)->get();
+        $recentAlunos = Aluno::latest()->take(5)->get();
 
-        // Dados opcionais (ocupação média)
+        // Ocupação média
         $ocupacaoTurmas = Turma::withCount('alunos')->get();
         $ocupacaoMedia = $turmasCount > 0
             ? round($ocupacaoTurmas->avg('alunos_count') / 30 * 100, 1)
@@ -52,7 +56,8 @@ class DashboardController extends Controller
             'professoresPorDisciplina',
             'evolucaoMatriculas',
             'ocupacaoMedia',
-            'recentAlunos'
+            'recentAlunos',
+            'settings'
         ));
     }
 }

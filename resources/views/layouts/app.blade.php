@@ -9,31 +9,30 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 
-
     <style>
+        /* ==================== TEMA PRINCIPAL DAXCODE ==================== */
         :root {
             --dax-yellow: #FFD54F;
             --dax-dark: #1E1E1E;
-            --dax-gray: #2C2C2C;
+            --dax-gray: #2B2B2B;
             --dax-light: #F8F9FA;
-            --dax-border: #E0E0E0;
-            --sidebar-width: 240px;
+            --sidebar-width: 250px;
         }
 
         body {
             font-family: "Inter", sans-serif;
-            background-color: var(--dax-light);
+            background: var(--dax-light);
             color: #222;
-            transition: all 0.3s ease;
+            transition: 0.3s;
         }
 
-        /* ===== SIDEBAR ===== */
+        /* ==================== SIDEBAR ==================== */
         .sidebar {
             width: var(--sidebar-width);
             height: 100vh;
             position: fixed;
-            top: 0;
             left: 0;
+            top: 0;
             background: var(--dax-dark);
             color: #fff;
             display: flex;
@@ -41,14 +40,11 @@
             justify-content: space-between;
             overflow-y: auto;
             scrollbar-width: thin;
-            scrollbar-color: #555 transparent;
-            z-index: 100;
-            transition: 0.3s;
+            scrollbar-color: #444 transparent;
+            box-shadow: 3px 0 8px rgba(0,0,0,.2);
         }
 
-        .sidebar::-webkit-scrollbar {
-            width: 6px;
-        }
+        .sidebar::-webkit-scrollbar { width: 6px; }
         .sidebar::-webkit-scrollbar-thumb {
             background: #444;
             border-radius: 4px;
@@ -56,68 +52,58 @@
 
         .sidebar-header {
             text-align: center;
-            padding: 1rem 0;
+            padding: 1.4rem 1rem;
+            background: #111;
             border-bottom: 1px solid #333;
-            background: var(--dax-gray);
+            letter-spacing: .5px;
         }
 
-        .sidebar h5 {
+        .sidebar-header h5 {
             font-weight: 800;
             color: var(--dax-yellow);
             margin: 0;
         }
 
-        .sidebar-section-title {
-            text-transform: uppercase;
-            font-size: 0.7rem;
-            font-weight: 700;
-            color: #bbb;
-            margin: 1rem 1rem 0.4rem;
-        }
-
+        /* LINKS */
         .sidebar a {
             display: flex;
             align-items: center;
-            gap: 0.8rem;
-            padding: 0.6rem 1rem;
-            color: #ccc;
-            text-decoration: none;
-            border-radius: 0.5rem;
+            gap: .9rem;
+            padding: .65rem 1rem;
+            color: #bbb;
             font-weight: 500;
-            transition: all 0.2s;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: .2s ease;
         }
 
         .sidebar a:hover {
-            background-color: #333;
+            background: #2f2f2f;
             color: var(--dax-yellow);
             transform: translateX(3px);
         }
 
         .sidebar a.active {
-            background-color: var(--dax-yellow);
+            background: var(--dax-yellow);
             color: #000;
-            font-weight: 600;
+            font-weight: 700;
         }
 
-        .sidebar a.active i {
-            color: #000;
-        }
-
+        /* SUBMENUS */
         .submenu {
             max-height: 0;
             overflow: hidden;
-            transition: all 0.3s ease;
-            padding-left: 1.8rem;
+            padding-left: 1.6rem;
+            transition: all .3s ease;
         }
 
         .submenu.show {
-            max-height: 400px;
-            padding-bottom: 0.5rem;
+            max-height: 500px;
+            padding-bottom: .4rem;
         }
 
         .submenu a {
-            font-size: 0.9rem;
-            padding: 0.4rem 0.6rem;
+            font-size: 0.92rem;
             color: #aaa;
         }
 
@@ -125,125 +111,132 @@
             color: var(--dax-yellow);
         }
 
-        .sidebar-footer {
-            border-top: 1px solid #333;
-            padding: 0.8rem 1rem;
-            background: var(--dax-gray);
-        }
-
-        .sidebar-footer a {
-            color: #f66;
+        /* SEPARADOR ENTRE SEÇÕES */
+        .sidebar-section {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #888;
+            padding: .7rem 1rem .3rem;
             font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
+            border-top: 1px solid #333;
+            letter-spacing: .5px;
         }
 
-        /* ===== CONTENT ===== */
+        /* FOOTER */
+        .sidebar-footer {
+            padding: .8rem 1rem;
+            background: #111;
+            border-top: 1px solid #333;
+        }
+
+        .sidebar-footer button {
+            width: 100%;
+            text-align: left;
+            color: #ccc;
+        }
+        .sidebar-footer button:hover {
+            color: var(--dax-yellow);
+        }
+
+        /* ==================== CONTEÚDO PRINCIPAL ==================== */
         .content {
             margin-left: var(--sidebar-width);
             padding: 2rem;
+            min-height: 100vh;
+            background: var(--dax-light);
         }
 
-        /* ===== NAVBAR ===== */
+        /* ==================== NAVBAR SUPERIOR ==================== */
         .navbar {
             background: #fff;
+            border: 1px solid #e5e5e5;
             border-radius: 10px;
-            border: 1px solid var(--dax-border);
+            padding: .7rem 1rem;
         }
 
-        /* ===== DASHBOARD CARDS ===== */
-        .card {
-            border-radius: 12px;
-            border: 1px solid var(--dax-border);
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-            transition: 0.2s;
+        .navbar .btn-outline-secondary {
+            border-color: #ccc;
         }
 
-        .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        /* ==================== DARK MODE ==================== */
+        body.dark-mode {
+            background: #121212;
+            color: #f1f1f1;
         }
 
-        .btn-primary {
-            background-color: var(--dax-yellow);
-            border-color: var(--dax-yellow);
-            color: #000;
+        body.dark-mode .navbar {
+            background: #1f1f1f;
+            border-color: #333;
         }
 
-        .btn-primary:hover {
-            background-color: #ffcc33;
-            border-color: #ffcc33;
-            color: #000;
+        body.dark-mode .sidebar {
+            background: #0d0d0d;
         }
 
-        /* ===== DARK MODE ===== */
-        .dark-mode {
-            background-color: var(--dax-dark);
-            color: #eee !important;
+        body.dark-mode .sidebar a {
+            color: #bbb;
         }
 
-        .dark-mode .sidebar {
-            background-color: #000 !important;
+        body.dark-mode .sidebar a:hover {
+            background: #1f1f1f;
+            color: var(--dax-yellow);
         }
 
-        .dark-mode .navbar {
-            background-color: #111 !important;
-            color: #eee;
+        body.dark-mode .sidebar-footer {
+            background: #111;
         }
 
+        /* ==================== FOOTER ==================== */
         footer {
-            position: fixed;
-            bottom: 0;
-            left: var(--sidebar-width);
-            width: calc(100% - var(--sidebar-width));
-            background: var(--dax-dark);
-            color: #fff;
             text-align: center;
-            padding: 0.6rem;
-            font-size: 0.8rem;
+            padding: .8rem;
+            font-size: .85rem;
+            background: var(--dax-dark);
+            color: #ccc;
+            position: fixed;
+            left: var(--sidebar-width);
+            bottom: 0;
+            width: calc(100% - var(--sidebar-width));
         }
 
         footer span {
             color: var(--dax-yellow);
             font-weight: 600;
         }
+
+        /* ==================== ÍCONE ROTATIVO DO MENU ==================== */
+        .rotate {
+            transform: rotate(180deg);
+            transition: .3s;
+        }
     </style>
-
-
 </head>
 
 <body>
+{{-- ==================== SIDEBAR ==================== --}}
 <div class="sidebar">
     <div>
         <div class="sidebar-header">
             <h5>SGE <span class="text-warning">DaxCode</span></h5>
         </div>
 
-        {{-- ======= Seção Acadêmica ======= --}}
+        {{-- ======= SEÇÃO: ACADÊMICO ======= --}}
+        <div class="sidebar-section">Acadêmico</div>
         <a href="javascript:void(0)" class="toggle-menu" data-target="#menu-academico">
             <i class="bi bi-mortarboard"></i> Acadêmico
             <i class="bi bi-chevron-down ms-auto small"></i>
         </a>
         <div id="menu-academico" class="submenu">
             <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">📊 Dashboard</a>
-            <a href="{{ route('admin.alunos.index') }}" class="{{ request()->routeIs('admin.alunos.*') ? 'active' : '' }}">👩‍🎓 Alunos</a>
-            <a href="{{ route('admin.professores.index') }}" class="{{ request()->routeIs('admin.professores.*') ? 'active' : '' }}">👨‍🏫 Professores</a>
+            <a href="{{ route('admin.alunos.index') }}" class="{{ request()->routeIs('admin.alunos.*') ? 'active' : '' }}">🎓 Alunos</a>
+            <a href="{{ route('admin.professores.index') }}" class="{{ request()->routeIs('admin.professores.*') ? 'active' : '' }}">🧑‍🏫 Professores</a>
             <a href="{{ route('admin.disciplinas.index') }}" class="{{ request()->routeIs('admin.disciplinas.*') ? 'active' : '' }}">📘 Disciplinas</a>
             <a href="{{ route('admin.turmas.index') }}" class="{{ request()->routeIs('admin.turmas.*') ? 'active' : '' }}">🏫 Turmas</a>
-
-            <li class="nav-item">
-                <a href="{{ route('admin.aluno_registros.index') }}"
-                   class="nav-link {{ request()->is('admin/aluno_registros*') ? 'active bg-light text-primary' : 'text-white' }}">
-                    <i class="bi bi-folder2-open me-2"></i> 📄 Registros
-                </a>
-            </li>
-
+            <a href="{{ route('admin.aluno_registros.index') }}" class="{{ request()->is('admin/aluno_registros*') ? 'active' : '' }}">📁 Registros</a>
         </div>
 
-
-
-        {{-- ======= Gestão Pedagógica ======= --}}
+        {{-- ======= SEÇÃO: GESTÃO ======= --}}
+        <div class="sidebar-section">Gestão</div>
         <a href="javascript:void(0)" class="toggle-menu" data-target="#menu-gestao">
             <i class="bi bi-bar-chart"></i> Gestão
             <i class="bi bi-chevron-down ms-auto small"></i>
@@ -255,7 +248,8 @@
             <a href="#">🧠 Planejamento</a>
         </div>
 
-        {{-- ======= Administrativo ======= --}}
+        {{-- ======= SEÇÃO: ADMINISTRATIVO ======= --}}
+        <div class="sidebar-section">Administrativo</div>
         <a href="javascript:void(0)" class="toggle-menu" data-target="#menu-admin">
             <i class="bi bi-gear"></i> Administrativo
             <i class="bi bi-chevron-down ms-auto small"></i>
@@ -266,7 +260,8 @@
             <a href="{{ route('admin.settings.edit') }}">⚙️ Configurações</a>
         </div>
 
-        {{-- ======= Comunicação ======= --}}
+        {{-- ======= SEÇÃO: COMUNICAÇÃO ======= --}}
+        <div class="sidebar-section">Comunicação</div>
         <a href="javascript:void(0)" class="toggle-menu" data-target="#menu-comunicacao">
             <i class="bi bi-chat-dots"></i> Comunicação
             <i class="bi bi-chevron-down ms-auto small"></i>
@@ -277,7 +272,8 @@
             <a href="#">💬 Chat interno</a>
         </div>
 
-        {{-- ======= Relatórios ======= --}}
+        {{-- ======= SEÇÃO: RELATÓRIOS ======= --}}
+        <div class="sidebar-section">Relatórios</div>
         <a href="javascript:void(0)" class="toggle-menu" data-target="#menu-relatorios">
             <i class="bi bi-clipboard-data"></i> Relatórios
             <i class="bi bi-chevron-down ms-auto small"></i>
@@ -288,24 +284,25 @@
         </div>
     </div>
 
-    {{-- ======= Rodapé da Sidebar ======= --}}
     <div class="sidebar-footer">
-        <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-            <i class="bi bi-box-arrow-right"></i> Sair
-        </a>
-        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
+        <form id="logout-form" action="{{ route('logout') }}" method="POST">
+            @csrf
+            <button type="submit" class="btn btn-link text-decoration-none">
+                <i class="bi bi-box-arrow-right"></i> Sair
+            </button>
+        </form>
     </div>
 </div>
 
-{{-- ======= Conteúdo ======= --}}
+{{-- ==================== CONTEÚDO PRINCIPAL ==================== --}}
 <div class="content">
-    <nav class="navbar shadow-sm mb-4 rounded d-flex justify-content-between align-items-center px-3">
-        <div><span class="navbar-brand mb-0">Painel Administrativo</span></div>
+    <nav class="navbar mb-4 d-flex justify-content-between align-items-center">
+        <div><strong>Painel Administrativo</strong></div>
         <div class="d-flex align-items-center gap-3">
-            <span class="text-muted small"><i class="bi bi-person-circle me-1"></i>{{ auth()->user()->name ?? 'Usuário' }}</span>
-            <button class="btn btn-sm btn-outline-secondary" id="themeToggle" title="Alternar tema">
-                <i class="bi bi-moon"></i>
-            </button>
+            <span class="text-muted small">
+                <i class="bi bi-person-circle me-1"></i>{{ auth()->user()->name ?? 'Usuário' }}
+            </span>
+            <button id="themeToggle" class="btn btn-sm btn-outline-secondary"><i class="bi bi-moon"></i></button>
         </div>
     </nav>
 
@@ -319,7 +316,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // Tema claro/escuro
+    // ======= Tema Claro/Escuro =======
     const themeToggle = document.getElementById('themeToggle');
     const icon = themeToggle.querySelector('i');
     if (localStorage.getItem('theme') === 'dark') {
@@ -334,7 +331,7 @@
         localStorage.setItem('theme', isDark ? 'dark' : 'light');
     });
 
-    // Submenus expansíveis
+    // ======= Submenus =======
     document.querySelectorAll('.toggle-menu').forEach(btn => {
         btn.addEventListener('click', () => {
             const target = document.querySelector(btn.dataset.target);

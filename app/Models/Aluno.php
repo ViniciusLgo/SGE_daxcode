@@ -33,4 +33,17 @@ class Aluno extends Model
     {
         return $this->belongsTo(Turma::class);
     }
+
+    public function registros()
+    {
+        return $this->hasMany(\App\Models\AlunoRegistro::class, 'aluno_id')->orderByDesc('created_at');
+    }
+
+    public function responsaveis()
+    {
+        return $this->belongsToMany(\App\Models\Responsavel::class, 'aluno_responsavel')
+            ->withTimestamps()
+            ->withPivot('observacao');
+    }
+
 }
