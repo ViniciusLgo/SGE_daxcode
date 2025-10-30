@@ -16,7 +16,7 @@
 
             <form action="{{ route('admin.turmas.update', $turma) }}" method="POST" class="needs-validation" novalidate>
                 @method('PUT')
-                @include('turmas._form')
+                @include('admin.aluno_registros.turmas._form')
             </form>
         </div>
     </div>
