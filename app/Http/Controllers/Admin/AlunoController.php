@@ -7,6 +7,8 @@ use App\Models\Aluno;
 use App\Models\Turma;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Hash;
+
 
 class AlunoController extends Controller
 {
@@ -58,16 +60,21 @@ class AlunoController extends Controller
 
     public function show($id)
     {
-        $aluno = Aluno::with(['turma'])->findOrFail($id);
+        $aluno = Aluno::with(['turma', 'responsaveis', 'documentos', 'registros'])->findOrFail($id);
         return view('admin.alunos.show', compact('aluno'));
     }
+
 
 
     public function edit($id)
     {
         $aluno = Aluno::findOrFail($id);
         $turmas = Turma::orderBy('nome')->get();
-        return view('admin.alunos.edit', compact('aluno', 'turmas'));
+        $aluno->load('responsaveis');
+        $responsaveis = \App\Models\Responsavel::orderBy('nome')->get();
+        return view('admin.alunos.edit', compact('aluno', 'responsaveis', 'turmas'));
+
+
     }
 
 
@@ -82,6 +89,8 @@ class AlunoController extends Controller
             'foto_perfil' => 'nullable|image|max:5120',
             'data_nascimento' => 'nullable|date',
             'turma_id' => 'required|exists:turmas,id',
+            'responsaveis' => 'array|nullable',
+
         ]);
 
         if ($request->hasFile('foto_perfil')) {
@@ -90,6 +99,11 @@ class AlunoController extends Controller
             }
             $validated['foto_perfil'] = $request->file('foto_perfil')->store('avatars/alunos', 'public');
         }
+
+        if ($request->has('responsaveis')) {
+            $aluno->responsaveis()->sync($request->responsaveis);
+        }
+
 
         $aluno->update($validated);
 
@@ -105,5 +119,18 @@ class AlunoController extends Controller
         $aluno->delete();
 
         return redirect()->route('admin.alunos.index')->with('success', 'Aluno excluído com sucesso!');
+    }
+
+    public function resetPassword($id)
+    {
+        $user = \App\Models\User::findOrFail($id);
+        $novaSenha = 'Dax@' . rand(1000, 9999); // exemplo gerador de senha temporária
+
+        $user->update([
+            'password' => Hash::make($novaSenha),
+            'first_login' => true, // força troca no próximo acesso
+        ]);
+
+        return back()->with('success', "Senha redefinida com sucesso! Nova senha: {$novaSenha}");
     }
 }

@@ -3,35 +3,33 @@
 @section('content')
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h4 class="mb-1">Disciplinas</h4>
-            <p class="text-muted mb-0">Catálogo de disciplinas vinculadas aos professores.</p>
+            <h4 class="mb-1">
+                <i class="bi bi-journal-bookmark-fill text-primary me-2"></i> Disciplinas
+            </h4>
+            <p class="text-muted mb-0">Gerencie as disciplinas e seus vínculos com professores e turmas.</p>
         </div>
-        <a href="{{ route('admin.disciplinas.create') }}" class="btn btn-primary">Nova disciplina</a>
+        <a href="{{ route('admin.disciplinas.create') }}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Nova Disciplina
+        </a>
     </div>
 
-    <form method="GET" class="row g-2 align-items-end mb-3">
-        <div class="col-md-4">
-            <label for="search" class="form-label">Busca</label>
-            <input type="search" id="search" name="search" value="{{ $search }}" class="form-control" placeholder="Nome da disciplina ou professor">
+    {{-- Barra de busca --}}
+    <form method="GET" action="{{ route('admin.disciplinas.index') }}" class="mb-3">
+        <div class="input-group">
+            <input type="text" name="search" class="form-control" placeholder="Buscar disciplina..."
+                   value="{{ $search ?? '' }}">
+            <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search"></i></button>
         </div>
-        <div class="col-md-auto">
-            <button type="submit" class="btn btn-outline-primary">Filtrar</button>
-        </div>
-        @if($search)
-            <div class="col-md-auto">
-                <a href="{{ route('admin.disciplinas.index') }}" class="btn btn-link text-decoration-none">Limpar</a>
-            </div>
-        @endif
     </form>
 
     <div class="card shadow-sm border-0">
-        <div class="table-responsive">
-            <table class="table table-striped align-middle mb-0">
-                <thead>
+        <div class="card-body p-0">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
                 <tr>
                     <th>Nome</th>
+                    <th>Carga Horária</th>
                     <th>Professores</th>
-                    <th>Carga horária</th>
                     <th class="text-end">Ações</th>
                 </tr>
                 </thead>
@@ -39,45 +37,43 @@
                 @forelse ($disciplinas as $disciplina)
                     <tr>
                         <td>{{ $disciplina->nome }}</td>
-
-                        {{-- Professores vinculados --}}
+                        <td>{{ $disciplina->carga_horaria ? $disciplina->carga_horaria . 'h' : '—' }}</td>
                         <td>
-                            @if($disciplina->professores->isNotEmpty())
-                                {{ $disciplina->professores->pluck('nome')->join(', ') }}
+                            @if ($disciplina->professores->count() > 0)
+                                @foreach ($disciplina->professores as $prof)
+                                    <span class="badge bg-secondary">{{ $prof->nome }}</span>
+                                @endforeach
                             @else
-                                <span class="text-muted">—</span>
+                                <span class="text-muted">Nenhum</span>
                             @endif
                         </td>
-
-                        <td>{{ $disciplina->carga_horaria ? $disciplina->carga_horaria . 'h' : '—' }}</td>
-
                         <td class="text-end">
-                            <a href="{{ route('admin.disciplinas.show', $disciplina) }}" class="btn btn-outline-primary btn-sm">Detalhes</a>
-                            <a href="{{ route('admin.disciplinas.edit', $disciplina) }}" class="btn btn-outline-warning btn-sm">Editar</a>
-                            <form action="{{ route('admin.disciplinas.destroy', $disciplina) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-outline-danger btn-sm"
-                                        onclick="return confirm('Tem certeza que deseja excluir esta disciplina?')">
-                                    Excluir
-                                </button>
+                            <a href="{{ route('admin.disciplinas.show', $disciplina->id) }}" class="btn btn-sm btn-outline-info">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <a href="{{ route('admin.disciplinas.edit', $disciplina->id) }}" class="btn btn-sm btn-outline-warning">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <form action="{{ route('admin.disciplinas.destroy', $disciplina->id) }}" method="POST" class="d-inline"
+                                  onsubmit="return confirm('Deseja excluir esta disciplina?')">
+                                @csrf @method('DELETE')
+                                <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
                             </form>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="4" class="text-center text-muted py-4">Nenhuma disciplina encontrada.</td>
+                        <td colspan="4" class="text-center text-muted py-3">Nenhuma disciplina cadastrada.</td>
                     </tr>
                 @endforelse
                 </tbody>
             </table>
-
         </div>
-
-        @if($disciplinas->hasPages())
-            <div class="card-footer bg-white">
-                {{ $disciplinas->links() }}
-            </div>
-        @endif
     </div>
+
+    @if ($disciplinas instanceof \Illuminate\Pagination\LengthAwarePaginator && $disciplinas->hasPages())
+        <div class="mt-3">
+            {{ $disciplinas->links() }}
+        </div>
+    @endif
 @endsection

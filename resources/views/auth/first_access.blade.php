@@ -1,27 +1,42 @@
-<x-guest-layout>
-    <h2 class="text-2xl font-bold text-center text-indigo-700 mb-6">Trocar Senha</h2>
+@extends('layouts.app')
 
-    <p class="text-center text-gray-600 mb-4">
-        Olá <strong>{{ auth()->user()->name }}</strong>, por segurança, defina uma nova senha antes de continuar.
-    </p>
+@section('content')
+    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 75vh;">
+        <div class="card shadow-sm border-0" style="max-width: 500px; width: 100%;">
+            <div class="card-header bg-dark text-white text-center fw-semibold">
+                🔒 Primeiro Acesso - Alterar Senha
+            </div>
+            <div class="card-body p-4">
 
-    <form method="POST" action="{{ route('auth.first_access.update') }}" class="space-y-5">
-        @csrf
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <strong>Ops!</strong> Corrija os erros abaixo:
+                        <ul class="mt-2 mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
 
-        <div>
-            <label for="password" class="block text-sm font-semibold text-gray-700">Nova Senha</label>
-            <input id="password" name="password" type="password" required
-                   class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" />
+                <form action="{{ route('auth.first_access.update') }}" method="POST">
+                    @csrf
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Nova Senha</label>
+                        <input type="password" name="password" class="form-control shadow-sm" required minlength="6">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Confirmar Senha</label>
+                        <input type="password" name="password_confirmation" class="form-control shadow-sm" required minlength="6">
+                    </div>
+
+                    <button type="submit" class="btn btn-dark w-100">
+                        <i class="bi bi-check-circle"></i> Salvar e Entrar
+                    </button>
+                </form>
+            </div>
         </div>
-
-        <div>
-            <label for="password_confirmation" class="block text-sm font-semibold text-gray-700">Confirmar Senha</label>
-            <input id="password_confirmation" name="password_confirmation" type="password" required
-                   class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" />
-        </div>
-
-        <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow-md transition">
-            Salvar e Continuar
-        </button>
-    </form>
-</x-guest-layout>
+    </div>
+@endsection

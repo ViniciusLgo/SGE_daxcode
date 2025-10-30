@@ -93,6 +93,28 @@
                     <input type="text" name="telefone" class="form-control"
                            value="{{ old('telefone', $aluno->telefone) }}">
                 </div>
+                {{-- Responsáveis --}}
+                <div class="card shadow-sm border-0 mt-4">
+                    <div class="card-header bg-white border-bottom fw-bold">
+                        <i class="bi bi-people-fill text-primary"></i> Responsáveis do Aluno
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted mb-2">Selecione os responsáveis vinculados a este aluno.</p>
+
+                        <select name="responsaveis[]" multiple class="form-select">
+                            @foreach($responsaveis as $r)
+                                <option value="{{ $r->id }}"
+                                    @selected($aluno->responsaveis->contains($r->id))>
+                                    {{ $r->nome }} — {{ $r->grau_parentesco ?? 'Sem parentesco' }}
+                                </option>
+                            @endforeach
+                        </select>
+
+                        <small class="text-muted">Use Ctrl (ou Cmd no Mac) para selecionar múltiplos.</small>
+                    </div>
+                </div>
+
+
 
                 {{-- Botões --}}
                 <div class="text-end mt-4">
