@@ -11,10 +11,8 @@ class Aluno extends Model
 
     protected $fillable = [
         'turma_id',
-        'nome',
         'user_id',
         'foto_perfil',
-        'email',
         'matricula',
         'data_nascimento',
         'telefone',
@@ -45,5 +43,11 @@ class Aluno extends Model
             ->withTimestamps()
             ->withPivot('observacao');
     }
+
+    public function user()
+    {
+        return $this->belongsTo(\App\Models\User::class);
+    }
+
 
 }

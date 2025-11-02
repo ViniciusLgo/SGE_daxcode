@@ -13,12 +13,10 @@ class Responsavel extends Model
 
 
     protected $fillable = [
-        'nome',
-        'email',
+        'user_id',
         'telefone',
         'cpf',
         'grau_parentesco',
-        'usuario_id',
     ];
 
     // 🔗 Vínculo N:N com Alunos
@@ -34,4 +32,11 @@ class Responsavel extends Model
     {
         return $this->belongsTo(User::class, 'usuario_id');
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+
 }

@@ -10,9 +10,10 @@ class Disciplina extends Model
 
     public function professores()
     {
-        return $this->belongsToMany(Professor::class, 'disciplina_professor')
+        return $this->belongsToMany(\App\Models\Professor::class, 'disciplina_professor', 'disciplina_id', 'professor_id')
             ->withTimestamps();
     }
+
     public function disciplinas()
     {
         return $this->belongsToMany(Disciplina::class, 'disciplina_professor', 'professor_id', 'disciplina_id');

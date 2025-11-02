@@ -2,42 +2,26 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'name',
         'email',
         'password',
+        'tipo',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -46,9 +30,36 @@ class User extends Authenticatable
         ];
     }
 
-    public function turma()
+    /* ======================================================
+     |  RELACIONAMENTOS
+     |======================================================*/
+    public function aluno()
     {
-        return $this->belongsTo(\App\Models\Turma::class);
+        return $this->hasOne(\App\Models\Aluno::class);
     }
 
+
+    public function professor()
+    {
+        return $this->hasOne(Professor::class);
+    }
+
+    public function responsavel()
+    {
+        return $this->hasOne(Responsavel::class);
+    }
+
+    /* ======================================================
+     |  HELPERS
+     |======================================================*/
+    public function getTipoLabelAttribute(): string
+    {
+        return match ($this->tipo) {
+            'admin' => 'Administrador',
+            'professor' => 'Professor',
+            'aluno' => 'Aluno',
+            'responsavel' => 'Responsável',
+            default => ucfirst($this->tipo ?? 'Indefinido'),
+        };
+    }
 }

@@ -56,11 +56,29 @@ class TurmaController extends Controller
     {
         $turma = \App\Models\Turma::with([
             'disciplinas',
-            'disciplinas.professores' // cada disciplina tem professores via pivot
+            'professores.user',
+            'alunos.user',
         ])->findOrFail($id);
 
-        return view('admin.turmas.show', compact('turma'));
+        // 🔹 Paginação de alunos
+        $alunos = $turma->alunos()
+            ->with('user')
+            ->orderBy('id', 'asc')
+            ->paginate(10);
+
+        // 🔹 Disciplinas e professores (fallback seguro)
+        $disciplinas = $turma->disciplinas ?? collect();
+        $professores = $turma->professores ?? collect();
+
+        return view('admin.turmas.show', compact(
+            'turma',
+            'alunos',
+            'disciplinas',
+            'professores'
+        ));
     }
+
+
 
 
 

@@ -9,30 +9,63 @@ class Professor extends Model
 {
     use HasFactory;
 
-    // Força o nome da tabela para corresponder ao schema em português
     protected $table = 'professores';
 
-    // Campos preenchíveis (opcional, mas recomendado)
     protected $fillable = [
-        'nome',
-        'email',
         'departamento',
         'user_id',
         'foto_perfil',
         'telefone',
-        'especializacao'
-
+        'especializacao',
     ];
 
-    public function disciplinaTurmas()
+    /**
+     * Relacionamento com o usuário (dados básicos: nome, email, senha)
+     */
+    public function user()
     {
-        return $this->belongsToMany(DisciplinaTurma::class, 'disciplina_turma_professor')
-            ->withTimestamps();
+        return $this->belongsTo(User::class);
     }
 
+    /**
+     * Disciplinas associadas ao professor
+     * (pivot: disciplina_professor)
+     */
     public function disciplinas()
     {
         return $this->belongsToMany(Disciplina::class, 'disciplina_professor', 'professor_id', 'disciplina_id')
             ->withTimestamps();
+    }
+
+    /**
+     * Turmas associadas ao professor
+     * (pivot: disciplina_turma_professor)
+     */
+    public function turmas()
+    {
+        return $this->belongsToMany(Turma::class, 'disciplina_turma_professor', 'professor_id', 'turma_id')
+            ->withTimestamps();
+    }
+
+    /**
+     * Relação direta com a tabela intermediária disciplina_turma
+     * (se você usa o model DisciplinaTurma)
+     */
+    public function disciplinaTurmas()
+    {
+        return $this->hasMany(DisciplinaTurma::class, 'professor_id');
+    }
+
+    /**
+     * Accessors para facilitar chamadas no Blade: $professor->nome e $professor->email
+     */
+    public function getNomeAttribute()
+    {
+        return $this->user->name ?? null;
+    }
+
+    public function getEmailAttribute()
+    {
+        return $this->user->email ?? null;
     }
 }
