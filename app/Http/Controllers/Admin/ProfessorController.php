@@ -4,120 +4,136 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Professor;
+use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class ProfessorController extends Controller
 {
-    private const PER_PAGE = 10;
-
-    /**
-     * Listagem de professores com busca.
-     */
     public function index(Request $request)
     {
         $search = $request->get('search');
 
-        $query = \App\Models\Professor::query();
-
-        if ($search) {
-            $query->where('nome', 'like', "%{$search}%")
-                ->orWhere('email', 'like', "%{$search}%");
-        }
-
-        $professores = $query
+        $professores = Professor::with('user')
+            ->when($search, function ($query) use ($search) {
+                $query->whereHas('user', function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%");
+                });
+            })
             ->withCount('disciplinas')
-            ->orderBy('nome')
+            ->orderByDesc('id')
             ->paginate(10);
 
         return view('admin.professores.index', compact('professores', 'search'));
     }
 
-
-    /**
-     * Formulário de criação.
-     */
     public function create()
     {
         return view('admin.professores.create');
     }
 
-    /**
-     * Armazena um novo professor.
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nome' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', 'unique:professores,email'],
-            'telefone' => ['nullable', 'string', 'max:20'],
-            'especializacao' => ['nullable', 'string', 'max:255'],
+            'nome'            => 'required|string|max:255',
+            'email'           => 'required|email|unique:users,email',
+            'telefone'        => 'nullable|string|max:20',
+            'especializacao'  => 'nullable|string|max:255',
+            'foto_perfil'     => 'nullable|image|max:5120',
         ]);
 
+        // Cria usuário vinculado
+        $user = User::create([
+            'name'     => $validated['nome'],
+            'email'    => $validated['email'],
+            'password' => Hash::make('123456789'),
+            'tipo'     => 'professor',
+        ]);
+
+        // Upload da foto
+        $fotoPath = null;
         if ($request->hasFile('foto_perfil')) {
-            $validated['foto_perfil'] = $request->file('foto_perfil')->store('avatars/professores', 'public');
+            $fotoPath = $request->file('foto_perfil')->store('avatars/professores', 'public');
         }
 
-        Professor::create($validated);
+        // Cria professor
+        Professor::create([
+            'user_id'        => $user->id,
+            'telefone'       => $validated['telefone'] ?? null,
+            'especializacao' => $validated['especializacao'] ?? null,
+            'foto_perfil'    => $fotoPath,
+        ]);
 
-        return redirect()
-            ->route('admin.professores.index')
-            ->with('status', 'Professor cadastrado com sucesso.');
+        return redirect()->route('admin.professores.index')
+            ->with('success', 'Professor e usuário criados com sucesso!');
     }
 
-    /**
-     * Exibe detalhes do professor.
-     */
-    public function show(Professor $professor)
+    public function show($id)
     {
-        $disciplinas = $professor->disciplinas()
-            ->orderBy('nome')
-            ->paginate(10);
+        $professor = Professor::with('user')->findOrFail($id);
+        $disciplinas = $professor->disciplinas()->paginate(10);
 
         return view('admin.professores.show', compact('professor', 'disciplinas'));
     }
 
 
-    /**
-     * Formulário de edição.
-     */
-    public function edit(Professor $professor)
+
+    public function edit($id)
     {
-        return view('professores.edit', compact('professor'));
+        $professor = Professor::with('user')->findOrFail($id);
+        return view('admin.professores.edit', compact('professor'));
     }
 
-    /**
-     * Atualiza o registro do professor.
-     */
-    public function update(Request $request, Professor $professor)
+    public function update(Request $request, $id)
     {
+        $professor = Professor::with('user')->findOrFail($id);
+
         $validated = $request->validate([
-            'nome' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', Rule::unique('professores', 'email')->ignore($professor->id)],
-            'telefone' => ['nullable', 'string', 'max:20'],
-            'especializacao' => ['nullable', 'string', 'max:255'],
+            'nome'            => 'required|string|max:255',
+            'email'           => 'required|email|unique:users,email,' . $professor->user->id,
+            'telefone'        => 'nullable|string|max:20',
+            'especializacao'  => 'nullable|string|max:255',
+            'foto_perfil'     => 'nullable|image|max:5120',
         ]);
 
+        // Atualiza User
+        $professor->user->update([
+            'name'  => $validated['nome'],
+            'email' => $validated['email'],
+        ]);
+
+        // Atualiza foto
         if ($request->hasFile('foto_perfil')) {
-            $validated['foto_perfil'] = $request->file('foto_perfil')->store('avatars/professores', 'public');
+            if ($professor->foto_perfil) {
+                Storage::disk('public')->delete($professor->foto_perfil);
+            }
+            $professor->foto_perfil = $request->file('foto_perfil')->store('avatars/professores', 'public');
         }
 
-        $professor->update($validated);
+        $professor->update([
+            'telefone'       => $validated['telefone'] ?? null,
+            'especializacao' => $validated['especializacao'] ?? null,
+            'foto_perfil'    => $professor->foto_perfil ?? null,
+        ]);
 
-        return redirect()
-            ->route('admin.professores.index')
-            ->with('status', 'Dados do professor atualizados com sucesso.');
+        return redirect()->route('admin.professores.index')
+            ->with('success', 'Professor e usuário atualizados com sucesso!');
     }
 
-    /**
-     * Remove o professor.
-     */
-    public function destroy(Professor $professor)
+    public function destroy($id)
     {
+        $professor = Professor::with('user')->findOrFail($id);
+
+        if ($professor->foto_perfil) {
+            Storage::disk('public')->delete($professor->foto_perfil);
+        }
+
+        $professor->user?->delete();
         $professor->delete();
 
-        return redirect()
-            ->route('admin.professores.index')
-            ->with('status', 'Professor removido com sucesso.');
+        return redirect()->route('admin.professores.index')
+            ->with('success', 'Professor e usuário removidos com sucesso!');
     }
 }

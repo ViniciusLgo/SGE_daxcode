@@ -30,6 +30,23 @@ class Turma extends Model
 
     public function disciplinaTurmas()
     {
-        return $this->hasMany(DisciplinaTurma::class, 'turma_id');
+        return $this->hasMany(\App\Models\DisciplinaTurma::class, 'turma_id');
     }
+
+    /**
+     * Professores da turma — relacionamento indireto via DisciplinaTurma
+     */
+    public function professores()
+    {
+        return $this->hasManyThrough(
+            \App\Models\Professor::class,
+            \App\Models\DisciplinaTurmaProfessor::class,
+            'disciplina_turma_id',  // Foreign key on disciplina_turma_professor
+            'id',                   // Foreign key on professor (target)
+            'id',                   // Local key on turma
+            'professor_id'          // Local key on disciplina_turma_professor
+        );
+    }
+
+
 }

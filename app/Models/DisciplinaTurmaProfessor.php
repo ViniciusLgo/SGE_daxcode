@@ -16,13 +16,13 @@ class DisciplinaTurmaProfessor extends Model
         'professor_id',
     ];
 
-    public function professor()
-    {
-        return $this->belongsTo(Professor::class);
-    }
-
     public function disciplinaTurma()
     {
-        return $this->belongsTo(DisciplinaTurma::class);
+        return $this->belongsTo(DisciplinaTurma::class, 'disciplina_turma_id');
+    }
+
+    public function professor()
+    {
+        return $this->belongsTo(Professor::class, 'professor_id');
     }
 }

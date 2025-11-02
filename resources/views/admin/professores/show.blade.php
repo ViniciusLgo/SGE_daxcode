@@ -4,7 +4,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h4 class="mb-1">
-                <i class="bi bi-person-badge text-info me-2"></i> {{ $professor->nome }}
+                <i class="bi bi-person-badge text-info me-2"></i> {{ $professor->user->name }}}
             </h4>
             <p class="text-muted mb-0">Informações detalhadas do professor e suas disciplinas associadas.</p>
         </div>
@@ -21,10 +21,10 @@
                     <h5 class="card-title mb-3"><i class="bi bi-person-lines-fill me-1"></i> Dados do Professor</h5>
                     <dl class="row mb-0">
                         <dt class="col-sm-5">Nome</dt>
-                        <dd class="col-sm-7">{{ $professor->nome }}</dd>
+                        <dd class="col-sm-7">{{ $professor->user->name }}}</dd>
 
                         <dt class="col-sm-5">E-mail</dt>
-                        <dd class="col-sm-7">{{ $professor->email }}</dd>
+                        <dd class="col-sm-7">{{ $professor->user->email }}</dd>
 
                         <dt class="col-sm-5">Telefone</dt>
                         <dd class="col-sm-7">{{ $professor->telefone ?? '—' }}</dd>

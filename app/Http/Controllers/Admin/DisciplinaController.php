@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Disciplina;
 use App\Models\Professor;
 use Illuminate\Http\Request;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
+
 
 class DisciplinaController extends Controller
 {
@@ -36,10 +39,22 @@ class DisciplinaController extends Controller
 
     public function create()
     {
-        $professores = Professor::orderBy('nome')->pluck('nome', 'id');
+        // Lista de professores: id => nome (puxando do users)
+        $professores = \App\Models\Professor::with('user')
+            ->get()
+            ->filter(fn($p) => $p->user) // garante user vinculado
+            ->mapWithKeys(fn($p) => [$p->id => $p->user->name])
+            ->sort()
+            ->toArray();
 
-        return view('admin.disciplinas.create', compact('professores'));
+        $turmas = \App\Models\Turma::orderBy('nome')->pluck('nome', 'id')->toArray();
+
+        // Na criação não há selecionados ainda:
+        $professoresSelecionados = [];
+
+        return view('admin.disciplinas.create', compact('professores', 'turmas', 'professoresSelecionados'));
     }
+
 
     public function store(Request $request)
     {
@@ -67,13 +82,28 @@ class DisciplinaController extends Controller
     }
 
 
-    public function edit(Disciplina $disciplina)
+    public function edit($id)
     {
-        $professores = Professor::orderBy('nome')->pluck('nome', 'id');
-        $selectedProfessores = $disciplina->professores->pluck('id')->toArray();
+        $disciplina = Disciplina::with('professores.user')->findOrFail($id);
 
-        return view('disciplinas.edit', compact('disciplina', 'professores', 'selectedProfessores'));
+        // id => nome
+        $professores = \App\Models\Professor::with('user')
+            ->get()
+            ->filter(fn($p) => $p->user)
+            ->mapWithKeys(fn($p) => [$p->id => $p->user->name])
+            ->sort()
+            ->toArray();
+
+        // IDs já vinculados à disciplina
+        $professoresSelecionados = $disciplina->professores->pluck('id')->toArray();
+
+        $turmas = \App\Models\Turma::orderBy('nome')->pluck('nome', 'id')->toArray();
+
+        return view('admin.disciplinas.edit', compact('disciplina', 'professores', 'turmas', 'professoresSelecionados'));
     }
+
+
+
 
     public function update(Request $request, Disciplina $disciplina)
     {
@@ -101,7 +131,8 @@ class DisciplinaController extends Controller
     public function show(Disciplina $disciplina)
     {
         $disciplina->load('professores');
-        return view('disciplinas.show', compact('disciplina'));
+        return view('admin.disciplinas.show', compact('disciplina'));
+
     }
 
     public function destroy(Disciplina $disciplina)

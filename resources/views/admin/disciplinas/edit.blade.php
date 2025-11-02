@@ -16,8 +16,10 @@
 
             <form action="{{ route('admin.disciplinas.update', $disciplina) }}" method="POST" class="needs-validation" novalidate>
                 @method('PUT')
-                @include('disciplinas._form')
+                @include('admin.disciplinas._form')
             </form>
         </div>
     </div>
+
+
 @endsection

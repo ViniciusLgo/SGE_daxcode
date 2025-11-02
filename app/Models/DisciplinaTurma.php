@@ -11,21 +11,16 @@ class DisciplinaTurma extends Model
 
     protected $table = 'disciplina_turmas';
 
-    protected $fillable = [
-        'disciplina_id',
-        'turma_id',
-        'ano_letivo',
-        'observacao',
-    ];
-
-    public function disciplina()
-    {
-        return $this->belongsTo(Disciplina::class);
-    }
+    protected $fillable = ['turma_id', 'disciplina_id', 'ano_letivo', 'observacao'];
 
     public function turma()
     {
         return $this->belongsTo(Turma::class);
+    }
+
+    public function disciplina()
+    {
+        return $this->belongsTo(Disciplina::class);
     }
 
     public function professores()

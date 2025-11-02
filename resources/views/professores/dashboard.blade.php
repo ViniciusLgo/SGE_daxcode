@@ -9,24 +9,36 @@
     </div>
 
     <div class="row g-3 mb-4">
+        {{-- CARD DE DISCIPLINAS --}}
         <div class="col-md-6">
             <div class="card card-kpi p-3 border-0 shadow-sm bg-light">
                 <div class="d-flex justify-content-between"><span class="kpi-emoji">📚</span></div>
                 <div class="kpi-title mt-2 text-dark">DISCIPLINAS</div>
+
+                {{-- Corrigido: nome da tabela explicitado --}}
                 <div class="kpi-number text-primary">
-                    {{ \App\Models\Disciplina::whereHas('professores', fn($q) => $q->where('id', auth()->id()))->count() }}
+                    {{ \App\Models\Disciplina::whereHas('professores', fn($q) =>
+                        $q->where('professores.id', auth()->id())
+                    )->count() }}
                 </div>
+
                 <div class="kpi-foot text-muted">Disciplinas atribuídas</div>
             </div>
         </div>
 
+        {{-- CARD DE TURMAS --}}
         <div class="col-md-6">
             <div class="card card-kpi p-3 border-0 shadow-sm bg-light">
                 <div class="d-flex justify-content-between"><span class="kpi-emoji">🏫</span></div>
                 <div class="kpi-title mt-2 text-dark">TURMAS</div>
+
+                {{-- Corrigido: nome da tabela explicitado --}}
                 <div class="kpi-number text-primary">
-                    {{ \App\Models\Turma::whereHas('professores', fn($q) => $q->where('id', auth()->id()))->count() }}
+                    {{ \App\Models\Turma::whereHas('professores', fn($q) =>
+                     $q->where('professores.id', auth()->id()))->count() }}
+
                 </div>
+
                 <div class="kpi-foot text-muted">Turmas vinculadas</div>
             </div>
         </div>
