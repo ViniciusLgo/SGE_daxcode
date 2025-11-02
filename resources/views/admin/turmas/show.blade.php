@@ -25,10 +25,10 @@
                         <dd class="col-sm-7">{{ $turma->turno ?? '—' }}</dd>
 
                         <dt class="col-sm-5">Criada em</dt>
-                        <dd class="col-sm-7">{{ $turma->created_at->format('d/m/Y H:i') }}</dd>
-
+                        <dd class="col-sm-7">{{ optional($turma->created_at)->format('d/m/Y H:i') ?? '—' }}</dd>
                         <dt class="col-sm-5">Atualizada em</dt>
-                        <dd class="col-sm-7">{{ $turma->updated_at->format('d/m/Y H:i') }}</dd>
+                        <dd class="col-sm-7">{{ optional($turma->updated_at)->format('d/m/Y H:i') ?? '—' }}</dd>
+
                     </dl>
 
                     <div class="mt-3">
@@ -42,11 +42,6 @@
         <div class="col-lg-8">
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="card-title mb-0">Alunos ({{ $alunos->total() }})</h5>
-                        <a href="{{ route('admin.alunos.create', ['turma_id' => $turma->id]) }}" class="btn btn-sm btn-primary">Adicionar aluno</a>
-                    </div>
-
                     <div class="table-responsive">
                         <table class="table table-striped mb-0">
                             <thead>
@@ -60,9 +55,9 @@
                             <tbody>
                                 @forelse($alunos as $aluno)
                                     <tr>
-                                        <td>{{ $aluno->nome }}</td>
-                                        <td>{{ $aluno->matricula }}</td>
-                                        <td>{{ $aluno->email }}</td>
+                                        <td>{{ $aluno->user->name ?? '—' }}</td>
+                                        <td>{{ $aluno->matricula ?? '—' }}</td>
+                                        <td>{{ $aluno->user->email ?? '—' }}</td>
                                         <td class="text-end">
                                             <a href="{{ route('admin.alunos.show', $aluno) }}" class="btn btn-sm btn-outline-secondary">Ver</a>
                                         </td>

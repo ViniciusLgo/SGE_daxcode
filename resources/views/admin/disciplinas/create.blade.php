@@ -22,7 +22,7 @@
 
                 <form action="{{ route('admin.disciplinas.store') }}" method="POST">
                     @csrf
-                    @include('disciplinas._form')
+                    @include('admin.disciplinas._form')
                 </form>
 
         </div>

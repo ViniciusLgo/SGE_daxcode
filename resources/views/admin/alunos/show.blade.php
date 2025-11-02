@@ -27,8 +27,8 @@
                     @else
                         <i class="bi bi-person-circle text-secondary" style="font-size: 5rem;"></i>
                     @endif
-                    <h5 class="mt-2 fw-bold">{{ $aluno->nome }}</h5>
-                    <span class="badge bg-primary">{{ $aluno->turma->nome ?? 'Sem turma atribuída' }}</span>
+                        <h5 class="mt-2 fw-bold">{{ $aluno->user->name }}</h5>
+                        <span class="badge bg-primary">{{ $aluno->turma->nome ?? 'Sem turma atribuída' }}</span>
                 </div>
 
                 <div class="col-md-9">
@@ -39,7 +39,7 @@
                         </tr>
                         <tr>
                             <th>E-mail</th>
-                            <td>{{ $aluno->email }}</td>
+                            <td>{{ $aluno->user->email }}</td>
                         </tr>
                         <tr>
                             <th>Telefone</th>

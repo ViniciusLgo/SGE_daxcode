@@ -233,6 +233,7 @@
             <a href="{{ route('admin.disciplinas.index') }}" class="{{ request()->routeIs('admin.disciplinas.*') ? 'active' : '' }}">📘 Disciplinas</a>
             <a href="{{ route('admin.turmas.index') }}" class="{{ request()->routeIs('admin.turmas.*') ? 'active' : '' }}">🏫 Turmas</a>
             <a href="{{ route('admin.aluno_registros.index') }}" class="{{ request()->is('admin/aluno_registros*') ? 'active' : '' }}">📁 Registros</a>
+            <a href="{{ route('admin.responsaveis.index') }}" class="{{ request()->routeIs('admin.responsaveis.*') ? 'active' : '' }}">👨‍👩‍👧 Responsáveis</a>
         </div>
 
         {{-- ======= SEÇÃO: GESTÃO ======= --}}

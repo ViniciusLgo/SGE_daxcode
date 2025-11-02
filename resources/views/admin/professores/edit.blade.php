@@ -42,13 +42,13 @@
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Nome</label>
                     <input type="text" name="nome" class="form-control shadow-sm"
-                           value="{{ old('nome', $professor->nome) }}" required>
+                           value="{{ old('nome', $professor->user->name) }}" required>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label fw-semibold">E-mail</label>
                     <input type="email" name="email" class="form-control shadow-sm"
-                           value="{{ old('email', $professor->email) }}" required>
+                           value="{{ old('email', $professor->user->email) }}" required>
                 </div>
 
                 <div class="mb-3">

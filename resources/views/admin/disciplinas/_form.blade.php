@@ -17,18 +17,21 @@
 </div>
 
 {{-- Seleção múltipla de professores --}}
+{{-- Professores --}}
 <div class="mb-3">
-    <label for="professores" class="form-label">Professores Responsáveis</label>
+    <label for="professores" class="form-label fw-semibold">Professores</label>
     <select name="professores[]" id="professores" class="form-select" multiple required>
-        @foreach ($professores as $id => $nome)
+        @foreach(($professores ?? []) as $id => $nome)
             <option value="{{ $id }}"
-                    @if(isset($selectedProfessores) && in_array($id, $selectedProfessores)) selected @endif>
+                {{ in_array($id, old('professores', $professoresSelecionados ?? [])) ? 'selected' : '' }}>
                 {{ $nome }}
             </option>
         @endforeach
     </select>
-    <small class="text-muted">Segure <strong>Ctrl</strong> (ou <strong>Cmd</strong> no Mac) para selecionar mais de um professor.</small>
+    <small class="text-muted">Segure Ctrl (ou Cmd) para selecionar vários.</small>
 </div>
+
+
 
 <div class="d-flex justify-content-between mt-4">
     <a href="{{ route('admin.disciplinas.index') }}" class="btn btn-secondary">

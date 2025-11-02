@@ -45,15 +45,17 @@
                     @endif
                 </div>
 
-                {{-- Nome e Email --}}
+                {{-- Nome e Email via User --}}
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label class="form-label fw-semibold">Nome</label>
-                        <input type="text" name="nome" class="form-control" value="{{ old('nome', $aluno->nome) }}" required>
+                        <input type="text" name="user[name]" class="form-control"
+                               value="{{ old('user.name', $aluno->user->name ?? '') }}" required>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label fw-semibold">E-mail</label>
-                        <input type="email" name="email" class="form-control" value="{{ old('email', $aluno->email) }}" required>
+                        <input type="email" name="user[email]" class="form-control"
+                               value="{{ old('user.email', $aluno->user->email ?? '') }}" required>
                     </div>
                 </div>
 
@@ -93,6 +95,7 @@
                     <input type="text" name="telefone" class="form-control"
                            value="{{ old('telefone', $aluno->telefone) }}">
                 </div>
+
                 {{-- Responsáveis --}}
                 <div class="card shadow-sm border-0 mt-4">
                     <div class="card-header bg-white border-bottom fw-bold">
@@ -103,9 +106,8 @@
 
                         <select name="responsaveis[]" multiple class="form-select">
                             @foreach($responsaveis as $r)
-                                <option value="{{ $r->id }}"
-                                    @selected($aluno->responsaveis->contains($r->id))>
-                                    {{ $r->nome }} — {{ $r->grau_parentesco ?? 'Sem parentesco' }}
+                                <option value="{{ $r->id }}" @selected($aluno->responsaveis->contains($r->id))>
+                                    {{ $r->user->name ?? $r->nome }} — {{ $r->grau_parentesco ?? 'Sem parentesco' }}
                                 </option>
                             @endforeach
                         </select>
@@ -113,8 +115,6 @@
                         <small class="text-muted">Use Ctrl (ou Cmd no Mac) para selecionar múltiplos.</small>
                     </div>
                 </div>
-
-
 
                 {{-- Botões --}}
                 <div class="text-end mt-4">
@@ -125,7 +125,6 @@
                 </div>
             </form>
 
-            {{-- ========================================= --}}
             {{-- Documentos --}}
             <hr class="my-4">
             <h5 class="mb-3"><i class="bi bi-folder2 text-primary"></i> Documentos do Aluno</h5>
@@ -171,7 +170,7 @@
                                 $ext = strtolower(pathinfo($doc->arquivo, PATHINFO_EXTENSION));
                                 $isImage = in_array($ext, ['jpg','jpeg','png']);
                                 $isPdf = $ext === 'pdf';
-                                @endphp
+                            @endphp
                             <tr>
                                 <td><i class="bi bi-file-earmark-text text-primary"></i> {{ $doc->tipo }}</td>
                                 <td>
