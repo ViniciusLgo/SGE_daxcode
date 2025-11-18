@@ -20,7 +20,7 @@ class Professor extends Model
     ];
 
     /**
-     * Relacionamento com o usuário (dados básicos: nome, email, senha)
+     * Relacionamento com o usuário
      */
     public function user()
     {
@@ -28,36 +28,33 @@ class Professor extends Model
     }
 
     /**
-     * Disciplinas associadas ao professor
-     * (pivot: disciplina_professor)
+     * Disciplinas do professor
      */
     public function disciplinas()
     {
-        return $this->belongsToMany(Disciplina::class, 'disciplina_professor', 'professor_id', 'disciplina_id')
-            ->withTimestamps();
+        return $this->belongsToMany(
+            Disciplina::class,
+            'disciplina_professor',
+            'professor_id',
+            'disciplina_id'
+        )->withTimestamps();
     }
 
     /**
-     * Turmas associadas ao professor
-     * (pivot: disciplina_turma_professor)
-     */
-    public function turmas()
-    {
-        return $this->belongsToMany(Turma::class, 'disciplina_turma_professor', 'professor_id', 'turma_id')
-            ->withTimestamps();
-    }
-
-    /**
-     * Relação direta com a tabela intermediária disciplina_turma
-     * (se você usa o model DisciplinaTurma)
+     * Professores vinculados diretamente por disciplina_turma
      */
     public function disciplinaTurmas()
     {
-        return $this->hasMany(DisciplinaTurma::class, 'professor_id');
+        return $this->belongsToMany(
+            DisciplinaTurma::class,
+            'disciplina_turma_professor',
+            'professor_id',
+            'disciplina_turma_id'
+        );
     }
 
     /**
-     * Accessors para facilitar chamadas no Blade: $professor->nome e $professor->email
+     * Acessors
      */
     public function getNomeAttribute()
     {

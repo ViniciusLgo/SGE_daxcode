@@ -9,6 +9,9 @@ class Turma extends Model
 {
     use HasFactory;
 
+    /**
+     * Campos liberados para criação/edição
+     */
     protected $fillable = [
         'nome',
         'ano',
@@ -16,37 +19,41 @@ class Turma extends Model
         'descricao',
     ];
 
+    /**
+     * Relacionamento 1:N com alunos
+     */
     public function alunos()
     {
         return $this->hasMany(Aluno::class, 'turma_id');
     }
 
+    /**
+     * Relacionamento N:N com disciplinas (através da tabela disciplina_turmas)
+     *
+     * OBS: Isso NÃO traz professores! Somente as disciplinas.
+     */
     public function disciplinas()
     {
-        return $this->belongsToMany(Disciplina::class, 'disciplina_turmas', 'turma_id', 'disciplina_id')
+        return $this->belongsToMany(
+            Disciplina::class,
+            'disciplina_turmas',
+            'turma_id',
+            'disciplina_id'
+        )
             ->withPivot(['id', 'ano_letivo', 'observacao'])
             ->withTimestamps();
     }
 
+    /**
+     * Relacionamento 1:N com a tabela disciplina_turmas (pivot)
+     *
+     * ESTE é o relacionamento que permite acessar os professores.
+     *
+     * exemplo:
+     * $turma->disciplinaTurmas->professores
+     */
     public function disciplinaTurmas()
     {
-        return $this->hasMany(\App\Models\DisciplinaTurma::class, 'turma_id');
+        return $this->hasMany(DisciplinaTurma::class, 'turma_id');
     }
-
-    /**
-     * Professores da turma — relacionamento indireto via DisciplinaTurma
-     */
-    public function professores()
-    {
-        return $this->hasManyThrough(
-            \App\Models\Professor::class,
-            \App\Models\DisciplinaTurmaProfessor::class,
-            'disciplina_turma_id',  // Foreign key on disciplina_turma_professor
-            'id',                   // Foreign key on professor (target)
-            'id',                   // Local key on turma
-            'professor_id'          // Local key on disciplina_turma_professor
-        );
-    }
-
-
 }
