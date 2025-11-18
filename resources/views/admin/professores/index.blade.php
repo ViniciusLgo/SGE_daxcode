@@ -6,9 +6,6 @@
             <h4 class="mb-1"><i class="bi bi-person-badge-fill text-primary"></i> Professores</h4>
             <p class="text-muted mb-0">Gerencie os professores e suas disciplinas vinculadas.</p>
         </div>
-        <a href="{{ route('admin.professores.create') }}" class="btn btn-primary">
-            <i class="bi bi-plus-circle"></i> Novo Professor
-        </a>
     </div>
 
     {{-- Barra de busca --}}
