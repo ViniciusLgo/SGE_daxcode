@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Turma;
+use App\Models\Aluno;     // <--- IMPORTAÇÃO CORRETA AQUI
 use Illuminate\Http\Request;
 
 class TurmaController extends Controller
@@ -54,33 +55,32 @@ class TurmaController extends Controller
 
     public function show($id)
     {
-        $turma = \App\Models\Turma::with([
-            'disciplinas',
-            'professores.user',
-            'alunos.user',
+        $turma = Turma::with([
+            'disciplinaTurmas.disciplina',
+            'disciplinaTurmas.professores.user'
         ])->findOrFail($id);
 
-        // 🔹 Paginação de alunos
-        $alunos = $turma->alunos()
-            ->with('user')
-            ->orderBy('id', 'asc')
+        // Alunos já vinculados à turma (tabela principal)
+        $alunos = Aluno::with('user')
+            ->where('turma_id', $id)
             ->paginate(10);
 
-        // 🔹 Disciplinas e professores (fallback seguro)
-        $disciplinas = $turma->disciplinas ?? collect();
-        $professores = $turma->professores ?? collect();
+        // Alunos disponíveis para atribuir no modal:
+        // - ou não têm turma
+        // - ou estão em outra turma (mas mostramos qual)
+        $alunosDisponiveis = Aluno::with(['user', 'turma'])
+            ->where(function ($q) use ($id) {
+                $q->whereNull('turma_id')
+                    ->orWhere('turma_id', '!=', $id);
+            })
+            ->get();
 
         return view('admin.turmas.show', compact(
             'turma',
             'alunos',
-            'disciplinas',
-            'professores'
+            'alunosDisponiveis'
         ));
     }
-
-
-
-
 
 
     public function edit(Turma $turma)
@@ -113,6 +113,7 @@ class TurmaController extends Controller
             ->with('status', 'Turma removida com sucesso.');
     }
 
+    // --- Vincular disciplina ---
     public function adicionarDisciplina(Request $request, $turmaId)
     {
         $request->validate([
@@ -143,7 +144,21 @@ class TurmaController extends Controller
             ->with('success', 'Disciplina vinculada com sucesso!');
     }
 
-    // --- Remover disciplina da turma ---
+    // --- Atribuir aluno à turma ---
+    public function atribuirAluno(Request $request, $turmaId)
+    {
+        $request->validate([
+            'aluno_id' => 'required|exists:alunos,id',
+        ]);
+
+        $aluno = Aluno::findOrFail($request->aluno_id);
+        $aluno->turma_id = $turmaId;
+        $aluno->save();
+
+        return back()->with('success', 'Aluno atribuído à turma.');
+    }
+
+    // --- Remover disciplina ---
     public function removerDisciplina($turmaId, $vinculoId)
     {
         $vinculo = \App\Models\DisciplinaTurma::findOrFail($vinculoId);
@@ -153,5 +168,4 @@ class TurmaController extends Controller
         return redirect()->route('admin.turmas.show', $turmaId)
             ->with('success', 'Vínculo removido com sucesso!');
     }
-
 }
