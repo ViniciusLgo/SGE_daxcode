@@ -51,6 +51,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])
             ->name('dashboard');
 
+
+        Route::get('buscar-turma-aluno/{id}', [AlunoRegistroController::class, 'buscarTurma'])
+            ->name('aluno_registros.buscar_turma');
+
         /*
         |--------------------------------------------------------------------------
         | CRUDs principais
