@@ -2,11 +2,14 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+
+// Controllers públicos
 use App\Http\Controllers\{
     ProfileController,
     Auth\FirstAccessController
 };
 
+// Controllers Admin
 use App\Http\Controllers\Admin\{
     DashboardController,
     UserController,
@@ -32,28 +35,31 @@ Route::get('/', function () {
 
 /*
 |--------------------------------------------------------------------------
-| Rotas protegidas (usuário autenticado e verificado)
+| Rotas protegidas (Usuário autenticado + verificado)
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'verified'])->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | Painel Administrativo (Admin)
+    | Painel ADMIN
     |--------------------------------------------------------------------------
     */
     Route::prefix('admin')->as('admin.')->middleware('is_admin')->group(function () {
 
-        // Dashboard principal do admin
+        // Dashboard do admin
         Route::get('/dashboard', [DashboardController::class, 'index'])
             ->name('dashboard');
 
-        // CRUD de usuários
+        /*
+        |--------------------------------------------------------------------------
+        | CRUDs principais
+        |--------------------------------------------------------------------------
+        */
         Route::resource('usuarios', UserController::class)
             ->names('usuarios')
             ->parameters(['usuarios' => 'usuario']);
 
-        // CRUDs principais
         Route::resource('alunos', AlunoController::class)
             ->names('alunos')
             ->parameters(['alunos' => 'aluno']);
@@ -76,24 +82,43 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         /*
         |--------------------------------------------------------------------------
-        | Vínculos: Disciplinas ↔ Turmas ↔ Professores
+        | DISCIPLINA ↔ TURMA ↔ PROFESSOR  (OFICIAL)
         |--------------------------------------------------------------------------
         */
-        Route::post('turmas/{turma}/disciplinas', [TurmaController::class, 'adicionarDisciplina'])
-            ->name('turmas.adicionarDisciplina');
+        Route::prefix('turmas/{turma}')->name('turmas.')->group(function () {
 
-        Route::delete('turmas/{turma}/disciplinas/{vinculo}', [TurmaController::class, 'removerDisciplina'])
-            ->name('turmas.removerDisciplina');
+            // Tela principal do gerenciamento de vínculos
+            Route::get('/disciplinas', [DisciplinaTurmaController::class, 'edit'])
+                ->name('disciplinas');
 
-        Route::post('disciplinas/{disciplina}/vincular-professor', [DisciplinaController::class, 'vincularProfessor'])
-            ->name('disciplinas.vincularProfessor');
+            // Adicionar disciplina
+            Route::post('/disciplinas', [DisciplinaTurmaController::class, 'store'])
+                ->name('disciplinas.store');
 
-        Route::post('disciplinas/{disciplina}/vincular-turma', [DisciplinaController::class, 'vincularTurma'])
-            ->name('disciplinas.vincularTurma');
+            // Remover disciplina
+            Route::delete('/disciplinas/{vinculo}', [DisciplinaTurmaController::class, 'destroy'])
+                ->name('disciplinas.destroy');
+
+            // Adicionar professor
+            Route::post('/disciplinas/{vinculo}/professores', [DisciplinaTurmaController::class, 'vincularProfessor'])
+                ->name('disciplinas.professores.store');
+
+            // Remover professor
+            Route::delete('/disciplinas/{vinculo}/professores/{professor}', [DisciplinaTurmaController::class, 'removerProfessor'])
+                ->name('disciplinas.professores.destroy');
+        });
 
         /*
         |--------------------------------------------------------------------------
-        | Registros e Documentos de Alunos
+        | Vínculo aluno ↔ turma
+        |--------------------------------------------------------------------------
+        */
+        Route::post('turmas/{turma}/atribuir-aluno', [TurmaController::class, 'atribuirAluno'])
+            ->name('turmas.atribuirAluno');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Registro e Documentos de Alunos
         |--------------------------------------------------------------------------
         */
         Route::resource('aluno_registros', AlunoRegistroController::class)
@@ -108,7 +133,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         /*
         |--------------------------------------------------------------------------
-        | Configurações do sistema
+        | Configurações
         |--------------------------------------------------------------------------
         */
         Route::controller(SettingController::class)->group(function () {
@@ -119,35 +144,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | Rota genérica de Dashboard — redireciona conforme o tipo do usuário
+    | Dashboard conforme tipo do usuário
     |--------------------------------------------------------------------------
     */
     Route::get('/dashboard', function () {
         $user = Auth::user();
 
-        if (!$user) {
-            return redirect()->route('login');
-        }
+        if ($user->tipo === 'admin') return redirect()->route('admin.dashboard');
+        if ($user->tipo === 'professor') return redirect()->route('dashboard.professor');
+        if ($user->tipo === 'aluno') return redirect()->route('dashboard.aluno');
+        if ($user->tipo === 'responsavel') return redirect()->route('dashboard.responsavel');
 
-        switch ($user->tipo) {
-            case 'admin':
-                return redirect()->route('admin.dashboard');
-            case 'professor':
-                return redirect()->route('dashboard.professor');
-            case 'aluno':
-                return redirect()->route('dashboard.aluno');
-            case 'responsavel':
-                return redirect()->route('dashboard.responsavel');
-            default:
-                return redirect()->route('login');
-        }
+        return redirect()->route('login');
     })->name('dashboard');
 
-    /*
-    |--------------------------------------------------------------------------
-    | Dashboards individuais (Professor, Aluno, Responsável)
-    |--------------------------------------------------------------------------
-    */
     Route::middleware('is_professor')->get('/dashboard/professor', fn() => view('professores.dashboard'))
         ->name('dashboard.professor');
 
@@ -160,7 +170,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| Perfil do usuário logado
+| Perfil
 |--------------------------------------------------------------------------
 */
 Route::middleware('auth')->group(function () {
@@ -171,7 +181,7 @@ Route::middleware('auth')->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| Primeiro acesso (troca de senha)
+| Primeiro acesso
 |--------------------------------------------------------------------------
 */
 Route::middleware('auth')->group(function () {
@@ -181,7 +191,7 @@ Route::middleware('auth')->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| Autenticação padrão (Breeze / Jetstream)
+| Autenticação
 |--------------------------------------------------------------------------
 */
 require __DIR__ . '/auth.php';
