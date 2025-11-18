@@ -3,34 +3,29 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Aluno;
 use App\Models\AlunoRegistro;
 use App\Models\Turma;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class AlunoRegistroController extends Controller
 {
+
     /**
-     * Listagem dos registros (com filtros)
+     * =========================================================
+     * LISTAGEM COM FILTROS
+     * =========================================================
      */
     public function index(Request $request)
     {
-        $query = AlunoRegistro::with(['aluno', 'turma', 'responsavel']);
+        $query = AlunoRegistro::with(['aluno.user', 'turma', 'responsavel']);
 
-        // 🔍 Filtros dinâmicos
-        if ($request->filled('tipo')) {
-            $query->where('tipo', $request->tipo);
-        }
-        if ($request->filled('categoria')) {
-            $query->where('categoria', $request->categoria);
-        }
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        }
-        if ($request->filled('turma_id')) {
-            $query->where('turma_id', $request->turma_id);
-        }
+        // filtros simples
+        if ($request->filled('tipo')) $query->where('tipo', $request->tipo);
+        if ($request->filled('categoria')) $query->where('categoria', $request->categoria);
+        if ($request->filled('status')) $query->where('status', $request->status);
+        if ($request->filled('turma_id')) $query->where('turma_id', $request->turma_id);
 
         $registros = $query->latest()->paginate(10);
         $turmas = Turma::orderBy('nome')->get();
@@ -38,19 +33,32 @@ class AlunoRegistroController extends Controller
         return view('admin.aluno_registros.index', compact('registros', 'turmas'));
     }
 
+
+
     /**
-     * Formulário de criação
+     * =========================================================
+     * FORMULÁRIO DE CRIAÇÃO
+     * =========================================================
      */
     public function create()
     {
-        $alunos = \App\Models\Aluno::orderBy('nome')->get();
-        $turmas = \App\Models\Turma::orderBy('nome')->get();
+        // Lista ordenada corretamente de alunos
+        $alunos = Aluno::with('user')
+            ->join('users', 'alunos.user_id', '=', 'users.id')
+            ->orderBy('users.name')
+            ->select('alunos.*')
+            ->get();
 
-        return view('admin.aluno_registros.create', compact('alunos', 'turmas'));
+        // Turma agora é preenchida automaticamente — não precisa listar
+        return view('admin.aluno_registros.create', compact('alunos'));
     }
 
+
+
     /**
-     * Salvar novo registro
+     * =========================================================
+     * SALVAR NOVO REGISTRO
+     * =========================================================
      */
     public function store(Request $request)
     {
@@ -63,13 +71,19 @@ class AlunoRegistroController extends Controller
             'data_evento' => 'nullable|date',
         ]);
 
-        $data = $request->all();
-        $data['responsavel_id'] = auth()->id();
+        $aluno = Aluno::with('turma')->findOrFail($request->aluno_id);
 
-        // 📁 Upload do arquivo (se existir)
+        $data = $request->all();
+        $data['turma_id'] = $aluno->turma_id; // turma automática
+        $data['responsavel_id'] = auth()->id();
+        $data['status'] = 'pendente';
+
+        // upload do arquivo
         if ($request->hasFile('arquivo')) {
-            $path = $request->file('arquivo')->store('public/alunos/registros');
-            $data['arquivo'] = str_replace('public/', 'storage/', $path);
+            $file = $request->file('arquivo');
+            $nome = uniqid('registro_') . '.' . $file->getClientOriginalExtension();
+            $file->storeAs('public/alunos/registros', $nome);
+            $data['arquivo'] = 'storage/alunos/registros/' . $nome;
         }
 
         AlunoRegistro::create($data);
@@ -78,30 +92,42 @@ class AlunoRegistroController extends Controller
             ->with('success', 'Registro adicionado com sucesso!');
     }
 
+
+
     /**
-     * Exibir um registro
+     * =========================================================
+     * EXIBIR REGISTRO INDIVIDUAL
+     * =========================================================
      */
     public function show(AlunoRegistro $aluno_registro)
     {
         return view('admin.aluno_registros.show', compact('aluno_registro'));
     }
 
+
+
     /**
-     * Editar registro
+     * =========================================================
+     * FORMULÁRIO DE EDIÇÃO
+     * =========================================================
      */
     public function edit(AlunoRegistro $aluno_registro)
     {
-        $alunos = User::where('tipo', 'aluno')
-            ->orderBy('name')
-            ->pluck('name', 'id');
+        $alunos = Aluno::with('user')
+            ->join('users', 'alunos.user_id', '=', 'users.id')
+            ->orderBy('users.name')
+            ->select('alunos.*')
+            ->get();
 
-        $turmas = Turma::orderBy('nome')->get();
-
-        return view('admin.aluno_registros.edit', compact('aluno_registro', 'alunos', 'turmas'));
+        return view('admin.aluno_registros.edit', compact('aluno_registro', 'alunos'));
     }
 
+
+
     /**
-     * Atualizar registro
+     * =========================================================
+     * ATUALIZAR O REGISTRO
+     * =========================================================
      */
     public function update(Request $request, AlunoRegistro $aluno_registro)
     {
@@ -112,19 +138,23 @@ class AlunoRegistroController extends Controller
             'descricao' => 'nullable|string',
             'arquivo' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
             'data_evento' => 'nullable|date',
-            'status' => 'nullable|in:pendente,validado,arquivado,expirado'
+            'status' => 'required|in:pendente,validado,arquivado,expirado'
         ]);
 
-        $data = $request->all();
+        $aluno = Aluno::findOrFail($request->aluno_id);
 
-        // 📁 Substituir arquivo antigo, se houver novo upload
+        $data = $request->all();
+        $data['turma_id'] = $aluno->turma_id;
+
         if ($request->hasFile('arquivo')) {
-            if ($aluno_registro->arquivo && Storage::exists(str_replace('storage/', 'public/', $aluno_registro->arquivo))) {
+            if ($aluno_registro->arquivo) {
                 Storage::delete(str_replace('storage/', 'public/', $aluno_registro->arquivo));
             }
 
-            $path = $request->file('arquivo')->store('public/alunos/registros');
-            $data['arquivo'] = str_replace('public/', 'storage/', $path);
+            $file = $request->file('arquivo');
+            $nome = uniqid('registro_') . '.' . $file->getClientOriginalExtension();
+            $file->storeAs('public/alunos/registros', $nome);
+            $data['arquivo'] = 'storage/alunos/registros/' . $nome;
         }
 
         $aluno_registro->update($data);
@@ -133,13 +163,16 @@ class AlunoRegistroController extends Controller
             ->with('success', 'Registro atualizado com sucesso!');
     }
 
+
+
     /**
-     * Excluir registro
+     * =========================================================
+     * APAGAR REGISTRO
+     * =========================================================
      */
     public function destroy(AlunoRegistro $aluno_registro)
     {
-        // 🗑️ Remove o arquivo associado
-        if ($aluno_registro->arquivo && Storage::exists(str_replace('storage/', 'public/', $aluno_registro->arquivo))) {
+        if ($aluno_registro->arquivo) {
             Storage::delete(str_replace('storage/', 'public/', $aluno_registro->arquivo));
         }
 
@@ -147,5 +180,30 @@ class AlunoRegistroController extends Controller
 
         return redirect()->route('admin.aluno_registros.index')
             ->with('success', 'Registro excluído com sucesso!');
+    }
+
+
+
+    /**
+     * =========================================================
+     * AJAX — BUSCAR TURMA AUTOMÁTICA DO ALUNO
+     * =========================================================
+     */
+    public function buscarTurma($alunoId)
+    {
+        $aluno = Aluno::with('turma')->find($alunoId);
+
+        if (!$aluno) {
+            return response()->json(['erro' => 'Aluno não encontrado'], 404);
+        }
+
+        if (!$aluno->turma) {
+            return response()->json(['sem_turma' => true]);
+        }
+
+        return response()->json([
+            'turma' => $aluno->turma->nome,
+            'turma_id' => $aluno->turma->id
+        ]);
     }
 }
