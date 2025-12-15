@@ -9,6 +9,11 @@ use App\Http\Controllers\{
     Auth\FirstAccessController
 };
 
+use App\Http\Controllers\Admin\FinanceiroDashboardController;
+use App\Http\Controllers\Admin\CategoriaDespesaController;
+use App\Http\Controllers\Admin\CentroCustoController;
+use App\Http\Controllers\Admin\DespesaController;
+
 // Controllers Admin
 use App\Http\Controllers\Admin\{
     DashboardController,
@@ -42,72 +47,64 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     /*
     |--------------------------------------------------------------------------
+    | MÓDULO FINANCEIRO (Fase 1)
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('admin/financeiro')->name('admin.financeiro.')->middleware(['is_admin'])->group(function () {
+
+        Route::get('/', [FinanceiroDashboardController::class, 'index'])->name('dashboard');
+
+        Route::resource('categorias', CategoriaDespesaController::class)->names('categorias');
+        Route::resource('centros', CentroCustoController::class)->names('centros');
+        Route::resource('despesas', DespesaController::class)->names('despesas');
+
+        Route::get('/despesas/{id}/duplicar', [DespesaController::class, 'duplicar'])
+            ->name('despesas.duplicar');
+
+        Route::post('/despesas/clonar-mes-anterior', [DespesaController::class, 'clonarMesAnterior'])
+            ->name('despesas.clonarMesAnterior');
+
+        Route::delete('/despesas/excluir-multiplas', [DespesaController::class, 'excluirMultiplas'])
+            ->name('despesas.excluirMultiplas');
+    });
+
+    /*
+    |--------------------------------------------------------------------------
     | Painel ADMIN
     |--------------------------------------------------------------------------
     */
     Route::prefix('admin')->as('admin.')->middleware('is_admin')->group(function () {
 
-        // Dashboard do admin
-        Route::get('/dashboard', [DashboardController::class, 'index'])
-            ->name('dashboard');
-
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
         Route::get('buscar-turma-aluno/{id}', [AlunoRegistroController::class, 'buscarTurma'])
             ->name('aluno_registros.buscar_turma');
 
-        /*
-        |--------------------------------------------------------------------------
-        | CRUDs principais
-        |--------------------------------------------------------------------------
-        */
-        Route::resource('usuarios', UserController::class)
-            ->names('usuarios')
-            ->parameters(['usuarios' => 'usuario']);
+        // CRUDs
+        Route::resource('usuarios', UserController::class)->parameters(['usuarios' => 'usuario']);
+        Route::resource('alunos', AlunoController::class)->parameters(['alunos' => 'aluno']);
+        Route::resource('professores', ProfessorController::class)->parameters(['professores' => 'professor']);
+        Route::resource('disciplinas', DisciplinaController::class)->parameters(['disciplinas' => 'disciplina']);
+        Route::resource('turmas', TurmaController::class)->parameters(['turmas' => 'turma']);
+        Route::resource('responsaveis', ResponsavelController::class)->parameters(['responsaveis' => 'responsavel']);
 
-        Route::resource('alunos', AlunoController::class)
-            ->names('alunos')
-            ->parameters(['alunos' => 'aluno']);
-
-        Route::resource('professores', ProfessorController::class)
-            ->names('professores')
-            ->parameters(['professores' => 'professor']);
-
-        Route::resource('disciplinas', DisciplinaController::class)
-            ->names('disciplinas')
-            ->parameters(['disciplinas' => 'disciplina']);
-
-        Route::resource('turmas', TurmaController::class)
-            ->names('turmas')
-            ->parameters(['turmas' => 'turma']);
-
-        Route::resource('responsaveis', ResponsavelController::class)
-            ->names('responsaveis')
-            ->parameters(['responsaveis' => 'responsavel']);
+        Route::get('/secretaria', function () {
+            return view('admin.secretaria.dashboard');
+        })->name('secretaria.dashboard');
 
         /*
         |--------------------------------------------------------------------------
-        | DISCIPLINA ↔ TURMA ↔ PROFESSOR  (OFICIAL)
+        | DISCIPLINA ↔ TURMA ↔ PROFESSOR
         |--------------------------------------------------------------------------
         */
         Route::prefix('turmas/{turma}')->name('turmas.')->group(function () {
+            Route::get('/disciplinas', [DisciplinaTurmaController::class, 'edit'])->name('disciplinas');
+            Route::post('/disciplinas', [DisciplinaTurmaController::class, 'store'])->name('disciplinas.store');
+            Route::delete('/disciplinas/{vinculo}', [DisciplinaTurmaController::class, 'destroy'])->name('disciplinas.destroy');
 
-            // Tela principal do gerenciamento de vínculos
-            Route::get('/disciplinas', [DisciplinaTurmaController::class, 'edit'])
-                ->name('disciplinas');
-
-            // Adicionar disciplina
-            Route::post('/disciplinas', [DisciplinaTurmaController::class, 'store'])
-                ->name('disciplinas.store');
-
-            // Remover disciplina
-            Route::delete('/disciplinas/{vinculo}', [DisciplinaTurmaController::class, 'destroy'])
-                ->name('disciplinas.destroy');
-
-            // Adicionar professor
             Route::post('/disciplinas/{vinculo}/professores', [DisciplinaTurmaController::class, 'vincularProfessor'])
                 ->name('disciplinas.professores.store');
 
-            // Remover professor
             Route::delete('/disciplinas/{vinculo}/professores/{professor}', [DisciplinaTurmaController::class, 'removerProfessor'])
                 ->name('disciplinas.professores.destroy');
         });
@@ -126,7 +123,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         |--------------------------------------------------------------------------
         */
         Route::resource('aluno_registros', AlunoRegistroController::class)
-            ->names('aluno_registros')
             ->parameters(['aluno_registros' => 'aluno_registro']);
 
         Route::post('alunos/{aluno}/documentos', [AlunoDocumentController::class, 'store'])
@@ -137,12 +133,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         /*
         |--------------------------------------------------------------------------
-        | Configurações
+        | Configurações — DEFINITIVO
         |--------------------------------------------------------------------------
         */
         Route::controller(SettingController::class)->group(function () {
             Route::get('settings/edit', 'edit')->name('settings.edit');
-            Route::post('settings/update', 'update')->name('settings.update');
+            Route::put('settings/update', 'update')->name('settings.update'); // ✔ CORRIGIDO
         });
     });
 
@@ -152,14 +148,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::get('/dashboard', function () {
+
         $user = Auth::user();
 
-        if ($user->tipo === 'admin') return redirect()->route('admin.dashboard');
-        if ($user->tipo === 'professor') return redirect()->route('dashboard.professor');
-        if ($user->tipo === 'aluno') return redirect()->route('dashboard.aluno');
-        if ($user->tipo === 'responsavel') return redirect()->route('dashboard.responsavel');
-
-        return redirect()->route('login');
+        return match ($user->tipo) {
+            'admin'       => redirect()->route('admin.dashboard'),
+            'professor'   => redirect()->route('dashboard.professor'),
+            'aluno'       => redirect()->route('dashboard.aluno'),
+            'responsavel' => redirect()->route('dashboard.responsavel'),
+            default       => redirect()->route('login'),
+        };
     })->name('dashboard');
 
     Route::middleware('is_professor')->get('/dashboard/professor', fn() => view('professores.dashboard'))
