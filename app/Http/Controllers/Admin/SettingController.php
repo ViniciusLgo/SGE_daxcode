@@ -10,44 +10,144 @@ use Illuminate\Support\Facades\Storage;
 class SettingController extends Controller
 {
     /**
-     * Exibe a tela de edição das configurações gerais.
+     * Exibe a tela de edição de configurações globais do sistema.
      */
     public function edit()
     {
-        // Busca a primeira configuração existente (ou cria uma nova em branco)
-        $setting = Setting::first() ?? new Setting();
+        // Busca o primeiro (e único) registro de settings.
+        // Se não existir, cria um com valores padrão.
+        $settings = Setting::first();
 
-        return view('admin.settings.edit', compact('setting'));
+        if (! $settings) {
+            $settings = Setting::create([
+                'school_name'        => 'Minha Escola',
+                'email'              => 'admin@admin.com',
+                'phone'              => '',
+                'address'            => '',
+                'version'            => '1.0',
+                'logo_path'          => null,
+                'academic_settings'  => [
+                    'ano_letivo'  => date('Y'),
+                    'modelo_ano'  => 'bimestre',
+                    'dias_letivos'=> null,
+                ],
+            ]);
+        }
+
+        // Garante que academic_settings seja sempre um array
+        $settings->academic_settings = $settings->academic_settings ?? [];
+
+        return view('admin.settings.edit', compact('settings'));
     }
 
     /**
-     * Atualiza as configurações gerais do sistema.
+     * Atualiza as configurações globais.
      */
     public function update(Request $request)
     {
-        $data = $request->validate([
-            'nome_instituicao' => 'nullable|string|max:255',
-            'email'            => 'nullable|email|max:255',
-            'telefone'         => 'nullable|string|max:50',
-            'endereco'         => 'nullable|string|max:255',
-            'versao_sistema'   => 'nullable|string|max:20',
-            'logo'             => 'nullable|image|mimes:jpg,jpeg,png|max:5120', // 5MB
+        $settings = Setting::firstOrFail();
+
+        // -----------------------------
+        // 1) VALIDAÇÕES SIMPLES
+        // -----------------------------
+        $request->validate([
+            'school_name' => ['nullable', 'string', 'max:255'],
+            'email'       => ['nullable', 'email', 'max:255'],
+            'phone'       => ['nullable', 'string', 'max:255'],
+            'address'     => ['nullable', 'string', 'max:255'],
+            'version'     => ['nullable', 'string', 'max:50'],
+            'logo'        => ['nullable', 'image', 'mimes:png,jpg,jpeg,svg', 'max:2048'],
         ]);
 
-        // Recupera a configuração existente ou cria uma nova
-        $setting = Setting::first() ?? new Setting();
+        // -----------------------------
+        // 2) CAMPOS BÁSICOS DA INSTITUIÇÃO
+        // -----------------------------
+        $settings->school_name = $request->input('school_name');
+        $settings->email       = $request->input('email');
+        $settings->phone       = $request->input('phone');
+        $settings->address     = $request->input('address');
+        $settings->version     = $request->input('version');
 
-        // Se houver upload de nova logo, apaga a antiga e salva a nova
+        // -----------------------------
+        // 3) UPLOAD DO LOGO (OPCIONAL)
+        // -----------------------------
         if ($request->hasFile('logo')) {
-            if ($setting->logo && Storage::disk('public')->exists($setting->logo)) {
-                Storage::disk('public')->delete($setting->logo);
+            // Apaga o logo anterior se existir
+            if ($settings->logo_path && Storage::disk('public')->exists($settings->logo_path)) {
+                Storage::disk('public')->delete($settings->logo_path);
             }
-            $data['logo'] = $request->file('logo')->store('logos', 'public');
+
+            // Salva o novo logo em storage/app/public/settings
+            $path = $request->file('logo')->store('settings', 'public');
+            $settings->logo_path = $path;
         }
 
-        // Atualiza os dados
-        $setting->fill($data);
-        $setting->save();
+        // -----------------------------
+        // 4) BLOCO ACADÊMICO (JSON)
+        // -----------------------------
+        // Pega tudo que veio em academic_settings[...]
+        $academic = $request->input('academic_settings', []);
+
+        // Garante que sempre seja array
+        if (!is_array($academic)) {
+            $academic = [];
+        }
+
+        // ---- LIMPEZA SIMPLES DE ARRAYS DINÂMICOS ----
+        // Remove linhas totalmente vazias de feriados
+        if (!empty($academic['feriados']) && is_array($academic['feriados'])) {
+            $academic['feriados'] = collect($academic['feriados'])
+                ->filter(function ($item) {
+                    // Mantém se tiver pelo menos data ou nome
+                    return !empty($item['data']) || !empty($item['nome']);
+                })
+                ->values()
+                ->all();
+        }
+
+        // Remove módulos que não tenham nome nem carga horária
+        if (!empty($academic['modulos']) && is_array($academic['modulos'])) {
+            $academic['modulos'] = collect($academic['modulos'])
+                ->filter(function ($item) {
+                    return !empty($item['nome']) || !empty($item['carga_horaria']);
+                })
+                ->values()
+                ->all();
+        }
+
+        // Remove cursos sem nome
+        if (!empty($academic['cursos']) && is_array($academic['cursos'])) {
+            $academic['cursos'] = collect($academic['cursos'])
+                ->filter(function ($item) {
+                    return !empty($item['nome']);
+                })
+                ->values()
+                ->all();
+        }
+
+        // Marca checkboxes que não voltam no request como false
+        // (para evitar undefined index depois)
+        $promocao = $academic['promocao'] ?? [];
+        $promocao['reprovar_por_nota']       = !empty($promocao['reprovar_por_nota']);
+        $promocao['reprovar_por_frequencia'] = !empty($promocao['reprovar_por_frequencia']);
+        $academic['promocao'] = $promocao;
+
+        $fech = $academic['fechamento_notas'] ?? [];
+        $fech['bloquear_apos_prazo'] = !empty($fech['bloquear_apos_prazo']);
+        $fech['arredondar_media']    = !empty($fech['arredondar_media']);
+        $academic['fechamento_notas'] = $fech;
+
+        $hor = $academic['horarios'] ?? [];
+        $hor['sabado_letivo_ativo'] = !empty($hor['sabado_letivo_ativo']);
+        $academic['horarios'] = $hor;
+
+        // Salva tudo no JSON academic_settings
+        $settings->academic_settings = $academic;
+
+        // -----------------------------
+        // 5) SALVAR NO BANCO
+        // -----------------------------
+        $settings->save();
 
         return redirect()
             ->route('admin.settings.edit')
