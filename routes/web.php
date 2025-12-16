@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
+use App\Http\Controllers\Admin\GestaoAcademica\AvaliacaoController;
+
+
 // Controllers públicos
 use App\Http\Controllers\{
     ProfileController,
@@ -13,6 +16,8 @@ use App\Http\Controllers\Admin\FinanceiroDashboardController;
 use App\Http\Controllers\Admin\CategoriaDespesaController;
 use App\Http\Controllers\Admin\CentroCustoController;
 use App\Http\Controllers\Admin\DespesaController;
+
+use App\Http\Controllers\Admin\Secretaria\SecretariaDashboardController;
 
 // Controllers Admin
 use App\Http\Controllers\Admin\{
@@ -26,7 +31,7 @@ use App\Http\Controllers\Admin\{
     DisciplinaTurmaController,
     SettingController,
     AlunoDocumentController,
-    ResponsavelController
+    ResponsavelController,
 };
 
 /*
@@ -88,9 +93,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('turmas', TurmaController::class)->parameters(['turmas' => 'turma']);
         Route::resource('responsaveis', ResponsavelController::class)->parameters(['responsaveis' => 'responsavel']);
 
-        Route::get('/secretaria', function () {
-            return view('admin.secretaria.dashboard');
-        })->name('secretaria.dashboard');
+        Route::get('/secretaria', [SecretariaDashboardController::class, 'index'])
+            ->name('secretaria.dashboard');
+
 
         /*
         |--------------------------------------------------------------------------
@@ -140,6 +145,31 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('settings/edit', 'edit')->name('settings.edit');
             Route::put('settings/update', 'update')->name('settings.update'); // ✔ CORRIGIDO
         });
+
+        Route::prefix('gestao-academica')
+            ->name('gestao_academica.')
+            ->group(function () {
+
+                Route::resource(
+                    'avaliacoes',
+                    \App\Http\Controllers\Admin\GestaoAcademica\AvaliacaoController::class
+                )->parameters([
+                    'avaliacoes' => 'avaliacao'
+                ]);
+
+
+                Route::post(
+                    'avaliacoes/{avaliacao}/encerrar',
+                    [AvaliacaoController::class, 'encerrar']
+                )->name('avaliacoes.encerrar');
+
+                Route::post(
+                    'avaliacoes/{avaliacao}/reabrir',
+                    [AvaliacaoController::class, 'reabrir']
+                )->name('avaliacoes.reabrir');
+            });
+
+
     });
 
     /*
@@ -152,11 +182,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         $user = Auth::user();
 
         return match ($user->tipo) {
-            'admin'       => redirect()->route('admin.dashboard'),
-            'professor'   => redirect()->route('dashboard.professor'),
-            'aluno'       => redirect()->route('dashboard.aluno'),
+            'admin' => redirect()->route('admin.dashboard'),
+            'professor' => redirect()->route('dashboard.professor'),
+            'aluno' => redirect()->route('dashboard.aluno'),
             'responsavel' => redirect()->route('dashboard.responsavel'),
-            default       => redirect()->route('login'),
+            default => redirect()->route('login'),
         };
     })->name('dashboard');
 
