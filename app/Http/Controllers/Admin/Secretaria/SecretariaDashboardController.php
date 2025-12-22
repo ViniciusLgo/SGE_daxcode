@@ -7,6 +7,8 @@ use App\Models\Aluno;
 use App\Models\Turma;
 use App\Models\UserDocument;
 use App\Models\User;
+use App\Models\SecretariaAtendimento;
+
 
 class SecretariaDashboardController extends Controller
 {
@@ -23,10 +25,9 @@ class SecretariaDashboardController extends Controller
         // EXEMPLO: Atendimentos recentes
         // Futuro: tabela secretaria_atendimentos
         // Por agora: mock para a tabela ficar exibida sem erro
-        $atendimentosRecentes = [
-            ['tipo' => 'Matrícula', 'aluno' => '—', 'data' => now()->format('d/m/Y'), 'status' => 'Concluído'],
-            ['tipo' => 'Declaração', 'aluno' => '—', 'data' => now()->format('d/m/Y'), 'status' => 'Pendente'],
-        ];
+        $atendimentosRecentes = SecretariaAtendimento::latest()
+            ->limit(5)
+            ->get();
 
         return view('admin.secretaria.dashboard', compact(
             'totalAlunos',
