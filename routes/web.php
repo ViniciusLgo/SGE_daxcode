@@ -132,6 +132,25 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('documentos.destroy');
 
         /*
+|--------------------------------------------------------------------------
+| AVALIAÇÕES
+|--------------------------------------------------------------------------
+*/
+        Route::prefix('gestao-academica')->name('gestao_academica.')->group(function () {
+
+            Route::resource('avaliacoes', AvaliacaoController::class);
+
+            Route::patch('avaliacoes/{avaliacao}/encerrar',
+                [AvaliacaoController::class, 'encerrar']
+            )->name('avaliacoes.encerrar');
+
+            Route::patch('avaliacoes/{avaliacao}/reabrir',
+                [AvaliacaoController::class, 'reabrir']
+            )->name('avaliacoes.reabrir');
+        });
+
+
+        /*
         |--------------------------------------------------------------------------
         | Configurações — DEFINITIVO
         |--------------------------------------------------------------------------
@@ -152,11 +171,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         $user = Auth::user();
 
         return match ($user->tipo) {
-            'admin'       => redirect()->route('admin.dashboard'),
-            'professor'   => redirect()->route('dashboard.professor'),
-            'aluno'       => redirect()->route('dashboard.aluno'),
+            'admin' => redirect()->route('admin.dashboard'),
+            'professor' => redirect()->route('dashboard.professor'),
+            'aluno' => redirect()->route('dashboard.aluno'),
             'responsavel' => redirect()->route('dashboard.responsavel'),
-            default       => redirect()->route('login'),
+            default => redirect()->route('login'),
         };
     })->name('dashboard');
 

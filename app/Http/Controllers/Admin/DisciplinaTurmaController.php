@@ -54,15 +54,29 @@ class DisciplinaTurmaController extends Controller
             return back()->with('error', 'Esta disciplina já está vinculada a esta turma.');
         }
 
-        // cria o vínculo na tabela disciplina_turmas
+        // Criar vínculo principal
         $vinculo = DisciplinaTurma::create([
-            'turma_id' => $turmaId,
+            'turma_id'      => $turmaId,
             'disciplina_id' => $request->disciplina_id,
-            'ano_letivo' => $request->ano_letivo ?? date('Y'),
-            'observacao' => $request->observacao,
+            'ano_letivo'    => $request->ano_letivo ?? date('Y'),
+            'observacao'    => $request->observacao,
         ]);
 
-        return back()->with('success', 'Disciplina vinculada com sucesso!');
+        /*
+        |--------------------------------------------------------------------------
+        | AUTO-VINCULAR PROFESSORES DA DISCIPLINA
+        |--------------------------------------------------------------------------
+        */
+        $disciplina = Disciplina::with('professores')->find($request->disciplina_id);
+
+        foreach ($disciplina->professores as $professor) {
+            DisciplinaTurmaProfessor::firstOrCreate([
+                'disciplina_turma_id' => $vinculo->id,
+                'professor_id'        => $professor->id,
+            ]);
+        }
+
+        return back()->with('success', 'Disciplina vinculada à turma com professores aplicados automaticamente.');
     }
 
     /**
