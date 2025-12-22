@@ -14,6 +14,8 @@ use App\Http\Controllers\Admin\CategoriaDespesaController;
 use App\Http\Controllers\Admin\CentroCustoController;
 use App\Http\Controllers\Admin\DespesaController;
 
+use App\Http\Controllers\Admin\Secretaria\SecretariaDashboardController;
+
 // Controllers Admin
 use App\Http\Controllers\Admin\{
     DashboardController,
@@ -88,9 +90,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('turmas', TurmaController::class)->parameters(['turmas' => 'turma']);
         Route::resource('responsaveis', ResponsavelController::class)->parameters(['responsaveis' => 'responsavel']);
 
-        Route::get('/secretaria', function () {
-            return view('admin.secretaria.dashboard');
-        })->name('secretaria.dashboard');
+        Route::get('/secretaria', [SecretariaDashboardController::class, 'index'])
+            ->name('secretaria.dashboard');
+
+
+        Route::prefix('secretaria')->name('secretaria.')->group(function () {
+            Route::resource('atendimentos', \App\Http\Controllers\Admin\Secretaria\SecretariaAtendimentoController::class)
+                ->only(['index', 'create', 'store']);
+        });
+
 
         /*
         |--------------------------------------------------------------------------
