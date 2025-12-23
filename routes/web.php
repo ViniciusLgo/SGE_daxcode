@@ -58,6 +58,7 @@ use App\Http\Controllers\Admin\Secretaria\{
 |--------------------------------------------------------------------------
 */
 use App\Http\Controllers\Admin\GestaoAcademica\AvaliacaoController;
+use App\Http\Controllers\Admin\GestaoAcademica\AvaliacaoResultadoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -240,21 +241,36 @@ Route::middleware(['auth', 'verified'])->group(function () {
             )->name('documentos.destroy');
 
             /*
-            |--------------------------------------------------------------------------
-            | GESTÃO ACADÊMICA — AVALIAÇÕES (CORRIGIDO)
-            |--------------------------------------------------------------------------
-            */
+ |--------------------------------------------------------------------------
+ | GESTÃO ACADÊMICA — AVALIAÇÕES
+ |--------------------------------------------------------------------------
+ */
             Route::prefix('gestao-academica')
                 ->name('gestao_academica.')
                 ->group(function () {
 
+                    // CRUD de Avaliações (EVENTO)
                     Route::resource('avaliacoes', AvaliacaoController::class)
                         ->parameters(['avaliacoes' => 'avaliacao']);
 
-                    Route::patch('avaliacoes/{avaliacao}/encerrar',
+                    // Encerrar avaliação
+                    Route::patch(
+                        'avaliacoes/{avaliacao}/encerrar',
                         [AvaliacaoController::class, 'encerrar']
                     )->name('avaliacoes.encerrar');
+
+                    // Resultados da avaliação (POR ALUNO)
+                    Route::get(
+                        'avaliacoes/{avaliacao}/resultados',
+                        [AvaliacaoResultadoController::class, 'index']
+                    )->name('avaliacoes.resultados.index');
+
+                    Route::post(
+                        'avaliacoes/{avaliacao}/resultados',
+                        [AvaliacaoResultadoController::class, 'store']
+                    )->name('avaliacoes.resultados.store');
                 });
+
 
             /*
             |--------------------------------------------------------------------------

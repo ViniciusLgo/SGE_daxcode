@@ -47,12 +47,23 @@
                                 <span class="badge bg-success">Aberta</span>
                             @endif
                         </td>
+
+
                         <td class="text-end">
 
                             {{-- Editar --}}
                             <a href="{{ route('admin.gestao_academica.avaliacoes.edit', $avaliacao) }}"
                                class="btn btn-sm btn-outline-primary">
                                 Editar
+                            </a>
+
+                            {{-- Resultados --}}
+                            <a href="{{ route(
+            'admin.gestao_academica.avaliacoes.resultados.index',
+            $avaliacao
+        ) }}"
+                               class="btn btn-sm {{ $avaliacao->status === 'aberta' ? 'btn-outline-primary' : 'btn-outline-secondary' }}">
+                                {{ $avaliacao->status === 'aberta' ? 'Lançar Resultados' : 'Ver Resultados' }}
                             </a>
 
                             {{-- Encerrar --}}
