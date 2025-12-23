@@ -21,11 +21,15 @@ class SecretariaAtendimentoController extends Controller
 
     public function create()
     {
-        $alunos = Aluno::orderBy('id')->get();
-        $responsaveis = Responsavel::orderBy('id')->get();
+        $alunos = Aluno::with('responsaveis.user')->get();
+        $responsaveis = Responsavel::with('user')->get();
 
-        return view('admin.secretaria.atendimentos.create', compact('alunos', 'responsaveis'));
+        return view('admin.secretaria.atendimentos.create', compact(
+            'alunos',
+            'responsaveis'
+        ));
     }
+
 
     public function store(Request $request)
     {
@@ -43,5 +47,59 @@ class SecretariaAtendimentoController extends Controller
         return redirect()
             ->route('admin.secretaria.atendimentos.index')
             ->with('success', 'Atendimento registrado com sucesso.');
+    }
+
+    public function edit(SecretariaAtendimento $atendimento)
+    {
+        $alunos = Aluno::with('responsaveis.user')->get();
+        $responsaveis = Responsavel::with('user')->get();
+
+        return view('admin.secretaria.atendimentos.edit', compact(
+            'atendimento',
+            'alunos',
+            'responsaveis'
+        ));
+    }
+
+
+    public function update(Request $request, SecretariaAtendimento $atendimento)
+    {
+        $request->validate([
+            'tipo' => 'required|string|max:255',
+            'status' => 'required|in:pendente,concluido,cancelado',
+            'aluno_id' => 'nullable|exists:alunos,id',
+            'responsavel_id' => 'nullable|exists:responsaveis,id',
+            'observacao' => 'nullable|string',
+            'data_atendimento' => 'required|date',
+        ]);
+
+        $atendimento->update($request->all());
+
+        return redirect()
+            ->route('admin.secretaria.atendimentos.index')
+            ->with('success', 'Atendimento atualizado com sucesso.');
+    }
+
+
+    public function responsaveisDoAluno(Aluno $aluno)
+    {
+        return response()->json(
+            $aluno->responsaveis()
+                ->with('user:id,name')
+                ->get()
+                ->map(fn ($r) => [
+                    'id' => $r->id,
+                    'nome' => $r->user->name ?? 'Responsável'
+                ])
+        );
+    }
+
+    public function destroy(SecretariaAtendimento $atendimento)
+    {
+        $atendimento->delete();
+
+        return redirect()
+            ->route('admin.secretaria.atendimentos.index')
+            ->with('success', 'Atendimento removido com sucesso.');
     }
 }

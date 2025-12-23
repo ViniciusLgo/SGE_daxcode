@@ -9,12 +9,14 @@ use App\Http\Controllers\{
     Auth\FirstAccessController
 };
 
+
 use App\Http\Controllers\Admin\FinanceiroDashboardController;
 use App\Http\Controllers\Admin\CategoriaDespesaController;
 use App\Http\Controllers\Admin\CentroCustoController;
 use App\Http\Controllers\Admin\DespesaController;
 
 use App\Http\Controllers\Admin\Secretaria\SecretariaDashboardController;
+use App\Http\Controllers\Admin\Secretaria\SecretariaAtendimentoController;
 
 // Controllers Admin
 use App\Http\Controllers\Admin\{
@@ -90,16 +92,34 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('turmas', TurmaController::class)->parameters(['turmas' => 'turma']);
         Route::resource('responsaveis', ResponsavelController::class)->parameters(['responsaveis' => 'responsavel']);
 
-        Route::get('/secretaria', [SecretariaDashboardController::class, 'index'])
-            ->name('secretaria.dashboard');
 
-
+        /*
+|--------------------------------------------------------------------------
+| SECRETARIA ESCOLAR
+|--------------------------------------------------------------------------
+*/
         Route::prefix('secretaria')->name('secretaria.')->group(function () {
-            Route::resource('atendimentos', \App\Http\Controllers\Admin\Secretaria\SecretariaAtendimentoController::class)
-                ->only(['index', 'create', 'store']);
+
+            // 📊 Dashboard da Secretaria
+            Route::get('/', [SecretariaDashboardController::class, 'index'])
+                ->name('dashboard');
+
+            // 🧾 Atendimentos da Secretaria (CRUD COMPLETO)
+            Route::resource('atendimentos', SecretariaAtendimentoController::class);
         });
 
+        Route::prefix('secretaria')->name('secretaria.')->group(function () {
 
+            Route::get('/', [SecretariaDashboardController::class, 'index'])
+                ->name('dashboard');
+
+            Route::resource('atendimentos', SecretariaAtendimentoController::class);
+
+            // 🔹 Buscar responsáveis de um aluno (AJAX)
+            Route::get('alunos/{aluno}/responsaveis',
+                [SecretariaAtendimentoController::class, 'responsaveisDoAluno']
+            )->name('alunos.responsaveis');
+        });
         /*
         |--------------------------------------------------------------------------
         | DISCIPLINA ↔ TURMA ↔ PROFESSOR
@@ -160,11 +180,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         $user = Auth::user();
 
         return match ($user->tipo) {
-            'admin'       => redirect()->route('admin.dashboard'),
-            'professor'   => redirect()->route('dashboard.professor'),
-            'aluno'       => redirect()->route('dashboard.aluno'),
+            'admin' => redirect()->route('admin.dashboard'),
+            'professor' => redirect()->route('dashboard.professor'),
+            'aluno' => redirect()->route('dashboard.aluno'),
             'responsavel' => redirect()->route('dashboard.responsavel'),
-            default       => redirect()->route('login'),
+            default => redirect()->route('login'),
         };
     })->name('dashboard');
 

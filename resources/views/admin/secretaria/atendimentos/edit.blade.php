@@ -2,15 +2,18 @@
 
 @section('content')
 
-    <h4>Novo Atendimento da Secretaria</h4>
+    <h4>Editar Atendimento</h4>
 
-    <form action="{{ route('admin.secretaria.atendimentos.store') }}" method="POST">
+    <form action="{{ route('admin.secretaria.atendimentos.update', $atendimento) }}" method="POST">
         @csrf
+        @method('PUT')
 
         {{-- Tipo --}}
         <div class="mb-3">
-            <label class="form-label">Tipo de Atendimento</label>
-            <input type="text" name="tipo" class="form-control" required>
+            <label class="form-label">Tipo</label>
+            <input type="text" name="tipo"
+                   value="{{ $atendimento->tipo }}"
+                   class="form-control" required>
         </div>
 
         {{-- Aluno --}}
@@ -19,8 +22,9 @@
             <select name="aluno_id" id="aluno_id" class="form-select">
                 <option value="">—</option>
                 @foreach($alunos as $aluno)
-                    <option value="{{ $aluno->id }}">
-                        {{ $aluno->user->name ?? 'Aluno sem usuário' }}
+                    <option value="{{ $aluno->id }}"
+                        @selected($atendimento->aluno_id == $aluno->id)>
+                        {{ $aluno->user->name ?? 'Aluno' }}
                     </option>
                 @endforeach
             </select>
@@ -32,7 +36,8 @@
             <select name="responsavel_id" id="responsavel_id" class="form-select">
                 <option value="">—</option>
                 @foreach($responsaveis as $r)
-                    <option value="{{ $r->id }}">
+                    <option value="{{ $r->id }}"
+                        @selected($atendimento->responsavel_id == $r->id)>
                         {{ $r->user->name ?? 'Responsável' }}
                     </option>
                 @endforeach
@@ -41,27 +46,30 @@
 
         {{-- Status --}}
         <div class="mb-3">
-            <label class="form-label">Status</label>
+            <label>Status</label>
             <select name="status" class="form-select">
-                <option value="pendente">Pendente</option>
-                <option value="concluido">Concluído</option>
-                <option value="cancelado">Cancelado</option>
+                @foreach(['pendente','concluido','cancelado'] as $s)
+                    <option value="{{ $s }}" @selected($atendimento->status == $s)>
+                        {{ ucfirst($s) }}
+                    </option>
+                @endforeach
             </select>
         </div>
 
         {{-- Data --}}
         <div class="mb-3">
-            <label class="form-label">Data do Atendimento</label>
-            <input type="date" name="data_atendimento" class="form-control" required>
+            <label>Data</label>
+            <input type="date"
+                   name="data_atendimento"
+                   value="{{ $atendimento->data_atendimento->format('Y-m-d') }}"
+                   class="form-control">
         </div>
 
-        <button class="btn btn-primary">Salvar</button>
+        <button class="btn btn-primary">Atualizar</button>
         <a href="{{ route('admin.secretaria.atendimentos.index') }}" class="btn btn-secondary">Voltar</a>
     </form>
 
-    {{-- ============================= --}}
-    {{-- JS AUTO RESPONSÁVEL --}}
-    {{-- ============================= --}}
+    {{-- JS AUTO --}}
     <script>
         const alunos = @json($alunos);
 

@@ -2,17 +2,20 @@
 
 @section('content')
 
+    {{-- ===============================
+        ESTILOS LOCAIS DO DASHBOARD
+        =============================== --}}
     <style>
-        /* Animação suave de crescimento nos números */
         .counter {
             font-size: 2rem;
             font-weight: bold;
-            transition: all .4s ease-in-out;
+            transition: all .3s ease;
         }
 
         .card-kpi {
             border-radius: 12px;
-            transition: transform .2s;
+            transition: transform .2s ease;
+            cursor: pointer;
         }
 
         .card-kpi:hover {
@@ -26,24 +29,34 @@
             font-weight: 600;
             display: inline-block;
         }
-        .status-concluido { background: #d1ffd6; color: #0b7a1c; }
-        .status-pendente { background: #fff3cd; color: #946200; }
+
+        .status-concluido {
+            background: #d1ffd6;
+            color: #0b7a1c;
+        }
+
+        .status-pendente {
+            background: #fff3cd;
+            color: #946200;
+        }
     </style>
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h4 class="mb-1">Secretaria Escolar</h4>
-            <p class="text-muted mb-0">
-                Painel administrativo com visão geral das matrículas, documentos e atendimentos.
-            </p>
-        </div>
+    {{-- ===============================
+        CABEÇALHO
+        =============================== --}}
+    <div class="mb-4">
+        <h4 class="mb-1">Secretaria Escolar</h4>
+        <p class="text-muted mb-0">
+            Painel administrativo com visão geral das matrículas, documentos e atendimentos.
+        </p>
     </div>
 
-    {{-- ================================ --}}
-    {{--        CARDS PRINCIPAIS          --}}
-    {{-- ================================ --}}
+    {{-- ===============================
+        CARDS DE INDICADORES
+        =============================== --}}
     <div class="row g-3 mb-4">
 
+        {{-- Alunos --}}
         <div class="col-md-3">
             <div class="card card-kpi shadow-sm border-0 p-3">
                 <div class="d-flex justify-content-between">
@@ -54,11 +67,12 @@
                     <div class="fs-2">🎓</div>
                 </div>
                 <p class="text-muted small mt-2 mb-0">
-                    Todos os alunos registrados no sistema.
+                    Total de alunos no sistema.
                 </p>
             </div>
         </div>
 
+        {{-- Turmas --}}
         <div class="col-md-3">
             <div class="card card-kpi shadow-sm border-0 p-3">
                 <div class="d-flex justify-content-between">
@@ -74,6 +88,7 @@
             </div>
         </div>
 
+        {{-- Pendências --}}
         <div class="col-md-3">
             <div class="card card-kpi shadow-sm border-0 p-3">
                 <div class="d-flex justify-content-between">
@@ -89,110 +104,93 @@
             </div>
         </div>
 
+        {{-- Atendimentos (ATALHO) --}}
         <div class="col-md-3">
-            <div class="card card-kpi shadow-sm border-0 p-3">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <span class="text-muted small">Solicitações do Dia</span>
-                        <div class="counter mt-1">{{ count($atendimentosRecentes) }}</div>
+            <a href="{{ route('admin.secretaria.atendimentos.index') }}"
+               class="text-decoration-none text-dark">
+                <div class="card card-kpi shadow-sm border-0 p-3">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <span class="text-muted small">Solicitações do Dia</span>
+                            <div class="counter mt-1">{{ count($atendimentosRecentes) }}</div>
+                        </div>
+                        <div class="fs-2">💬</div>
                     </div>
-                    <div class="fs-2">💬</div>
+                    <p class="text-muted small mt-2 mb-0">
+                        Clique para gerenciar atendimentos.
+                    </p>
                 </div>
-                <p class="text-muted small mt-2 mb-0">
-                    Atendimentos registrados recentemente.
-                </p>
-            </div>
+            </a>
         </div>
 
     </div>
 
-    {{-- ================================ --}}
-    {{--     ATENDIMENTOS RECENTES        --}}
-    {{-- ================================ --}}
+    {{-- ===============================
+        ATENDIMENTOS RECENTES
+        =============================== --}}
     <div class="card shadow-sm border-0 mb-4">
         <div class="card-body">
-            <h5 class="card-title mb-3">📌 Atendimentos Recentes</h5>
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0">📌 Atendimentos Recentes</h5>
+
+                <a href="{{ route('admin.secretaria.atendimentos.index') }}"
+                   class="btn btn-sm btn-outline-primary">
+                    Ver todos
+                </a>
+            </div>
 
             <table class="table table-sm align-middle">
                 <thead>
                 <tr>
                     <th>Tipo</th>
-                    <th>Aluno/Responsável</th>
+                    <th>Aluno / Responsável</th>
                     <th>Data</th>
                     <th>Status</th>
                 </tr>
                 </thead>
 
                 <tbody>
-                @foreach($atendimentosRecentes as $a)
+                @forelse($atendimentosRecentes as $a)
                     <tr>
-                        <td>{{ $a['tipo'] }}</td>
-                        <td>{{ $a['aluno'] }}</td>
-                        <td>{{ $a['data'] }}</td>
+                        <td>{{ $a->tipo ?? $a['tipo'] }}</td>
+
+                        {{-- Correção do bug do objeto --}}
                         <td>
-                            @if($a['status'] === 'Concluído')
+                            @if(is_object($a) && $a->aluno)
+                                {{ $a->aluno->user->name ?? '—' }}
+                            @else
+                                {{ $a['aluno'] ?? '—' }}
+                            @endif
+                        </td>
+
+                        <td>
+                            {{ is_object($a) ? $a->data_atendimento->format('d/m/Y') : $a['data'] }}
+                        </td>
+
+                        <td>
+                            @php
+                                $status = is_object($a) ? $a->status : $a['status'];
+                            @endphp
+
+                            @if($status === 'Concluído' || $status === 'concluido')
                                 <span class="status-pill status-concluido">Concluído</span>
                             @else
                                 <span class="status-pill status-pendente">Pendente</span>
                             @endif
                         </td>
                     </tr>
-                @endforeach
+                @empty
+                    <tr>
+                        <td colspan="4" class="text-center text-muted">
+                            Nenhum atendimento recente.
+                        </td>
+                    </tr>
+                @endforelse
                 </tbody>
-
             </table>
 
-            <p class="text-muted small mt-2 mb-0">Futuramente essa tabela será alimentada pelo módulo de "Atendimentos da Secretaria".</p>
         </div>
     </div>
 
-    {{-- ================================ --}}
-    {{--      PENDÊNCIAS DOCUMENTAIS      --}}
-    {{-- ================================ --}}
-    <div class="card shadow-sm border-0 mb-4">
-        <div class="card-body">
-            <h5 class="card-title mb-3">📄 Pendências Documentais</h5>
-
-            <p class="text-muted mb-0">
-                Quando implementarmos a checagem automática de documentos obrigatórios,
-                essa área vai listar os alunos com pendências.
-            </p>
-        </div>
-    </div>
-
-    {{-- ================================ --}}
-    {{--         GRÁFICOS (Chart.js)       --}}
-    {{-- ================================ --}}
-    <div class="card shadow-sm border-0">
-        <div class="card-body">
-            <h5 class="card-title mb-3">📊 Visão Geral (Gráficos)</h5>
-
-            <canvas id="graficoSecretaria" height="120"></canvas>
-
-            <p class="text-muted small mt-2">
-                O gráfico será ativado quando você quiser implementar. O espaço já está pronto.
-            </p>
-        </div>
-    </div>
-
-@endsection
-
-@section('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <script>
-        // Placeholder para futuro gráfico
-        const ctx = document.getElementById('graficoSecretaria');
-
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Alunos', 'Turmas', 'Pendências'],
-                datasets: [{
-                    label: 'Indicadores',
-                    data: [{{ $totalAlunos }}, {{ $totalTurmas }}, {{ $pendencias }}],
-                }]
-            }
-        });
-    </script>
 @endsection
