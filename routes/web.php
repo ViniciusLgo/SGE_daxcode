@@ -59,6 +59,7 @@ use App\Http\Controllers\Admin\Secretaria\{
 */
 use App\Http\Controllers\Admin\GestaoAcademica\AvaliacaoController;
 use App\Http\Controllers\Admin\GestaoAcademica\AvaliacaoResultadoController;
+use App\Http\Controllers\Admin\GestaoAcademica\BoletimController;
 
 /*
 |--------------------------------------------------------------------------
@@ -271,6 +272,51 @@ Route::middleware(['auth', 'verified'])->group(function () {
                     )->name('avaliacoes.resultados.store');
                 });
 
+
+            /*
+|--------------------------------------------------------------------------
+| BOLETIM
+|--------------------------------------------------------------------------
+*/
+            Route::prefix('boletim')
+                ->name('boletim.')
+                ->group(function () {
+
+                    Route::get(
+                        'alunos/{aluno}',
+                        [BoletimController::class, 'aluno']
+                    )->name('aluno');
+                });
+
+            Route::prefix('boletim')->name('boletim.')->group(function () {
+
+                Route::get('alunos/{aluno}', [BoletimController::class, 'aluno'])
+                    ->name('aluno');
+
+                Route::get('turmas/{turma}', [BoletimController::class, 'turma'])
+                    ->name('turma');
+            });
+
+
+            Route::prefix('boletim')
+                ->name('boletim.')
+                ->group(function () {
+
+                    Route::get('/', function () {
+                        return view('admin.gestao_academica.boletim.index');
+                    })->name('index');
+
+                    Route::get('alunos/{aluno}', [BoletimController::class, 'aluno'])
+                        ->name('aluno');
+
+                    Route::get('turmas/{turma}', [BoletimController::class, 'turma'])
+                        ->name('turma');
+                });
+
+            Route::get(
+                'boletins/turmas/{turma}',
+                [BoletimController::class, 'turma']
+            )->name('boletins.turmas.show');
 
             /*
             |--------------------------------------------------------------------------
