@@ -13,6 +13,12 @@
             <a href="{{ route('admin.alunos.index') }}" class="btn btn-secondary btn-sm">
                 <i class="bi bi-arrow-left"></i> Voltar
             </a>
+
+            <a href="{{ route('admin.boletim.aluno', $aluno) }}"
+               class="btn btn-outline-primary">
+                📘 Ver Boletim
+            </a>
+
         </div>
     </div>
 

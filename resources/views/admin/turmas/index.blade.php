@@ -76,6 +76,11 @@
 
                             <div class="btn-group btn-group-sm">
 
+                                <a href="{{ route('admin.boletins.turmas.show', $turma) }}"
+                                   class="btn btn-outline-primary btn-sm">
+                                    📘 Boletim
+                                </a>
+
                                 <a href="{{ route('admin.turmas.show', $turma) }}"
                                    class="btn btn-outline-secondary">
                                     Detalhes

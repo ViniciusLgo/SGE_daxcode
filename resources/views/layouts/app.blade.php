@@ -202,7 +202,10 @@
             </a>
 
             {{-- FUTURO --}}
-            <a href="#" class="disabled text-muted">📋 Boletins</a>
+            <a href="{{ route('admin.boletim.index') }}"
+               class="nav-link {{ request()->routeIs('admin.boletim.*') ? 'active' : '' }}">
+                📘 Boletins
+            </a>
             <a href="#" class="disabled text-muted">📈 Desempenho</a>
             <a href="#" class="disabled text-muted">🧮 Frequência</a>
         </div>
