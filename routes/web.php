@@ -3,22 +3,21 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
-// Controllers públicos
+/*
+|--------------------------------------------------------------------------
+| Controllers Públicos
+|--------------------------------------------------------------------------
+*/
 use App\Http\Controllers\{
     ProfileController,
     Auth\FirstAccessController
 };
 
-
-use App\Http\Controllers\Admin\FinanceiroDashboardController;
-use App\Http\Controllers\Admin\CategoriaDespesaController;
-use App\Http\Controllers\Admin\CentroCustoController;
-use App\Http\Controllers\Admin\DespesaController;
-
-use App\Http\Controllers\Admin\Secretaria\SecretariaDashboardController;
-use App\Http\Controllers\Admin\Secretaria\SecretariaAtendimentoController;
-
-// Controllers Admin
+/*
+|--------------------------------------------------------------------------
+| Controllers Admin – Gerais
+|--------------------------------------------------------------------------
+*/
 use App\Http\Controllers\Admin\{
     DashboardController,
     UserController,
@@ -35,193 +34,267 @@ use App\Http\Controllers\Admin\{
 
 /*
 |--------------------------------------------------------------------------
-| Página inicial pública
+| Controllers Admin – Financeiro
 |--------------------------------------------------------------------------
 */
-Route::get('/', function () {
-    return view('welcome');
-});
+use App\Http\Controllers\Admin\FinanceiroDashboardController;
+use App\Http\Controllers\Admin\CategoriaDespesaController;
+use App\Http\Controllers\Admin\CentroCustoController;
+use App\Http\Controllers\Admin\DespesaController;
 
 /*
 |--------------------------------------------------------------------------
-| Rotas protegidas (Usuário autenticado + verificado)
+| Controllers Admin – Secretaria
+|--------------------------------------------------------------------------
+*/
+use App\Http\Controllers\Admin\Secretaria\{
+    SecretariaDashboardController,
+    SecretariaAtendimentoController
+};
+
+/*
+|--------------------------------------------------------------------------
+| Controllers Admin – Gestão Acadêmica
+|--------------------------------------------------------------------------
+*/
+use App\Http\Controllers\Admin\GestaoAcademica\AvaliacaoController;
+
+/*
+|--------------------------------------------------------------------------
+| Página Inicial Pública
+|--------------------------------------------------------------------------
+*/
+Route::get('/', fn () => view('welcome'));
+
+/*
+|--------------------------------------------------------------------------
+| Rotas Protegidas (auth + verified)
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'verified'])->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | MÓDULO FINANCEIRO (Fase 1)
-    |--------------------------------------------------------------------------
-    */
-    Route::prefix('admin/financeiro')->name('admin.financeiro.')->middleware(['is_admin'])->group(function () {
-
-        Route::get('/', [FinanceiroDashboardController::class, 'index'])->name('dashboard');
-
-        Route::resource('categorias', CategoriaDespesaController::class)->names('categorias');
-        Route::resource('centros', CentroCustoController::class)->names('centros');
-        Route::resource('despesas', DespesaController::class)->names('despesas');
-
-        Route::get('/despesas/{id}/duplicar', [DespesaController::class, 'duplicar'])
-            ->name('despesas.duplicar');
-
-        Route::post('/despesas/clonar-mes-anterior', [DespesaController::class, 'clonarMesAnterior'])
-            ->name('despesas.clonarMesAnterior');
-
-        Route::delete('/despesas/excluir-multiplas', [DespesaController::class, 'excluirMultiplas'])
-            ->name('despesas.excluirMultiplas');
-    });
-
-    /*
-    |--------------------------------------------------------------------------
-    | Painel ADMIN
-    |--------------------------------------------------------------------------
-    */
-    Route::prefix('admin')->as('admin.')->middleware('is_admin')->group(function () {
-
-        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
-        Route::get('buscar-turma-aluno/{id}', [AlunoRegistroController::class, 'buscarTurma'])
-            ->name('aluno_registros.buscar_turma');
-
-        // CRUDs
-        Route::resource('usuarios', UserController::class)->parameters(['usuarios' => 'usuario']);
-        Route::resource('alunos', AlunoController::class)->parameters(['alunos' => 'aluno']);
-        Route::resource('professores', ProfessorController::class)->parameters(['professores' => 'professor']);
-        Route::resource('disciplinas', DisciplinaController::class)->parameters(['disciplinas' => 'disciplina']);
-        Route::resource('turmas', TurmaController::class)->parameters(['turmas' => 'turma']);
-        Route::resource('responsaveis', ResponsavelController::class)->parameters(['responsaveis' => 'responsavel']);
-
-
-        /*
-|--------------------------------------------------------------------------
-| SECRETARIA ESCOLAR
-|--------------------------------------------------------------------------
-*/
-        Route::prefix('secretaria')->name('secretaria.')->group(function () {
-
-            // 📊 Dashboard da Secretaria
-            Route::get('/', [SecretariaDashboardController::class, 'index'])
-                ->name('dashboard');
-
-            // 🧾 Atendimentos da Secretaria (CRUD COMPLETO)
-            Route::resource('atendimentos', SecretariaAtendimentoController::class);
-        });
-
-        Route::prefix('secretaria')->name('secretaria.')->group(function () {
-
-            Route::get('/', [SecretariaDashboardController::class, 'index'])
-                ->name('dashboard');
-
-            Route::resource('atendimentos', SecretariaAtendimentoController::class);
-
-            // 🔹 Buscar responsáveis de um aluno (AJAX)
-            Route::get('alunos/{aluno}/responsaveis',
-                [SecretariaAtendimentoController::class, 'responsaveisDoAluno']
-            )->name('alunos.responsaveis');
-        });
-        /*
-        |--------------------------------------------------------------------------
-        | DISCIPLINA ↔ TURMA ↔ PROFESSOR
-        |--------------------------------------------------------------------------
-        */
-        Route::prefix('turmas/{turma}')->name('turmas.')->group(function () {
-            Route::get('/disciplinas', [DisciplinaTurmaController::class, 'edit'])->name('disciplinas');
-            Route::post('/disciplinas', [DisciplinaTurmaController::class, 'store'])->name('disciplinas.store');
-            Route::delete('/disciplinas/{vinculo}', [DisciplinaTurmaController::class, 'destroy'])->name('disciplinas.destroy');
-
-            Route::post('/disciplinas/{vinculo}/professores', [DisciplinaTurmaController::class, 'vincularProfessor'])
-                ->name('disciplinas.professores.store');
-
-            Route::delete('/disciplinas/{vinculo}/professores/{professor}', [DisciplinaTurmaController::class, 'removerProfessor'])
-                ->name('disciplinas.professores.destroy');
-        });
-
-        /*
-        |--------------------------------------------------------------------------
-        | Vínculo aluno ↔ turma
-        |--------------------------------------------------------------------------
-        */
-        Route::post('turmas/{turma}/atribuir-aluno', [TurmaController::class, 'atribuirAluno'])
-            ->name('turmas.atribuirAluno');
-
-        /*
-        |--------------------------------------------------------------------------
-        | Registro e Documentos de Alunos
-        |--------------------------------------------------------------------------
-        */
-        Route::resource('aluno_registros', AlunoRegistroController::class)
-            ->parameters(['aluno_registros' => 'aluno_registro']);
-
-        Route::post('alunos/{aluno}/documentos', [AlunoDocumentController::class, 'store'])
-            ->name('alunos.documentos.store');
-
-        Route::delete('documentos/{documento}', [AlunoDocumentController::class, 'destroy'])
-            ->name('documentos.destroy');
-
-        /*
-        |--------------------------------------------------------------------------
-        | Configurações — DEFINITIVO
-        |--------------------------------------------------------------------------
-        */
-        Route::controller(SettingController::class)->group(function () {
-            Route::get('settings/edit', 'edit')->name('settings.edit');
-            Route::put('settings/update', 'update')->name('settings.update'); // ✔ CORRIGIDO
-        });
-    });
-
-    /*
-    |--------------------------------------------------------------------------
-    | Dashboard conforme tipo do usuário
+    | DASHBOARD POR PERFIL
     |--------------------------------------------------------------------------
     */
     Route::get('/dashboard', function () {
-
-        $user = Auth::user();
-
-        return match ($user->tipo) {
-            'admin' => redirect()->route('admin.dashboard'),
-            'professor' => redirect()->route('dashboard.professor'),
-            'aluno' => redirect()->route('dashboard.aluno'),
-            'responsavel' => redirect()->route('dashboard.responsavel'),
-            default => redirect()->route('login'),
+        return match (Auth::user()->tipo) {
+            'admin'        => redirect()->route('admin.dashboard'),
+            'professor'    => redirect()->route('dashboard.professor'),
+            'aluno'        => redirect()->route('dashboard.aluno'),
+            'responsavel'  => redirect()->route('dashboard.responsavel'),
+            default        => redirect()->route('login'),
         };
     })->name('dashboard');
 
-    Route::middleware('is_professor')->get('/dashboard/professor', fn() => view('professores.dashboard'))
+    Route::middleware('is_professor')
+        ->get('/dashboard/professor', fn () => view('professores.dashboard'))
         ->name('dashboard.professor');
 
-    Route::middleware('is_aluno')->get('/dashboard/aluno', fn() => view('alunos.dashboard'))
+    Route::middleware('is_aluno')
+        ->get('/dashboard/aluno', fn () => view('alunos.dashboard'))
         ->name('dashboard.aluno');
 
-    Route::middleware('is_responsavel')->get('/dashboard/responsavel', fn() => view('responsaveis.dashboard'))
+    Route::middleware('is_responsavel')
+        ->get('/dashboard/responsavel', fn () => view('responsaveis.dashboard'))
         ->name('dashboard.responsavel');
+
+    /*
+    |--------------------------------------------------------------------------
+    | PAINEL ADMINISTRATIVO
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('admin')
+        ->as('admin.')
+        ->middleware('is_admin')
+        ->group(function () {
+
+            /*
+            |--------------------------------------------------------------------------
+            | Dashboard Admin
+            |--------------------------------------------------------------------------
+            */
+            Route::get('/dashboard', [DashboardController::class, 'index'])
+                ->name('dashboard');
+
+            /*
+            |--------------------------------------------------------------------------
+            | MÓDULO FINANCEIRO
+            |--------------------------------------------------------------------------
+            */
+            Route::prefix('financeiro')->name('financeiro.')->group(function () {
+
+                Route::get('/', [FinanceiroDashboardController::class, 'index'])
+                    ->name('dashboard');
+
+                Route::resource('categorias', CategoriaDespesaController::class)
+                    ->parameters(['categorias' => 'categoria']);
+
+                Route::resource('centros', CentroCustoController::class)
+                    ->parameters(['centros' => 'centro']);
+
+                Route::resource('despesas', DespesaController::class)
+                    ->parameters(['despesas' => 'despesa']);
+
+                Route::get('despesas/{despesa}/duplicar', [DespesaController::class, 'duplicar'])
+                    ->name('despesas.duplicar');
+
+                Route::post('despesas/clonar-mes-anterior', [DespesaController::class, 'clonarMesAnterior'])
+                    ->name('despesas.clonarMesAnterior');
+
+                Route::delete('despesas/excluir-multiplas', [DespesaController::class, 'excluirMultiplas'])
+                    ->name('despesas.excluirMultiplas');
+            });
+
+            /*
+            |--------------------------------------------------------------------------
+            | CRUDs PRINCIPAIS
+            |--------------------------------------------------------------------------
+            */
+            Route::resource('usuarios', UserController::class)
+                ->parameters(['usuarios' => 'usuario']);
+
+            Route::resource('alunos', AlunoController::class)
+                ->parameters(['alunos' => 'aluno']);
+
+            Route::resource('professores', ProfessorController::class)
+                ->parameters(['professores' => 'professor']);
+
+            Route::resource('disciplinas', DisciplinaController::class)
+                ->parameters(['disciplinas' => 'disciplina']);
+
+            Route::resource('turmas', TurmaController::class)
+                ->parameters(['turmas' => 'turma']);
+
+            Route::resource('responsaveis', ResponsavelController::class)
+                ->parameters(['responsaveis' => 'responsavel']);
+
+            /*
+            |--------------------------------------------------------------------------
+            | SECRETARIA ESCOLAR
+            |--------------------------------------------------------------------------
+            */
+            Route::prefix('secretaria')->name('secretaria.')->group(function () {
+
+                Route::get('/', [SecretariaDashboardController::class, 'index'])
+                    ->name('dashboard');
+
+                Route::resource('atendimentos', SecretariaAtendimentoController::class);
+
+                Route::get('alunos/{aluno}/responsaveis',
+                    [SecretariaAtendimentoController::class, 'responsaveisDoAluno']
+                )->name('alunos.responsaveis');
+            });
+
+            /*
+            |--------------------------------------------------------------------------
+            | DISCIPLINA ↔ TURMA ↔ PROFESSOR
+            |--------------------------------------------------------------------------
+            */
+            Route::prefix('turmas/{turma}')
+                ->name('turmas.')
+                ->group(function () {
+
+                    Route::get('disciplinas', [DisciplinaTurmaController::class, 'edit'])
+                        ->name('disciplinas');
+
+                    Route::post('disciplinas', [DisciplinaTurmaController::class, 'store'])
+                        ->name('disciplinas.store');
+
+                    Route::delete('disciplinas/{vinculo}', [DisciplinaTurmaController::class, 'destroy'])
+                        ->name('disciplinas.destroy');
+
+                    Route::post('disciplinas/{vinculo}/professores',
+                        [DisciplinaTurmaController::class, 'vincularProfessor']
+                    )->name('disciplinas.professores.store');
+
+                    Route::delete('disciplinas/{vinculo}/professores/{professor}',
+                        [DisciplinaTurmaController::class, 'removerProfessor']
+                    )->name('disciplinas.professores.destroy');
+                });
+
+            /*
+            |--------------------------------------------------------------------------
+            | VÍNCULO ALUNO ↔ TURMA
+            |--------------------------------------------------------------------------
+            */
+            Route::post('turmas/{turma}/atribuir-aluno',
+                [TurmaController::class, 'atribuirAluno']
+            )->name('turmas.atribuirAluno');
+
+            /*
+            |--------------------------------------------------------------------------
+            | REGISTROS E DOCUMENTOS DE ALUNOS
+            |--------------------------------------------------------------------------
+            */
+            Route::resource('aluno_registros', AlunoRegistroController::class)
+                ->parameters(['aluno_registros' => 'aluno_registro']);
+
+            Route::post('alunos/{aluno}/documentos',
+                [AlunoDocumentController::class, 'store']
+            )->name('alunos.documentos.store');
+
+            Route::delete('documentos/{documento}',
+                [AlunoDocumentController::class, 'destroy']
+            )->name('documentos.destroy');
+
+            /*
+            |--------------------------------------------------------------------------
+            | GESTÃO ACADÊMICA — AVALIAÇÕES (CORRIGIDO)
+            |--------------------------------------------------------------------------
+            */
+            Route::prefix('gestao-academica')
+                ->name('gestao_academica.')
+                ->group(function () {
+
+                    Route::resource('avaliacoes', AvaliacaoController::class)
+                        ->parameters(['avaliacoes' => 'avaliacao']);
+
+                    Route::patch('avaliacoes/{avaliacao}/encerrar',
+                        [AvaliacaoController::class, 'encerrar']
+                    )->name('avaliacoes.encerrar');
+                });
+
+            /*
+            |--------------------------------------------------------------------------
+            | CONFIGURAÇÕES DO SISTEMA
+            |--------------------------------------------------------------------------
+            */
+            Route::controller(SettingController::class)->group(function () {
+                Route::get('settings/edit', 'edit')->name('settings.edit');
+                Route::put('settings/update', 'update')->name('settings.update');
+            });
+        });
+
+    /*
+    |--------------------------------------------------------------------------
+    | PERFIL DO USUÁRIO
+    |--------------------------------------------------------------------------
+    */
+    Route::middleware('auth')->group(function () {
+        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | PRIMEIRO ACESSO
+    |--------------------------------------------------------------------------
+    */
+    Route::middleware('auth')->group(function () {
+        Route::get('/first-access', [FirstAccessController::class, 'index'])
+            ->name('auth.first_access');
+
+        Route::post('/first-access', [FirstAccessController::class, 'update'])
+            ->name('auth.first_access.update');
+    });
 });
 
 /*
 |--------------------------------------------------------------------------
-| Perfil
-|--------------------------------------------------------------------------
-*/
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
-/*
-|--------------------------------------------------------------------------
-| Primeiro acesso
-|--------------------------------------------------------------------------
-*/
-Route::middleware('auth')->group(function () {
-    Route::get('/first-access', [FirstAccessController::class, 'index'])->name('auth.first_access');
-    Route::post('/first-access', [FirstAccessController::class, 'update'])->name('auth.first_access.update');
-});
-
-/*
-|--------------------------------------------------------------------------
-| Autenticação
+| Autenticação (Laravel Breeze / Jetstream / Fortify)
 |--------------------------------------------------------------------------
 */
 require __DIR__ . '/auth.php';

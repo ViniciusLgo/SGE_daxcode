@@ -181,20 +181,32 @@
         </div>
 
         {{-- ========================================= --}}
-        {{-- GESTÃO --}}
+        {{-- GESTÃO ACADÊMICA --}}
         {{-- ========================================= --}}
         <div class="sidebar-section">Gestão</div>
 
         <a href="javascript:void(0)" class="toggle-menu" data-target="#menu-gestao">
-            📊 Gestão
-            <i class="bi bi-chevron-down ms-auto small"></i>
+            📊 Gestão Acadêmica
+            <i class="bi bi-chevron-down ms-auto small
+        {{ request()->routeIs('admin.gestao_academica.*') ? 'rotate' : '' }}">
+            </i>
         </a>
 
-        <div id="menu-gestao" class="submenu">
-            <a href="#">📋 Boletins</a>
-            <a href="#">📈 Desempenho</a>
-            <a href="#">🧮 Frequência</a>
+        <div id="menu-gestao" class="submenu
+    {{ request()->routeIs('admin.gestao_academica.*') ? 'show' : '' }}">
+
+            {{-- AVALIAÇÕES --}}
+            <a href="{{ route('admin.gestao_academica.avaliacoes.index') }}"
+               class="{{ request()->routeIs('admin.gestao_academica.avaliacoes.*') ? 'active' : '' }}">
+                📝 Avaliações
+            </a>
+
+            {{-- FUTURO --}}
+            <a href="#" class="disabled text-muted">📋 Boletins</a>
+            <a href="#" class="disabled text-muted">📈 Desempenho</a>
+            <a href="#" class="disabled text-muted">🧮 Frequência</a>
         </div>
+
 
         {{-- ========================================= --}}
         {{-- ADMINISTRATIVO --}}
