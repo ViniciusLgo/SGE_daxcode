@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Professor;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 class ProfessorController extends Controller
@@ -22,63 +21,49 @@ class ProfessorController extends Controller
                         ->orWhere('email', 'like', "%{$search}%");
                 });
             })
-            ->withCount('disciplinas')
             ->orderByDesc('id')
             ->paginate(10);
 
         return view('admin.professores.index', compact('professores', 'search'));
     }
 
-    public function create()
+    /**
+     * CREATE — recebe user_id
+     */
+    public function create(Request $request)
     {
-        return view('admin.professores.create');
+        $user = User::findOrFail($request->user_id);
+        return view('admin.professores.create', compact('user'));
     }
 
+    /**
+     * STORE
+     */
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nome'            => 'required|string|max:255',
-            'email'           => 'required|email|unique:users,email',
-            'telefone'        => 'nullable|string|max:20',
-            'especializacao'  => 'nullable|string|max:255',
-            'foto_perfil'     => 'nullable|image|max:5120',
+            'user_id'        => 'required|exists:users,id',
+            'telefone'       => 'nullable|string|max:20',
+            'especializacao' => 'nullable|string|max:255',
+            'foto_perfil'    => 'nullable|image|max:5120',
         ]);
 
-        // Cria usuário vinculado
-        $user = User::create([
-            'name'     => $validated['nome'],
-            'email'    => $validated['email'],
-            'password' => Hash::make('123456789'),
-            'tipo'     => 'professor',
-        ]);
-
-        // Upload da foto
-        $fotoPath = null;
+        $foto = null;
         if ($request->hasFile('foto_perfil')) {
-            $fotoPath = $request->file('foto_perfil')->store('avatars/professores', 'public');
+            $foto = $request->file('foto_perfil')->store('professores/fotos', 'public');
         }
 
-        // Cria professor
         Professor::create([
-            'user_id'        => $user->id,
+            'user_id'        => $validated['user_id'],
             'telefone'       => $validated['telefone'] ?? null,
             'especializacao' => $validated['especializacao'] ?? null,
-            'foto_perfil'    => $fotoPath,
+            'foto_perfil'    => $foto,
         ]);
 
-        return redirect()->route('admin.professores.index')
-            ->with('success', 'Professor e usuário criados com sucesso!');
+        return redirect()
+            ->route('admin.professores.index')
+            ->with('success', 'Professor cadastrado com sucesso!');
     }
-
-    public function show($id)
-    {
-        $professor = Professor::with('user')->findOrFail($id);
-        $disciplinas = $professor->disciplinas()->paginate(10);
-
-        return view('admin.professores.show', compact('professor', 'disciplinas'));
-    }
-
-
 
     public function edit($id)
     {
@@ -91,35 +76,30 @@ class ProfessorController extends Controller
         $professor = Professor::with('user')->findOrFail($id);
 
         $validated = $request->validate([
-            'nome'            => 'required|string|max:255',
-            'email'           => 'required|email|unique:users,email,' . $professor->user->id,
-            'telefone'        => 'nullable|string|max:20',
-            'especializacao'  => 'nullable|string|max:255',
-            'foto_perfil'     => 'nullable|image|max:5120',
+            'user.name'   => 'required|string|max:255',
+            'user.email'  => 'required|email|unique:users,email,' . $professor->user->id,
+            'telefone'    => 'nullable|string|max:20',
+            'especializacao' => 'nullable|string|max:255',
+            'foto_perfil' => 'nullable|image|max:5120',
         ]);
 
-        // Atualiza User
-        $professor->user->update([
-            'name'  => $validated['nome'],
-            'email' => $validated['email'],
-        ]);
+        $professor->user->update($validated['user']);
 
-        // Atualiza foto
         if ($request->hasFile('foto_perfil')) {
             if ($professor->foto_perfil) {
                 Storage::disk('public')->delete($professor->foto_perfil);
             }
-            $professor->foto_perfil = $request->file('foto_perfil')->store('avatars/professores', 'public');
+            $professor->foto_perfil = $request->file('foto_perfil')->store('professores/fotos', 'public');
         }
 
         $professor->update([
             'telefone'       => $validated['telefone'] ?? null,
             'especializacao' => $validated['especializacao'] ?? null,
-            'foto_perfil'    => $professor->foto_perfil ?? null,
+            'foto_perfil'    => $professor->foto_perfil,
         ]);
 
         return redirect()->route('admin.professores.index')
-            ->with('success', 'Professor e usuário atualizados com sucesso!');
+            ->with('success', 'Professor atualizado com sucesso!');
     }
 
     public function destroy($id)
@@ -130,10 +110,10 @@ class ProfessorController extends Controller
             Storage::disk('public')->delete($professor->foto_perfil);
         }
 
-        $professor->user?->delete();
+        $professor->user->delete();
         $professor->delete();
 
         return redirect()->route('admin.professores.index')
-            ->with('success', 'Professor e usuário removidos com sucesso!');
+            ->with('success', 'Professor removido com sucesso!');
     }
 }

@@ -7,22 +7,33 @@ use App\Models\User;
 use App\Models\Aluno;
 use App\Models\Professor;
 use App\Models\Responsavel;
+use App\Models\Turma;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    /**
+     * LISTAGEM DE USUÁRIOS
+     */
     public function index()
     {
         $usuarios = User::orderByDesc('id')->get();
         return view('admin.usuarios.index', compact('usuarios'));
     }
 
+    /**
+     * FORMULÁRIO DE CRIAÇÃO
+     */
     public function create()
     {
         return view('admin.usuarios.create');
     }
 
+    /**
+     * STORE — CRIA USUÁRIO E PERFIL ASSOCIADO
+     * Regra: User é a entidade primária.
+     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -32,7 +43,6 @@ class UserController extends Controller
             'password' => 'required|string|min:6|confirmed',
         ]);
 
-        // 🔹 Criação do usuário
         $user = User::create([
             'name'     => $validated['name'],
             'email'    => $validated['email'],
@@ -40,59 +50,35 @@ class UserController extends Controller
             'tipo'     => $validated['tipo'],
         ]);
 
-        // 🔹 Se for aluno, cria o perfil correspondente
-        if ($user->tipo === 'aluno') {
-            // Verifica se existe turma padrão
-            $turmaPadrao = \App\Models\Turma::where('id', 999)->first();
+        return match ($user->tipo) {
+            'aluno' => redirect()
+                ->route('admin.alunos.create', ['user_id' => $user->id]),
 
-            // Se não existir, cria
-            if (!$turmaPadrao) {
-                $turmaPadrao = \App\Models\Turma::create([
-                    'id' => 999,
-                    'nome' => 'Turma Padrão',
-                    'ano' => date('Y'),
-                    'turno' => 'Indefinido',
-                    'descricao' => 'Turma criada automaticamente para alunos sem turma atribuída',
-                ]);
-            }
+            'professor' => redirect()
+                ->route('admin.professores.create', ['user_id' => $user->id]),
 
-            // Cria o aluno vinculado
-            Aluno::create([
-                'user_id'   => $user->id,
-                'turma_id'  => $turmaPadrao->id,
-                'matricula' => 'A' . str_pad($user->id, 4, '0', STR_PAD_LEFT),
-                'telefone'  => null,
-                'foto_perfil' => null,
-            ]);
-        }
+            'responsavel' => redirect()
+                ->route('admin.responsaveis.create', ['user_id' => $user->id]),
 
-        // 🔹 Professor
-        elseif ($user->tipo === 'professor') {
-            Professor::create([
-                'user_id' => $user->id,
-                'especializacao' => null,
-            ]);
-        }
-
-        // 🔹 Responsável
-        elseif ($user->tipo === 'responsavel') {
-            Responsavel::create([
-                'user_id' => $user->id,
-                'cpf' => null,
-                'grau_parentesco' => null,
-            ]);
-        }
-
-        return redirect()->route('admin.usuarios.index')
-            ->with('success', "Usuário ({$user->tipo}) e perfil criados com sucesso!");
+            default => redirect()
+                ->route('admin.usuarios.index')
+                ->with('success', 'Administrador criado com sucesso!')
+        };
     }
 
+
+    /**
+     * FORMULÁRIO DE EDIÇÃO
+     */
     public function edit($id)
     {
         $user = User::findOrFail($id);
         return view('admin.usuarios.edit', compact('user'));
     }
 
+    /**
+     * UPDATE — ATUALIZA USUÁRIO E GARANTE PERFIL
+     */
     public function update(Request $request, $id)
     {
         $user = User::findOrFail($id);
@@ -112,15 +98,10 @@ class UserController extends Controller
 
         $user->update($validated);
 
-        // 🔹 Garante que o perfil correspondente exista
+        // Garante consistência do perfil
         if ($user->tipo === 'aluno' && !$user->aluno) {
-            $turmaPadrao = \App\Models\Turma::where('id', 999)->first() ?? \App\Models\Turma::create([
-                'id' => 999,
-                'nome' => 'Turma Padrão',
-                'ano' => date('Y'),
-                'turno' => 'Indefinido',
-                'descricao' => 'Turma criada automaticamente',
-            ]);
+
+            $turmaPadrao = Turma::where('nome', 'Turma Padrão')->firstOrFail();
 
             Aluno::create([
                 'user_id'   => $user->id,
@@ -137,10 +118,14 @@ class UserController extends Controller
             Responsavel::create(['user_id' => $user->id]);
         }
 
-        return redirect()->route('admin.usuarios.index')
+        return redirect()
+            ->route('admin.usuarios.index')
             ->with('success', 'Usuário atualizado com sucesso!');
     }
 
+    /**
+     * DESTROY — REMOVE USUÁRIO E PERFIL
+     */
     public function destroy($id)
     {
         $user = User::findOrFail($id);
@@ -154,7 +139,8 @@ class UserController extends Controller
 
         $user->delete();
 
-        return redirect()->route('admin.usuarios.index')
+        return redirect()
+            ->route('admin.usuarios.index')
             ->with('success', 'Usuário e perfil excluídos com sucesso!');
     }
 }

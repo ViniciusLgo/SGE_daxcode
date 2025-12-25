@@ -8,13 +8,12 @@ use App\Models\Turma;
 use App\Models\User;
 use App\Models\Responsavel;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 class AlunoController extends Controller
 {
     /**
-     * Listagem de alunos (com busca)
+     * LISTAGEM
      */
     public function index(Request $request)
     {
@@ -22,11 +21,10 @@ class AlunoController extends Controller
 
         $alunos = Aluno::with(['user', 'turma'])
             ->when($search, function ($query, $search) {
-                $query->whereHas('user', function ($q) use ($search) {
-                    $q->where('name', 'like', "%{$search}%")
+                $query->whereHas('user', function ($u) use ($search) {
+                    $u->where('name', 'like', "%{$search}%")
                         ->orWhere('email', 'like', "%{$search}%");
-                })
-                    ->orWhere('matricula', 'like', "%{$search}%");
+                })->orWhere('matricula', 'like', "%{$search}%");
             })
             ->orderByDesc('id')
             ->paginate(10);
@@ -35,68 +33,54 @@ class AlunoController extends Controller
     }
 
     /**
-     * Formulário de criação
+     * CREATE — recebe user_id
      */
-    public function create()
+    public function create(Request $request)
     {
-        // redireciona para o cadastro unificado de usuários (perfil aluno)
-        return redirect()
-            ->route('admin.usuarios.create', ['perfil' => 'aluno'])
-            ->with('info', 'O cadastro de alunos agora é feito pela tela de Usuários.');
+        $user = User::findOrFail($request->user_id);
+        $turmas = Turma::orderBy('nome')->get();
+
+        return view('admin.alunos.create', compact('user', 'turmas'));
     }
 
     /**
-     * Cria novo aluno e automaticamente o usuário vinculado.
+     * STORE
      */
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nome' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'telefone' => 'nullable|string|max:20',
-            'matricula' => 'required|string|max:50|unique:alunos,matricula',
-            'turma_id' => 'required|exists:turmas,id',
+            'user_id'   => 'required|exists:users,id',
+            'turma_id'  => 'required|exists:turmas,id',
+            'telefone'  => 'nullable|string|max:20',
             'foto_perfil' => 'nullable|image|max:2048',
         ]);
 
-        // 🔹 Cria o usuário vinculado
-        $user = User::create([
-            'name' => $validated['nome'],
-            'email' => $validated['email'],
-            'password' => Hash::make('123456789'), // senha padrão ajustada
-            'tipo' => 'aluno',
-        ]);
+        $ultimoAluno = Aluno::orderByDesc('id')->first();
+        $proximoNumero = $ultimoAluno ? $ultimoAluno->id + 1 : 1;
 
-        // 🔹 Upload da foto, se enviada
-        $fotoPath = null;
+        $matricula = 'ALU-' . now()->format('Y') . '-' . str_pad($proximoNumero, 5, '0', STR_PAD_LEFT);
+
+        $foto = null;
         if ($request->hasFile('foto_perfil')) {
-            $fotoPath = $request->file('foto_perfil')->store('alunos/fotos', 'public');
+            $foto = $request->file('foto_perfil')->store('alunos/fotos', 'public');
         }
 
-        // 🔹 Cria o aluno vinculado ao usuário
-        $aluno = Aluno::create([
-            'user_id' => $user->id,
-            'matricula' => $validated['matricula'],
-            'telefone' => $validated['telefone'] ?? null,
-            'turma_id' => $validated['turma_id'],
-            'foto_perfil' => $fotoPath,
+        Aluno::create([
+            'user_id'   => $validated['user_id'],
+            'turma_id'  => $validated['turma_id'],
+            'matricula' => $matricula,
+            'telefone'  => $validated['telefone'] ?? null,
+            'foto_perfil' => $foto,
         ]);
 
-        return redirect()->route('admin.alunos.index')
-            ->with('success', "Aluno criado com sucesso e usuário vinculado!");
+        return redirect()
+            ->route('admin.alunos.index')
+            ->with('success', 'Aluno cadastrado com sucesso!');
     }
 
-    /**
-     * Exibe detalhes do aluno.
-     */
-    public function show($id)
-    {
-        $aluno = Aluno::with(['user', 'turma', 'responsaveis', 'documentos', 'registros'])->findOrFail($id);
-        return view('admin.alunos.show', compact('aluno'));
-    }
 
     /**
-     * Formulário de edição.
+     * EDIT
      */
     public function edit($id)
     {
@@ -108,28 +92,23 @@ class AlunoController extends Controller
     }
 
     /**
-     * Atualiza aluno e o respectivo usuário.
+     * UPDATE
      */
     public function update(Request $request, $id)
     {
         $aluno = Aluno::with('user')->findOrFail($id);
 
         $validated = $request->validate([
-            'user.name' => 'required|string|max:255',
-            'user.email' => 'required|email|unique:users,email,' . $aluno->user->id,
-            'telefone' => 'nullable|string|max:20',
-            'matricula' => 'required|string|max:50|unique:alunos,matricula,' . $aluno->id,
-            'turma_id' => 'required|exists:turmas,id',
-            'foto_perfil' => 'nullable|image|max:2048',
+            'user.name'   => 'required|string|max:255',
+            'user.email'  => 'required|email|unique:users,email,' . $aluno->user->id,
+            'telefone'   => 'nullable|string|max:20',
+            'matricula'  => 'required|string|unique:alunos,matricula,' . $aluno->id,
+            'turma_id'   => 'required|exists:turmas,id',
+            'foto_perfil'=> 'nullable|image|max:2048',
         ]);
 
-        // 🔹 Atualiza User
-        $aluno->user->update([
-            'name' => $validated['user']['name'],
-            'email' => $validated['user']['email'],
-        ]);
+        $aluno->user->update($validated['user']);
 
-        // 🔹 Atualiza foto se enviada
         if ($request->hasFile('foto_perfil')) {
             if ($aluno->foto_perfil) {
                 Storage::disk('public')->delete($aluno->foto_perfil);
@@ -137,43 +116,51 @@ class AlunoController extends Controller
             $aluno->foto_perfil = $request->file('foto_perfil')->store('alunos/fotos', 'public');
         }
 
-        // 🔹 Atualiza demais campos do aluno
         $aluno->update([
-            'telefone' => $validated['telefone'] ?? null,
+            'telefone'  => $validated['telefone'] ?? null,
             'matricula' => $validated['matricula'],
-            'turma_id' => $validated['turma_id'],
+            'turma_id'  => $validated['turma_id'],
+            'foto_perfil' => $aluno->foto_perfil,
         ]);
 
-        // 🔹 Sincroniza responsáveis (se houver)
-        if ($request->filled('responsaveis')) {
-            $aluno->responsaveis()->sync($request->responsaveis);
-        }
+        $aluno->responsaveis()->sync($request->responsaveis ?? []);
 
-        return redirect()->route('admin.alunos.edit', $aluno->id)
-            ->with('success', 'Aluno e usuário atualizados com sucesso!');
+        return redirect()->back()->with('success', 'Aluno atualizado com sucesso!');
     }
 
+
     /**
-     * Exclui aluno e respectivo usuário vinculado.
+     * SHOW — ficha completa do aluno
+     */
+    public function show($id)
+    {
+        $aluno = Aluno::with([
+            'user',
+            'turma',
+            'responsaveis',
+            'documentos',
+            'registros',
+        ])->findOrFail($id);
+
+        return view('admin.alunos.show', compact('aluno'));
+    }
+
+
+    /**
+     * DESTROY
      */
     public function destroy($id)
     {
         $aluno = Aluno::with('user')->findOrFail($id);
 
-        // 🔹 Remove foto, se existir
         if ($aluno->foto_perfil) {
             Storage::disk('public')->delete($aluno->foto_perfil);
         }
 
-        // 🔹 Deleta o usuário (cascade)
-        if ($aluno->user) {
-            $aluno->user->delete();
-        }
-
-        // 🔹 Deleta o aluno
+        $aluno->user->delete();
         $aluno->delete();
 
         return redirect()->route('admin.alunos.index')
-            ->with('success', 'Aluno e usuário removidos com sucesso!');
+            ->with('success', 'Aluno removido com sucesso!');
     }
 }

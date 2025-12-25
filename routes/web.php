@@ -112,6 +112,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->middleware('is_admin')
         ->group(function () {
 
+            Route::get('usuarios', [UserController::class, 'index'])
+                ->name('usuarios.index');
+
+
             /*
             |--------------------------------------------------------------------------
             | Dashboard Admin

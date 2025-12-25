@@ -145,10 +145,16 @@
             <h5>SGE <span class="text-warning">DaxCode</span></h5>
         </div>
 
+        <a href="{{ route('admin.dashboard') }}"
+           class="mx-2 mt-2 {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+            <i class="bi bi-house-door-fill"></i> Dashboard
+        </a>
+
         {{-- ========================================= --}}
         {{-- ACADÊMICO --}}
         {{-- ========================================= --}}
         <div class="sidebar-section">Acadêmico</div>
+
 
         <a href="javascript:void(0)" class="toggle-menu" data-target="#menu-academico">
             🎓 Acadêmico
@@ -308,7 +314,10 @@
 {{-- ========== CONTENT ========== --}}
 <div class="content">
     <nav class="navbar mb-4 d-flex justify-content-between">
-        <strong>Painel Administrativo</strong>
+        <a href="{{ route('admin.dashboard') }}"
+           class="fw-bold text-decoration-none text-dark">
+            <i class="bi bi-house-door me-1"></i> Painel Administrativo
+        </a>
 
         <div class="d-flex align-items-center gap-3">
             <span class="text-muted small">
