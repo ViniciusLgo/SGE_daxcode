@@ -245,6 +245,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 [AlunoDocumentController::class, 'destroy']
             )->name('documentos.destroy');
 
+
+            Route::get(
+                'buscar-turma-aluno/{aluno}',
+                [AlunoRegistroController::class, 'buscarTurmaAluno']
+            )->name('buscar_turma_aluno');
+
             /*
  |--------------------------------------------------------------------------
  | GESTÃO ACADÊMICA — AVALIAÇÕES
@@ -257,6 +263,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
                     // CRUD de Avaliações (EVENTO)
                     Route::resource('avaliacoes', AvaliacaoController::class)
                         ->parameters(['avaliacoes' => 'avaliacao']);
+
+                    Route::patch(
+                        'avaliacoes/{avaliacao}/reabrir',
+                        [\App\Http\Controllers\Admin\GestaoAcademica\AvaliacaoController::class, 'reabrir']
+                    )->name('avaliacoes.reabrir');
+
+
 
                     // Encerrar avaliação
                     Route::patch(

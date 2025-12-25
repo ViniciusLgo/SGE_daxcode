@@ -2,11 +2,12 @@
 
 @section('content')
 
+    {{-- Cabeçalho --}}
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h4>Nova Avaliação</h4>
+            <h4 class="mb-1">Nova Avaliação</h4>
             <p class="text-muted mb-0">
-                Cadastro de avaliação por turma, disciplina e professor.
+                Cadastro de avaliação por turma e disciplina.
             </p>
         </div>
 
@@ -16,6 +17,7 @@
         </a>
     </div>
 
+    {{-- Card --}}
     <div class="card shadow-sm border-0">
         <div class="card-body">
 
@@ -48,22 +50,9 @@
                     </select>
                 </div>
 
-                {{-- Professor --}}
-                <div class="mb-3">
-                    <label class="form-label">Professor</label>
-                    <select name="professor_id" class="form-select" required>
-                        <option value="">Selecione</option>
-                        @foreach($professores as $professor)
-                            <option value="{{ $professor->id }}">
-                                {{ $professor->user->name ?? '—' }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
                 {{-- Título --}}
                 <div class="mb-3">
-                    <label class="form-label">Título da Avaliação</label>
+                    <label class="form-label">Título</label>
                     <input type="text"
                            name="titulo"
                            class="form-control"

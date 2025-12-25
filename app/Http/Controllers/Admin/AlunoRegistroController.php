@@ -189,21 +189,18 @@ class AlunoRegistroController extends Controller
      * AJAX — BUSCAR TURMA AUTOMÁTICA DO ALUNO
      * =========================================================
      */
-    public function buscarTurma($alunoId)
+    public function buscarTurmaAluno(Aluno $aluno)
     {
-        $aluno = Aluno::with('turma')->find($alunoId);
-
-        if (!$aluno) {
-            return response()->json(['erro' => 'Aluno não encontrado'], 404);
-        }
-
+        // Aluno sem turma
         if (!$aluno->turma) {
-            return response()->json(['sem_turma' => true]);
+            return response()->json([
+                'sem_turma' => true
+            ]);
         }
 
         return response()->json([
-            'turma' => $aluno->turma->nome,
-            'turma_id' => $aluno->turma->id
+            'turma_id' => $aluno->turma->id,
+            'turma'    => $aluno->turma->nome,
         ]);
     }
 }

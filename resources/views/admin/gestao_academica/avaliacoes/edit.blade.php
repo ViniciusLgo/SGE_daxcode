@@ -2,9 +2,10 @@
 
 @section('content')
 
+    {{-- ================= CABEÇALHO ================= --}}
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h4>Editar Avaliação</h4>
+            <h4 class="mb-1">Editar Avaliação</h4>
             <p class="text-muted mb-0">
                 Atualização dos dados da avaliação.
             </p>
@@ -16,17 +17,35 @@
         </a>
     </div>
 
+    {{-- ================= REABRIR (SE ENCERRADA) ================= --}}
+    @if($avaliacao->status === 'encerrada')
+        <div class="alert alert-warning d-flex justify-content-between align-items-center">
+            <div>
+                <strong>Avaliação encerrada.</strong>
+                Para editar ou lançar novos resultados, reabra a avaliação.
+            </div>
+
+            <form action="{{ route('admin.gestao_academica.avaliacoes.reabrir', $avaliacao) }}"
+                  method="POST"
+                  class="mb-0">
+                @csrf
+                @method('PATCH')
+
+                <button class="btn btn-success">
+                    🔓 Reabrir Avaliação
+                </button>
+            </form>
+        </div>
+    @endif
+
+    {{-- ================= FORMULÁRIO DE EDIÇÃO ================= --}}
     <div class="card shadow-sm border-0">
         <div class="card-body">
 
             <form method="POST"
-                  action="{{ route(
-          'admin.gestao_academica.avaliacoes.update',
-          ['avaliacao' => $avaliacao->id]
-            ) }}">
+                  action="{{ route('admin.gestao_academica.avaliacoes.update', $avaliacao) }}">
                 @csrf
                 @method('PUT')
-
 
                 {{-- Turma --}}
                 <div class="mb-3">
@@ -49,19 +68,6 @@
                             <option value="{{ $disciplina->id }}"
                                 @selected($avaliacao->disciplina_id == $disciplina->id)>
                                 {{ $disciplina->nome }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
-                {{-- Professor --}}
-                <div class="mb-3">
-                    <label class="form-label">Professor</label>
-                    <select name="professor_id" class="form-select" required>
-                        @foreach($professores as $professor)
-                            <option value="{{ $professor->id }}"
-                                @selected($avaliacao->professor_id == $professor->id)>
-                                {{ $professor->user->name ?? '—' }}
                             </option>
                         @endforeach
                     </select>
@@ -113,7 +119,7 @@
                     </select>
                 </div>
 
-                {{-- Ações --}}
+                {{-- ================= AÇÕES ================= --}}
                 <div class="d-flex justify-content-end gap-2">
                     <a href="{{ route('admin.gestao_academica.avaliacoes.index') }}"
                        class="btn btn-light">
@@ -125,6 +131,20 @@
                     </button>
                 </div>
 
+            </form>
+
+            {{-- ================= EXCLUIR (FORM SEPARADO) ================= --}}
+            <hr>
+
+            <form action="{{ route('admin.gestao_academica.avaliacoes.destroy', $avaliacao) }}"
+                  method="POST"
+                  onsubmit="return confirm('Deseja excluir esta avaliação? Esta ação não pode ser desfeita.')">
+                @csrf
+                @method('DELETE')
+
+                <button class="btn btn-outline-danger">
+                    Excluir Avaliação
+                </button>
             </form>
 
         </div>

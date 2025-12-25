@@ -2,11 +2,12 @@
 
 @section('content')
 
+    {{-- Cabeçalho --}}
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h4>Avaliações</h4>
+            <h4 class="mb-1">Avaliações</h4>
             <p class="text-muted mb-0">
-                Gestão de avaliações por turma, disciplina e professor.
+                Gestão de avaliações por turma e disciplina.
             </p>
         </div>
 
@@ -20,12 +21,12 @@
         <div class="card-body">
 
             <table class="table table-hover align-middle">
-                <thead>
+                <thead class="table-light">
                 <tr>
                     <th>Título</th>
                     <th>Turma</th>
                     <th>Disciplina</th>
-                    <th>Professor</th>
+                    <th>Tipo</th>
                     <th>Data</th>
                     <th>Status</th>
                     <th class="text-end">Ações</th>
@@ -38,8 +39,17 @@
                         <td>{{ $avaliacao->titulo }}</td>
                         <td>{{ $avaliacao->turma->nome ?? '—' }}</td>
                         <td>{{ $avaliacao->disciplina->nome ?? '—' }}</td>
-                        <td>{{ $avaliacao->professor->user->name ?? '—' }}</td>
-                        <td>{{ \Carbon\Carbon::parse($avaliacao->data_avaliacao)->format('d/m/Y') }}</td>
+
+                        <td>
+                        <span class="badge bg-info text-dark">
+                            {{ ucfirst($avaliacao->tipo) }}
+                        </span>
+                        </td>
+
+                        <td>
+                            {{ \Carbon\Carbon::parse($avaliacao->data_avaliacao)->format('d/m/Y') }}
+                        </td>
+
                         <td>
                             @if($avaliacao->status === 'encerrada')
                                 <span class="badge bg-secondary">Encerrada</span>
@@ -47,7 +57,6 @@
                                 <span class="badge bg-success">Aberta</span>
                             @endif
                         </td>
-
 
                         <td class="text-end">
 
@@ -58,13 +67,28 @@
                             </a>
 
                             {{-- Resultados --}}
-                            <a href="{{ route(
-            'admin.gestao_academica.avaliacoes.resultados.index',
-            $avaliacao
-        ) }}"
-                               class="btn btn-sm {{ $avaliacao->status === 'aberta' ? 'btn-outline-primary' : 'btn-outline-secondary' }}">
-                                {{ $avaliacao->status === 'aberta' ? 'Lançar Resultados' : 'Ver Resultados' }}
+                            <a href="{{ route('admin.gestao_academica.avaliacoes.resultados.index', $avaliacao) }}"
+                               class="btn btn-sm {{ $avaliacao->status === 'aberta'
+                                ? 'btn-outline-success'
+                                : 'btn-outline-secondary' }}">
+                                {{ $avaliacao->status === 'aberta'
+                                    ? 'Lançar Resultados'
+                                    : 'Ver Resultados' }}
                             </a>
+
+                            {{-- 🔓 Reabrir --}}
+                            @if($avaliacao->status === 'encerrada')
+                                <form action="{{ route('admin.gestao_academica.avaliacoes.reabrir', $avaliacao) }}"
+                                      method="POST"
+                                      class="d-inline">
+                                    @csrf
+                                    @method('PATCH')
+
+                                    <button class="btn btn-sm btn-outline-success">
+                                        Reabrir
+                                    </button>
+                                </form>
+                            @endif
 
                             {{-- Encerrar --}}
                             @if($avaliacao->status === 'aberta')
@@ -73,18 +97,32 @@
                                       class="d-inline">
                                     @csrf
                                     @method('PATCH')
-                                    <button class="btn btn-sm btn-outline-danger"
+
+                                    <button class="btn btn-sm btn-outline-warning"
                                             onclick="return confirm('Deseja encerrar esta avaliação?')">
                                         Encerrar
                                     </button>
                                 </form>
                             @endif
 
+                            {{-- Excluir --}}
+                            <form action="{{ route('admin.gestao_academica.avaliacoes.destroy', $avaliacao) }}"
+                                  method="POST"
+                                  class="d-inline">
+                                @csrf
+                                @method('DELETE')
+
+                                <button class="btn btn-sm btn-outline-danger"
+                                        onclick="return confirm('Deseja excluir esta avaliação?')">
+                                    Excluir
+                                </button>
+                            </form>
+
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="text-center text-muted">
+                        <td colspan="7" class="text-center text-muted py-4">
                             Nenhuma avaliação cadastrada.
                         </td>
                     </tr>

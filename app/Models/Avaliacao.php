@@ -14,7 +14,6 @@ class Avaliacao extends Model
     protected $fillable = [
         'turma_id',
         'disciplina_id',
-        'professor_id',
         'titulo',
         'tipo',
         'data_avaliacao',
@@ -32,13 +31,14 @@ class Avaliacao extends Model
         return $this->belongsTo(Turma::class);
     }
 
+
     public function disciplina()
     {
         return $this->belongsTo(Disciplina::class);
     }
 
-    public function professor()
+    public function resultados()
     {
-        return $this->belongsTo(Professor::class);
+        return $this->hasMany(AvaliacaoResultado::class);
     }
 }

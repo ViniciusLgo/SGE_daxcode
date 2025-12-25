@@ -17,11 +17,14 @@ class AvaliacaoController extends Controller
      */
     public function index()
     {
-        $avaliacoes = Avaliacao::with(['turma', 'disciplina', 'professor'])
-            ->orderByDesc('data_avaliacao')
+        $avaliacoes = Avaliacao::with(['turma', 'disciplina'])
+            ->orderBy('data_avaliacao', 'desc')
             ->paginate(10);
 
-        return view('admin.gestao_academica.avaliacoes.index', compact('avaliacoes'));
+        return view(
+            'admin.gestao_academica.avaliacoes.index',
+            compact('avaliacoes')
+        );
     }
 
     /**
@@ -48,7 +51,6 @@ class AvaliacaoController extends Controller
         $request->validate([
             'turma_id'       => 'required|exists:turmas,id',
             'disciplina_id'  => 'required|exists:disciplinas,id',
-            'professor_id'   => 'required|exists:professores,id',
             'titulo'         => 'required|string|max:255',
             'tipo'           => 'required|string|max:50',
             'data_avaliacao' => 'required|date',
@@ -57,7 +59,6 @@ class AvaliacaoController extends Controller
         Avaliacao::create([
             'turma_id'       => $request->turma_id,
             'disciplina_id'  => $request->disciplina_id,
-            'professor_id'   => $request->professor_id,
             'titulo'         => $request->titulo,
             'tipo'           => $request->tipo,
             'data_avaliacao' => $request->data_avaliacao,
@@ -92,21 +93,28 @@ class AvaliacaoController extends Controller
     public function update(Request $request, Avaliacao $avaliacao)
     {
         $request->validate([
-            'turma_id'       => 'required|exists:turmas,id',
-            'disciplina_id'  => 'required|exists:disciplinas,id',
-            'professor_id'   => 'required|exists:professores,id',
-            'titulo'         => 'required|string|max:255',
-            'tipo'           => 'required|string|max:50',
-            'data_avaliacao' => 'required|date',
-            'status'         => 'required|in:aberta,encerrada',
+            'turma_id'        => 'required|exists:turmas,id',
+            'disciplina_id'   => 'required|exists:disciplinas,id',
+            'titulo'          => 'required|string|max:255',
+            'tipo'            => 'required|in:prova,trabalho,atividade,recuperacao',
+            'data_avaliacao'  => 'required|date',
+            'status'          => 'required|in:aberta,encerrada',
         ]);
 
-        $avaliacao->update($request->all());
+        $avaliacao->update($request->only([
+            'turma_id',
+            'disciplina_id',
+            'titulo',
+            'tipo',
+            'data_avaliacao',
+            'status',
+        ]));
 
         return redirect()
             ->route('admin.gestao_academica.avaliacoes.index')
             ->with('success', 'Avaliação atualizada com sucesso.');
     }
+
 
     /**
      * Encerrar avaliação
@@ -117,4 +125,40 @@ class AvaliacaoController extends Controller
 
         return back()->with('success', 'Avaliação encerrada.');
     }
+    /**
+     * Reabrir avaliação encerrada
+     */
+    public function reabrir(Avaliacao $avaliacao)
+    {
+        if ($avaliacao->status === 'encerrada') {
+            $avaliacao->update([
+                'status' => 'aberta',
+            ]);
+        }
+
+        return redirect()
+            ->route('admin.gestao_academica.avaliacoes.edit', $avaliacao)
+            ->with('success', 'Avaliação reaberta com sucesso.');
+    }
+
+    /**
+     * Remove a avaliação do sistema
+     */
+    public function destroy(Avaliacao $avaliacao)
+    {
+        // ❌ Bloqueia APENAS exclusão
+        if ($avaliacao->resultados()->exists()) {
+            return redirect()
+                ->route('admin.gestao_academica.avaliacoes.index')
+                ->with('error', 'Não é possível excluir uma avaliação que já possui resultados.');
+        }
+
+        $avaliacao->delete();
+
+        return redirect()
+            ->route('admin.gestao_academica.avaliacoes.index')
+            ->with('success', 'Avaliação excluída com sucesso.');
+    }
+
+
 }
