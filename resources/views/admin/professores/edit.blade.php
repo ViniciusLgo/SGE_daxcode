@@ -1,32 +1,42 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h4 class="mb-1">
-                <i class="bi bi-pencil-square text-warning me-2"></i> Editar Professor
-            </h4>
-            <p class="text-muted mb-0">Atualize as informações deste professor.</p>
-        </div>
-        <a href="{{ route('admin.professores.index') }}" class="btn btn-outline-secondary">
-            <i class="bi bi-arrow-left"></i> Voltar
-        </a>
-    </div>
+    <div class="space-y-6">
 
-    <div class="card shadow-sm border-0">
-        <div class="card-body">
-            {{-- Exibe mensagens de sucesso ou erro --}}
+        {{-- Header --}}
+        <div class="flex justify-between items-start">
+            <div>
+                <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light flex items-center gap-2">
+                    <i class="bi bi-pencil-square text-dax-yellow"></i>
+                    Editar Professor
+                </h1>
+                <p class="text-slate-500">
+                    Atualize as informações deste professor.
+                </p>
+            </div>
+
+            <a href="{{ route('admin.professores.index') }}"
+               class="px-4 py-2 rounded-xl border
+                  border-slate-200 dark:border-slate-800">
+                <i class="bi bi-arrow-left"></i> Voltar
+            </a>
+        </div>
+
+        {{-- Card --}}
+        <div class="rounded-2xl border bg-white dark:bg-dax-dark/60
+                border-slate-200 dark:border-slate-800 p-6">
+
+            {{-- Mensagens --}}
             @if (session('success'))
-                <div class="alert alert-success alert-dismissible fade show">
+                <div class="mb-4 rounded-xl bg-green-100 text-green-800 px-4 py-3">
                     {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             @endif
 
             @if ($errors->any())
-                <div class="alert alert-danger">
+                <div class="mb-4 rounded-xl bg-red-100 text-red-800 px-4 py-3">
                     <strong>Ops!</strong> Corrija os erros abaixo:
-                    <ul class="mb-0 mt-2">
+                    <ul class="list-disc list-inside mt-2">
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
                         @endforeach
@@ -34,44 +44,16 @@
                 </div>
             @endif
 
-            {{-- Formulário de edição --}}
+            {{-- Form --}}
             <form action="{{ route('admin.professores.update', $professor->id) }}" method="POST">
                 @csrf
                 @method('PUT')
 
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">Nome</label>
-                    <input type="text" name="nome" class="form-control shadow-sm"
-                           value="{{ old('nome', $professor->user->name) }}" required>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">E-mail</label>
-                    <input type="email" name="email" class="form-control shadow-sm"
-                           value="{{ old('email', $professor->user->email) }}" required>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">Telefone</label>
-                    <input type="text" name="telefone" class="form-control shadow-sm"
-                           value="{{ old('telefone', $professor->telefone) }}">
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">Especialização</label>
-                    <input type="text" name="especializacao" class="form-control shadow-sm"
-                           value="{{ old('especializacao', $professor->especializacao) }}">
-                </div>
-
-                <div class="text-end">
-                    <a href="{{ route('admin.professores.show', $professor->id) }}" class="btn btn-secondary">
-                        <i class="bi bi-x-circle"></i> Cancelar
-                    </a>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-save"></i> Salvar Alterações
-                    </button>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    @include('admin.professores._form', ['professor' => $professor])
                 </div>
             </form>
         </div>
+
     </div>
 @endsection

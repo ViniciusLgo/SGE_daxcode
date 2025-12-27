@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.sidebar-link {
+    @apply flex items-center gap-3 px-4 py-2.5 rounded-xl
+    font-semibold
+    text-slate-700 dark:text-slate-300
+    hover:bg-slate-100 dark:hover:bg-slate-800
+    transition;
+}
+
+.sidebar-link-active {
+    @apply bg-dax-yellow/20
+    text-dax-dark dark:text-dax-yellow
+    font-bold;
+}

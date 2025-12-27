@@ -1,92 +1,100 @@
 @csrf
 
-<!-- ========================================================= -->
-<!-- FORMULÁRIO DE CADASTRO / EDIÇÃO DE TURMA                 -->
-<!-- Este form é reaproveitado nas telas create e edit         -->
-<!-- ========================================================= -->
+{{-- ========================================================= --}}
+{{-- FORMULÁRIO DE CADASTRO / EDIÇÃO DE TURMA                  --}}
+{{-- Reaproveitado em create e edit                            --}}
+{{-- ========================================================= --}}
 
-<div class="row g-3">
+<div class="grid grid-cols-1 md:grid-cols-6 gap-4">
 
-    <!-- NOME DA TURMA -->
-    <div class="col-md-6">
-        <label for="nome" class="form-label">Nome da Turma</label>
+    {{-- NOME DA TURMA --}}
+    <div class="md:col-span-3">
+        <label class="block text-sm font-medium mb-1">Nome da Turma *</label>
         <input
             type="text"
             name="nome"
-            id="nome"
             value="{{ old('nome', $turma->nome ?? '') }}"
-            class="form-control @error('nome') is-invalid @enderror"
             placeholder="Ex: T1 2025 Manhã"
             required
+            class="w-full rounded-xl border px-4 py-2.5
+                   bg-white dark:bg-dax-dark/60
+                   border-slate-200 dark:border-slate-800
+                   @error('nome') border-red-500 @enderror"
         >
         @error('nome')
-        <div class="invalid-feedback">{{ $message }}</div>
+        <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
         @enderror
     </div>
 
-    <!-- TURNO -->
-    <div class="col-md-3">
-        <label for="turno" class="form-label">Turno</label>
-        <select name="turno" id="turno"
-                class="form-select @error('turno') is-invalid @enderror">
+    {{-- TURNO --}}
+    <div class="md:col-span-2">
+        <label class="block text-sm font-medium mb-1">Turno</label>
+        <select
+            name="turno"
+            class="w-full rounded-xl border px-4 py-2.5
+                   bg-white dark:bg-dax-dark/60
+                   border-slate-200 dark:border-slate-800
+                   @error('turno') border-red-500 @enderror"
+        >
             <option value="">Selecione...</option>
-            <option value="Matutino" {{ old('turno', $turma->turno ?? '') == 'Matutino' ? 'selected' : '' }}>Matutino</option>
-            <option value="Vespertino" {{ old('turno', $turma->turno ?? '') == 'Vespertino' ? 'selected' : '' }}>Vespertino</option>
-            <option value="Noturno" {{ old('turno', $turma->turno ?? '') == 'Noturno' ? 'selected' : '' }}>Noturno</option>
+            <option value="Matutino" {{ old('turno', $turma->turno ?? '') === 'Matutino' ? 'selected' : '' }}>Matutino</option>
+            <option value="Vespertino" {{ old('turno', $turma->turno ?? '') === 'Vespertino' ? 'selected' : '' }}>Vespertino</option>
+            <option value="Noturno" {{ old('turno', $turma->turno ?? '') === 'Noturno' ? 'selected' : '' }}>Noturno</option>
         </select>
-
         @error('turno')
-        <div class="invalid-feedback">{{ $message }}</div>
+        <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
         @enderror
     </div>
 
-
-    <!-- ANO LETIVO -->
-    <div class="col-md-3">
-        <label for="ano" class="form-label">Ano Letivo</label>
+    {{-- ANO LETIVO --}}
+    <div class="md:col-span-1">
+        <label class="block text-sm font-medium mb-1">Ano Letivo</label>
         <input
             type="number"
             name="ano"
-            id="ano"
-            value="{{ old('ano', $turma->ano ?? '') }}"
             min="2000"
             max="2100"
-            class="form-control @error('ano') is-invalid @enderror"
             placeholder="2025"
+            value="{{ old('ano', $turma->ano ?? '') }}"
+            class="w-full rounded-xl border px-4 py-2.5
+                   bg-white dark:bg-dax-dark/60
+                   border-slate-200 dark:border-slate-800
+                   @error('ano') border-red-500 @enderror"
         >
         @error('ano')
-        <div class="invalid-feedback">{{ $message }}</div>
+        <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
         @enderror
     </div>
 
-    <!-- DESCRIÇÃO -->
-    <div class="col-12">
-        <label for="descricao" class="form-label">Descrição da Turma</label>
+    {{-- DESCRIÇÃO --}}
+    <div class="md:col-span-6">
+        <label class="block text-sm font-medium mb-1">Descrição da Turma</label>
         <textarea
             name="descricao"
-            id="descricao"
             rows="3"
-            class="form-control @error('descricao') is-invalid @enderror"
             placeholder="Informações adicionais sobre a turma (opcional)"
+            class="w-full rounded-xl border px-4 py-2.5
+                   bg-white dark:bg-dax-dark/60
+                   border-slate-200 dark:border-slate-800
+                   @error('descricao') border-red-500 @enderror"
         >{{ old('descricao', $turma->descricao ?? '') }}</textarea>
         @error('descricao')
-        <div class="invalid-feedback">{{ $message }}</div>
+        <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
         @enderror
     </div>
 
 </div>
 
-<!-- BOTÕES DE AÇÃO -->
-<div class="d-flex justify-content-end gap-2 mt-4">
-
-    <!-- Botão cancelar -->
-    <a href="{{ route('admin.turmas.index') }}" class="btn btn-outline-secondary">
+{{-- BOTÕES --}}
+<div class="flex justify-end gap-2 mt-6">
+    <a href="{{ route('admin.turmas.index') }}"
+       class="px-4 py-2 rounded-xl border
+              border-slate-200 dark:border-slate-800">
         Cancelar
     </a>
 
-    <!-- Botão salvar -->
-    <button type="submit" class="btn btn-primary">
+    <button type="submit"
+            class="px-4 py-2 rounded-xl bg-dax-green text-white">
         {{ isset($turma) ? 'Atualizar Turma' : 'Salvar Turma' }}
     </button>
-
 </div>

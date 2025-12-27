@@ -1,75 +1,95 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h4 class="mb-1">{{ $disciplina->nome }}</h4>
-            <p class="text-muted mb-0">Informações da disciplina e professor responsável.</p>
+    <div class="space-y-6">
+
+        {{-- Header --}}
+        <div class="flex justify-between items-start">
+            <div>
+                <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light">
+                    {{ $disciplina->nome }}
+                </h1>
+                <p class="text-slate-500">
+                    Informações da disciplina e professores responsáveis.
+                </p>
+            </div>
+
+            <div class="flex gap-2">
+                <a href="{{ route('admin.disciplinas.edit', $disciplina) }}"
+                   class="px-4 py-2 rounded-xl bg-dax-green text-white">
+                    Editar
+                </a>
+                <a href="{{ route('admin.disciplinas.index') }}"
+                   class="px-4 py-2 rounded-xl border
+                      border-slate-200 dark:border-slate-800">
+                    Voltar
+                </a>
+            </div>
         </div>
-        <div class="d-flex gap-2">
-            <a href="{{ route('admin.disciplinas.edit', $disciplina) }}" class="btn btn-primary">Editar</a>
-            <a href="{{ route('admin.disciplinas.index') }}" class="btn btn-outline-secondary">Voltar</a>
-        </div>
-    </div>
 
-    <div class="row g-3">
-        <div class="col-lg-6">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-body">
-                    <h5 class="card-title">Dados da disciplina</h5>
-                    <dl class="row mb-0">
-                        <dt class="col-sm-5">Nome</dt>
-                        <dd class="col-sm-7">{{ $disciplina->nome }}</dd>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-                        <dt class="col-sm-5">Carga horária</dt>
-                        <dd class="col-sm-7">{{ $disciplina->carga_horaria ? $disciplina->carga_horaria . ' horas' : '—' }}</dd>
+            {{-- Dados da Disciplina --}}
+            <div class="rounded-2xl border bg-white dark:bg-dax-dark/60
+                    border-slate-200 dark:border-slate-800 p-6">
+                <h2 class="font-semibold mb-4">Dados da Disciplina</h2>
 
-                        <dt class="col-sm-5">Criada em</dt>
-                        <dd class="col-sm-7">{{ $disciplina->created_at->format('d/m/Y H:i') }}</dd>
+                <dl class="grid grid-cols-2 gap-y-3 text-sm">
+                    <dt class="text-slate-500">Nome</dt>
+                    <dd>{{ $disciplina->nome }}</dd>
 
-                        <dt class="col-sm-5">Atualizada em</dt>
-                        <dd class="col-sm-7">{{ $disciplina->updated_at->format('d/m/Y H:i') }}</dd>
-                    </dl>
+                    <dt class="text-slate-500">Carga Horária</dt>
+                    <dd>
+                        {{ $disciplina->carga_horaria ? $disciplina->carga_horaria.' horas' : '—' }}
+                    </dd>
 
-                    <div class="mt-3">
-                        <h6>Descrição</h6>
-                        <p class="mb-0 text-muted">{{ $disciplina->descricao ?: 'Nenhuma descrição informada.' }}</p>
+                    <dt class="text-slate-500">Criada em</dt>
+                    <dd>{{ $disciplina->created_at->format('d/m/Y H:i') }}</dd>
+
+                    <dt class="text-slate-500">Atualizada em</dt>
+                    <dd>{{ $disciplina->updated_at->format('d/m/Y H:i') }}</dd>
+                </dl>
+
+                <div class="mt-4">
+                    <h3 class="font-medium">Descrição</h3>
+                    <p class="text-slate-500 mt-1">
+                        {{ $disciplina->descricao ?: 'Nenhuma descrição informada.' }}
+                    </p>
+                </div>
+            </div>
+
+            {{-- Professores --}}
+            <div class="rounded-2xl border bg-white dark:bg-dax-dark/60
+                    border-slate-200 dark:border-slate-800 p-6">
+                <h2 class="font-semibold mb-4">Professores Responsáveis</h2>
+
+                @forelse($disciplina->professores as $professor)
+                    <div class="mb-4 last:mb-0">
+                        <p class="font-medium">{{ $professor->nome }}</p>
+                        <p class="text-sm text-slate-500">
+                            {{ $professor->email }} —
+                            {{ $professor->telefone ?? 'sem telefone' }}
+                        </p>
+
+                        @if($professor->especializacao)
+                            <p class="text-xs italic text-slate-500">
+                                {{ $professor->especializacao }}
+                            </p>
+                        @endif
+
+                        <a href="{{ route('admin.professores.show', $professor) }}"
+                           class="inline-block mt-2 text-sky-600 hover:underline text-sm">
+                            Ver perfil
+                        </a>
                     </div>
-                </div>
+                @empty
+                    <p class="text-slate-500">
+                        Nenhum professor vinculado.
+                    </p>
+                @endforelse
             </div>
+
         </div>
-
-        <div class="col-lg-6">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-body">
-                    <h5 class="card-title">Professores responsáveis</h5>
-
-                    @if($disciplina->professores->isNotEmpty())
-                        <ul class="list-unstyled mb-0">
-                            @foreach($disciplina->professores as $professor)
-                                <li class="mb-2">
-                                    <strong>{{ $professor->nome }}</strong><br>
-                                    <small class="text-muted">
-                                        {{ $professor->email }} — {{ $professor->telefone ?? 'sem telefone' }}
-                                    </small>
-                                    @if($professor->especializacao)
-                                        <br><small><em>{{ $professor->especializacao }}</em></small>
-                                    @endif
-                                    <br>
-                                    <a href="{{ route('admin.professores.show', $professor) }}"
-                                       class="btn btn-outline-primary btn-sm mt-1">
-                                        Ver perfil
-                                    </a>
-                                </li>
-                            @endforeach
-                        </ul>
-                    @else
-                        <p class="text-muted mb-0">Nenhum professor vinculado.</p>
-                    @endif
-                </div>
-            </div>
-        </div>
-
 
     </div>
 @endsection

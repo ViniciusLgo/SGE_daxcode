@@ -1,96 +1,84 @@
 @extends('layouts.app')
 
 @section('content')
+    <div class="space-y-6">
 
-    <div class="mb-4">
-        <h4 class="mb-1">
-            <i class="bi bi-person-vcard text-primary"></i>
-            Detalhes do Responsável
-        </h4>
-        <p class="text-muted">Informações completas e alunos vinculados.</p>
-    </div>
-
-    <div class="card shadow-sm border-0 p-4">
-
-        {{-- ========================== --}}
-        {{-- DADOS DO RESPONSÁVEL --}}
-        {{-- ========================== --}}
-        <h5 class="fw-bold mb-3">
-            <i class="bi bi-person-fill text-primary"></i> Informações Pessoais
-        </h5>
-
-        <div class="row g-3">
-
-            <div class="col-md-6">
-                <strong>Nome:</strong> {{ $responsavel->user->name }}
-            </div>
-
-            <div class="col-md-6">
-                <strong>E-mail:</strong> {{ $responsavel->user->email }}
-            </div>
-
-            <div class="col-md-6">
-                <strong>Telefone:</strong> {{ $responsavel->telefone ?? '—' }}
-            </div>
-
-            <div class="col-md-6">
-                <strong>CPF:</strong> {{ $responsavel->cpf ?? '—' }}
-            </div>
-
-            <div class="col-md-6">
-                <strong>Grau de Parentesco:</strong> {{ $responsavel->grau_parentesco ?? '—' }}
-            </div>
-
+        {{-- Header --}}
+        <div>
+            <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light flex items-center gap-2">
+                <i class="bi bi-person-vcard text-dax-yellow"></i>
+                Detalhes do Responsável
+            </h1>
+            <p class="text-slate-500">
+                Informações completas e alunos vinculados.
+            </p>
         </div>
 
-        <hr class="my-4">
+        <div class="rounded-2xl border bg-white dark:bg-dax-dark/60
+                border-slate-200 dark:border-slate-800 p-6 space-y-6">
 
-        {{-- ========================== --}}
-        {{-- ALUNOS VINCULADOS --}}
-        {{-- ========================== --}}
-        <h5 class="fw-bold mb-3">
-            <i class="bi bi-people-fill text-success"></i> Alunos Vinculados
-        </h5>
+            {{-- Dados --}}
+            <div>
+                <h2 class="font-semibold mb-3 flex items-center gap-2">
+                    <i class="bi bi-person-fill"></i>
+                    Informações Pessoais
+                </h2>
 
-        @if($responsavel->alunos->isEmpty())
-            <p class="text-muted">Nenhum aluno vinculado.</p>
-        @else
-            <div class="list-group">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div><span class="text-slate-500">Nome:</span> {{ $responsavel->user->name }}</div>
+                    <div><span class="text-slate-500">E-mail:</span> {{ $responsavel->user->email }}</div>
+                    <div><span class="text-slate-500">Telefone:</span> {{ $responsavel->telefone ?? '—' }}</div>
+                    <div><span class="text-slate-500">CPF:</span> {{ $responsavel->cpf ?? '—' }}</div>
+                    <div><span class="text-slate-500">Grau de Parentesco:</span> {{ $responsavel->grau_parentesco ?? '—' }}</div>
+                </div>
+            </div>
 
-                @foreach($responsavel->alunos as $aluno)
+            {{-- Alunos --}}
+            <div>
+                <h2 class="font-semibold mb-3 flex items-center gap-2">
+                    <i class="bi bi-people-fill text-dax-green"></i>
+                    Alunos Vinculados
+                </h2>
 
-                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                @if($responsavel->alunos->isEmpty())
+                    <p class="text-slate-500">Nenhum aluno vinculado.</p>
+                @else
+                    <div class="space-y-2">
+                        @foreach($responsavel->alunos as $aluno)
+                            <div class="flex justify-between items-center
+                                    rounded-xl border p-4
+                                    border-slate-200 dark:border-slate-800">
+                                <div>
+                                    <strong>{{ $aluno->user->name }}</strong><br>
+                                    <span class="text-slate-500 text-sm">
+                                    Turma: {{ $aluno->turma->nome ?? 'Sem turma' }}
+                                </span>
+                                </div>
 
-                        <div>
-                            <strong>{{ $aluno->user->name }}</strong><br>
-                            <span class="text-muted">
-                                Turma: {{ $aluno->turma->nome ?? 'Sem turma' }}
-                            </span>
-                        </div>
-
-                        <a href="{{ route('admin.alunos.show', $aluno->id) }}"
-                           class="btn btn-sm btn-outline-primary">
-                            Ver Aluno
-                        </a>
+                                <a href="{{ route('admin.alunos.show', $aluno) }}"
+                                   class="text-sky-600 hover:underline">
+                                    Ver Aluno
+                                </a>
+                            </div>
+                        @endforeach
                     </div>
-
-                @endforeach
-
+                @endif
             </div>
-        @endif
 
-        {{-- BOTÕES --}}
-        <div class="mt-4 text-end">
-            <a href="{{ route('admin.responsaveis.edit', $responsavel->id) }}"
-               class="btn btn-warning">
-                <i class="bi bi-pencil"></i> Editar
-            </a>
+            {{-- Ações --}}
+            <div class="flex justify-end gap-2 pt-4">
+                <a href="{{ route('admin.responsaveis.edit', $responsavel) }}"
+                   class="px-4 py-2 rounded-xl bg-dax-yellow text-dax-dark">
+                    <i class="bi bi-pencil"></i> Editar
+                </a>
 
-            <a href="{{ route('admin.responsaveis.index') }}"
-               class="btn btn-secondary">
-                <i class="bi bi-arrow-left"></i> Voltar
-            </a>
+                <a href="{{ route('admin.responsaveis.index') }}"
+                   class="px-4 py-2 rounded-xl border
+                      border-slate-200 dark:border-slate-800">
+                    <i class="bi bi-arrow-left"></i> Voltar
+                </a>
+            </div>
+
         </div>
-
     </div>
 @endsection

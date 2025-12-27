@@ -2,68 +2,69 @@
 
 @section('content')
 
-    {{-- Cabeçalho --}}
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="flex items-center justify-between mb-6">
         <div>
-            <h4 class="mb-1">Nova Avaliação</h4>
-            <p class="text-muted mb-0">
+            <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light">
+                ➕ Nova Avaliação
+            </h1>
+            <p class="text-sm text-slate-500">
                 Cadastro de avaliação por turma e disciplina.
             </p>
         </div>
 
         <a href="{{ route('admin.gestao_academica.avaliacoes.index') }}"
-           class="btn btn-outline-secondary">
+           class="px-4 py-2 rounded-xl border
+              border-slate-300 dark:border-slate-700
+              hover:bg-slate-100 dark:hover:bg-slate-800">
             ← Voltar
         </a>
     </div>
 
-    {{-- Card --}}
-    <div class="card shadow-sm border-0">
-        <div class="card-body">
+    <div class="rounded-2xl border border-slate-200 dark:border-slate-800
+            bg-white dark:bg-dax-dark/60 p-6">
 
-            <form action="{{ route('admin.gestao_academica.avaliacoes.store') }}" method="POST">
-                @csrf
+        <form method="POST"
+              action="{{ route('admin.gestao_academica.avaliacoes.store') }}">
+            @csrf
 
-                {{-- Turma --}}
-                <div class="mb-3">
-                    <label class="form-label">Turma</label>
-                    <select name="turma_id" class="form-select" required>
-                        <option value="">Selecione</option>
-                        @foreach($turmas as $turma)
-                            <option value="{{ $turma->id }}">
-                                {{ $turma->nome }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
-                {{-- Disciplina --}}
-                <div class="mb-3">
-                    <label class="form-label">Disciplina</label>
-                    <select name="disciplina_id" class="form-select" required>
-                        <option value="">Selecione</option>
-                        @foreach($disciplinas as $disciplina)
-                            <option value="{{ $disciplina->id }}">
-                                {{ $disciplina->nome }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+                @foreach([
+                    ['label'=>'Turma','name'=>'turma_id','type'=>'select','options'=>$turmas],
+                    ['label'=>'Disciplina','name'=>'disciplina_id','type'=>'select','options'=>$disciplinas]
+                ] as $field)
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">{{ $field['label'] }}</label>
+                        <select name="{{ $field['name'] }}" required
+                                class="w-full rounded-xl px-4 py-2.5
+                   bg-white dark:bg-slate-900
+                   text-dax-dark dark:text-dax-light
+                   border border-slate-300 dark:border-slate-700">
+                            <option value="">Selecione</option>
+                            @foreach($field['options'] as $item)
+                                <option value="{{ $item->id }}">{{ $item->nome }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                @endforeach
 
-                {{-- Título --}}
-                <div class="mb-3">
-                    <label class="form-label">Título</label>
-                    <input type="text"
-                           name="titulo"
-                           class="form-control"
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-semibold mb-1">Título</label>
+                    <input type="text" name="titulo" required
                            placeholder="Ex: Prova Bimestral"
-                           required>
+                           class="w-full rounded-xl px-4 py-2.5
+                  bg-white dark:bg-slate-900
+                  text-dax-dark dark:text-dax-light
+                  border border-slate-300 dark:border-slate-700">
                 </div>
 
-                {{-- Tipo --}}
-                <div class="mb-3">
-                    <label class="form-label">Tipo</label>
-                    <select name="tipo" class="form-select" required>
+                <div>
+                    <label class="block text-sm font-semibold mb-1">Tipo</label>
+                    <select name="tipo" required
+                            class="w-full rounded-xl px-4 py-2.5
+                   bg-white dark:bg-slate-900
+                   text-dax-dark dark:text-dax-light
+                   border border-slate-300 dark:border-slate-700">
                         <option value="prova">Prova</option>
                         <option value="trabalho">Trabalho</option>
                         <option value="atividade">Atividade</option>
@@ -71,30 +72,27 @@
                     </select>
                 </div>
 
-                {{-- Data --}}
-                <div class="mb-4">
-                    <label class="form-label">Data da Avaliação</label>
-                    <input type="date"
-                           name="data_avaliacao"
-                           class="form-control"
-                           required>
+                <div>
+                    <label class="block text-sm font-semibold mb-1">Data da Avaliação</label>
+                    <input type="date" name="data_avaliacao" required
+                           class="w-full rounded-xl px-4 py-2.5
+                  bg-white dark:bg-slate-900
+                  text-dax-dark dark:text-dax-light
+                  border border-slate-300 dark:border-slate-700">
                 </div>
 
-                {{-- Ações --}}
-                <div class="d-flex justify-content-end gap-2">
-                    <a href="{{ route('admin.gestao_academica.avaliacoes.index') }}"
-                       class="btn btn-light">
-                        Cancelar
-                    </a>
+            </div>
 
-                    <button class="btn btn-primary">
-                        Salvar Avaliação
-                    </button>
-                </div>
+            <div class="flex justify-end gap-3 mt-6">
+                <a href="{{ route('admin.gestao_academica.avaliacoes.index') }}"
+                   class="px-4 py-2 rounded-xl border">
+                    Cancelar
+                </a>
+                <button class="px-5 py-2 rounded-xl bg-dax-green text-white font-semibold">
+                    💾 Salvar Avaliação
+                </button>
+            </div>
 
-            </form>
-
-        </div>
+        </form>
     </div>
-
 @endsection

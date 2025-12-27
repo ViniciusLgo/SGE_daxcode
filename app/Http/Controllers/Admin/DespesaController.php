@@ -79,7 +79,9 @@ class DespesaController extends Controller
     {
         $categorias = CategoriaDespesa::orderBy('nome')->get();
         $centros = CentroCusto::orderBy('nome')->get();
-        $usuarios = User::orderBy('name')->get();
+        $usuarios = User::where('tipo', 'admin')
+            ->orderBy('name')
+            ->get();
 
         return view('admin.financeiro.despesas.create', compact('categorias', 'centros', 'usuarios'));
     }
@@ -126,7 +128,9 @@ class DespesaController extends Controller
     {
         $categorias = CategoriaDespesa::orderBy('nome')->get();
         $centros = CentroCusto::orderBy('nome')->get();
-        $usuarios = User::orderBy('name')->get();
+        $usuarios = User::where('tipo', 'admin')
+            ->orderBy('name')
+            ->get();
 
         return view('admin.financeiro.despesas.edit', compact('despesa', 'categorias', 'centros', 'usuarios'));
     }
@@ -135,7 +139,7 @@ class DespesaController extends Controller
     {
         $data = $request->validate([
             'categoria_id' => 'required|exists:categorias_despesas,id',
-            'centro_custo_id' => 'nullable|exists:centro_custos,id',
+            'centro_custo_id' => 'nullable|exists:centros_custos,id',
             'valor' => 'required|numeric',
             'data' => 'required|date',
             'descricao' => 'nullable|string',

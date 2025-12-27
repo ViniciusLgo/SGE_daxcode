@@ -18,14 +18,21 @@ class Aluno extends Model
         'telefone',
     ];
 
-    public function documentos()
-    {
-        return $this->hasMany(UserDocument::class);
-    }
-
     protected $casts = [
         'data_nascimento' => 'date',
     ];
+
+    /**
+     * Documentos do aluno
+     */
+    public function documents()
+    {
+        return $this->hasMany(
+            \App\Models\UserDocument::class,
+            'aluno_id', // FK REAL
+            'id'        // PK do aluno
+        );
+    }
 
     public function turma()
     {
@@ -34,12 +41,18 @@ class Aluno extends Model
 
     public function registros()
     {
-        return $this->hasMany(\App\Models\AlunoRegistro::class, 'aluno_id')->orderByDesc('created_at');
+        return $this->hasMany(
+            \App\Models\AlunoRegistro::class,
+            'aluno_id'
+        )->orderByDesc('created_at');
     }
 
     public function responsaveis()
     {
-        return $this->belongsToMany(\App\Models\Responsavel::class, 'aluno_responsavel')
+        return $this->belongsToMany(
+            \App\Models\Responsavel::class,
+            'aluno_responsavel'
+        )
             ->withTimestamps()
             ->withPivot('observacao');
     }
@@ -49,5 +62,12 @@ class Aluno extends Model
         return $this->belongsTo(\App\Models\User::class);
     }
 
-
+    public function documentos()
+    {
+        return $this->hasMany(
+            \App\Models\UserDocument::class,
+            'aluno_id',
+            'id'
+        );
+    }
 }

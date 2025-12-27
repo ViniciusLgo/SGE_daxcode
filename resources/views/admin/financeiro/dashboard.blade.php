@@ -3,196 +3,194 @@
 @section('content')
 
     {{-- ========================================================= --}}
-    {{-- CABEÇALHO --}}
+    {{-- HEADER --}}
     {{-- ========================================================= --}}
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="flex items-center justify-between mb-6">
         <div>
-            <h4 class="mb-1">Dashboard Financeiro</h4>
-            <p class="text-muted mb-0">Visão geral das despesas do projeto social.</p>
+            <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light">
+                💰 Dashboard Financeiro
+            </h1>
+            <p class="text-sm text-slate-500">
+                Visão geral das despesas do projeto social.
+            </p>
         </div>
 
-        {{-- Botão principal de criar despesa --}}
-        <a href="{{ route('admin.financeiro.despesas.create') }}" class="btn btn-primary">
+        <a href="{{ route('admin.financeiro.despesas.create') }}"
+           class="px-5 py-2 rounded-xl bg-dax-green text-white font-semibold
+              hover:bg-dax-greenSoft transition">
             + Lançar Despesa
         </a>
     </div>
 
-
     {{-- ========================================================= --}}
-    {{-- FILTROS (ANO / MÊS / PERÍODO) --}}
+    {{-- FILTROS --}}
     {{-- ========================================================= --}}
-    <div class="card shadow-sm border-0 mb-4">
-        <div class="card-body">
+    <div class="rounded-2xl border border-slate-200 dark:border-slate-800
+            bg-white dark:bg-dax-dark/60 p-6 mb-6">
 
-            <form method="GET" class="row g-3">
+        <form method="GET">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
 
-                {{-- Filtro por ano --}}
-                <div class="col-md-3">
-                    <label class="form-label">Ano</label>
-                    <select name="ano" class="form-select">
+                {{-- Ano --}}
+                <div>
+                    <label class="block text-sm font-semibold mb-1 text-dax-dark dark:text-dax-light">
+                        Ano
+                    </label>
+                    <select name="ano"
+                            class="w-full rounded-xl px-4 py-2.5
+                       bg-white dark:bg-slate-900
+                       text-dax-dark dark:text-dax-light
+                       border border-slate-300 dark:border-slate-700">
                         @for ($i = date('Y'); $i >= 2020; $i--)
-                            <option value="{{ $i }}" {{ $i == $ano ? 'selected' : '' }}>
+                            <option value="{{ $i }}" @selected($i == $ano)>
                                 {{ $i }}
                             </option>
                         @endfor
                     </select>
                 </div>
 
-                {{-- Filtro por mês --}}
-                <div class="col-md-3">
-                    <label class="form-label">Mês</label>
-                    <select name="mes" class="form-select">
+                {{-- Mês --}}
+                <div>
+                    <label class="block text-sm font-semibold mb-1 text-dax-dark dark:text-dax-light">
+                        Mês
+                    </label>
+                    <select name="mes"
+                            class="w-full rounded-xl px-4 py-2.5
+                       bg-white dark:bg-slate-900
+                       text-dax-dark dark:text-dax-light
+                       border border-slate-300 dark:border-slate-700">
                         <option value="">Todos</option>
-                        @foreach ([
+                        @foreach([
                             1=>'Janeiro',2=>'Fevereiro',3=>'Março',4=>'Abril',5=>'Maio',
                             6=>'Junho',7=>'Julho',8=>'Agosto',9=>'Setembro',
                             10=>'Outubro',11=>'Novembro',12=>'Dezembro'
                         ] as $m => $nome)
-                            <option value="{{ $m }}" {{ $mes == $m ? 'selected' : '' }}>
+                            <option value="{{ $m }}" @selected($mes == $m)>
                                 {{ $nome }}
                             </option>
                         @endforeach
                     </select>
                 </div>
 
-                {{-- Período de início --}}
-                <div class="col-md-3">
-                    <label class="form-label">De</label>
-                    <input type="date" name="inicio" class="form-control" value="{{ $inicio }}">
+                {{-- Início --}}
+                <div>
+                    <label class="block text-sm font-semibold mb-1 text-dax-dark dark:text-dax-light">
+                        De
+                    </label>
+                    <input type="date" name="inicio" value="{{ $inicio }}"
+                           class="w-full rounded-xl px-4 py-2.5
+                      bg-white dark:bg-slate-900
+                      text-dax-dark dark:text-dax-light
+                      border border-slate-300 dark:border-slate-700">
                 </div>
 
-                {{-- Período de fim --}}
-                <div class="col-md-3">
-                    <label class="form-label">Até</label>
-                    <input type="date" name="fim" class="form-control" value="{{ $fim }}">
+                {{-- Fim --}}
+                <div>
+                    <label class="block text-sm font-semibold mb-1 text-dax-dark dark:text-dax-light">
+                        Até
+                    </label>
+                    <input type="date" name="fim" value="{{ $fim }}"
+                           class="w-full rounded-xl px-4 py-2.5
+                      bg-white dark:bg-slate-900
+                      text-dax-dark dark:text-dax-light
+                      border border-slate-300 dark:border-slate-700">
                 </div>
 
-                {{-- Botões --}}
-                <div class="col-12 text-end">
-                    <button class="btn btn-primary">Filtrar</button>
-                    <a href="{{ route('admin.financeiro.dashboard') }}" class="btn btn-secondary">
-                        Limpar
-                    </a>
-                </div>
+            </div>
 
-            </form>
-
-        </div>
+            <div class="flex justify-end gap-3 mt-6">
+                <button class="px-5 py-2 rounded-xl bg-dax-green text-white font-semibold">
+                    Filtrar
+                </button>
+                <a href="{{ route('admin.financeiro.dashboard') }}"
+                   class="px-4 py-2 rounded-xl border">
+                    Limpar
+                </a>
+            </div>
+        </form>
     </div>
 
-
-
     {{-- ========================================================= --}}
-    {{-- CARDS RESUMO SUPERIOR --}}
+    {{-- KPIs --}}
     {{-- ========================================================= --}}
-    <div class="row g-3 mb-4">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
 
-        {{-- Total do mês --}}
-        <div class="col-md-4">
-            <div class="card border-0 shadow-sm h-100 bg-light">
-                <div class="card-body">
-                    <p class="text-muted mb-1">Total do mês</p>
-                    <h3>R$ {{ number_format($totalMes, 2, ',', '.') }}</h3>
-                </div>
-            </div>
+        {{-- Total mês --}}
+        <div class="rounded-2xl border bg-white dark:bg-dax-dark/60 p-6">
+            <p class="text-sm text-slate-500 mb-1">Total do mês</p>
+            <h3 class="text-2xl font-black">
+                R$ {{ number_format($totalMes, 2, ',', '.') }}
+            </h3>
         </div>
 
-        {{-- Total do ano --}}
-        <div class="col-md-4">
-            <div class="card border-0 shadow-sm h-100 bg-light">
-                <div class="card-body">
-                    <p class="text-muted mb-1">Total do ano</p>
-                    <h3>R$ {{ number_format($totalAno, 2, ',', '.') }}</h3>
-                </div>
-            </div>
+        {{-- Total ano --}}
+        <div class="rounded-2xl border bg-white dark:bg-dax-dark/60 p-6">
+            <p class="text-sm text-slate-500 mb-1">Total do ano</p>
+            <h3 class="text-2xl font-black">
+                R$ {{ number_format($totalAno, 2, ',', '.') }}
+            </h3>
         </div>
 
-        {{-- Categorias mais utilizadas --}}
-        <div class="col-md-4">
-            <div class="card border-0 shadow-sm h-100 bg-light">
-                <div class="card-body">
-                    <p class="text-muted mb-1">Categorias mais utilizadas</p>
-
-                    <ul class="mb-0">
-                        @forelse($topCategorias as $item)
-                            <li>
-                                {{ $item->categoria->nome ?? 'Sem categoria' }}:
-                                <strong>R$ {{ number_format($item->total, 2, ',', '.') }}</strong>
-                            </li>
-                        @empty
-                            <li>Nenhuma despesa lançada.</li>
-                        @endforelse
-                    </ul>
-
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-
-
-    {{-- ========================================================= --}}
-    {{-- RANKING DE CATEGORIAS --}}
-    {{-- ========================================================= --}}
-    <div class="card shadow-sm border-0 mb-4">
-        <div class="card-body">
-            <h5 class="mb-3">🏆 Ranking de Categorias (Top 5)</h5>
-
-            <ol class="list-group list-group-numbered">
-                @foreach($porCategoria as $c)
-                    <li class="list-group-item d-flex justify-content-between">
-                        <span>{{ $c->categoria->nome ?? 'Sem categoria' }}</span>
-                        <strong>R$ {{ number_format($c->total, 2, ',', '.') }}</strong>
+        {{-- Categorias --}}
+        <div class="rounded-2xl border bg-white dark:bg-dax-dark/60 p-6">
+            <p class="text-sm text-slate-500 mb-2">Categorias mais utilizadas</p>
+            <ul class="space-y-1 text-sm">
+                @forelse($topCategorias as $item)
+                    <li class="flex justify-between">
+                        <span>{{ $item->categoria->nome ?? 'Sem categoria' }}</span>
+                        <strong>
+                            R$ {{ number_format($item->total, 2, ',', '.') }}
+                        </strong>
                     </li>
-                @endforeach
-            </ol>
+                @empty
+                    <li class="text-slate-500">Nenhuma despesa lançada.</li>
+                @endforelse
+            </ul>
         </div>
+
     </div>
 
+    {{-- ========================================================= --}}
+    {{-- RANKING --}}
+    {{-- ========================================================= --}}
+    <div class="rounded-2xl border bg-white dark:bg-dax-dark/60 p-6 mb-6">
+        <h2 class="text-lg font-black mb-4">
+            🏆 Ranking de Categorias (Top 5)
+        </h2>
 
+        <ol class="space-y-2">
+            @foreach($porCategoria as $c)
+                <li class="flex justify-between px-4 py-2 rounded-xl
+                       bg-slate-100 dark:bg-slate-900">
+                    <span>{{ $c->categoria->nome ?? 'Sem categoria' }}</span>
+                    <strong>
+                        R$ {{ number_format($c->total, 2, ',', '.') }}
+                    </strong>
+                </li>
+            @endforeach
+        </ol>
+    </div>
 
     {{-- ========================================================= --}}
     {{-- GRÁFICOS --}}
     {{-- ========================================================= --}}
-    <div class="row g-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-        {{-- Linha: Gastos por mês --}}
-        <div class="col-md-6">
-            <div class="card shadow-sm border-0 p-3" style="height: 350px;">
-                <h6 class="mb-3">Gastos por mês ({{ $ano }})</h6>
-                <canvas id="graficoMes" height="250"></canvas>
+        @foreach([
+            ['id'=>'graficoMes','titulo'=>"Gastos por mês ($ano)"],
+            ['id'=>'graficoCategoria','titulo'=>'Distribuição por categoria'],
+            ['id'=>'graficoCentro','titulo'=>'Gastos por centro de custo'],
+            ['id'=>'graficoForma','titulo'=>'Forma de pagamento']
+        ] as $g)
+            <div class="rounded-2xl border bg-white dark:bg-dax-dark/60 p-6 h-[350px]">
+                <h3 class="font-semibold mb-3">{{ $g['titulo'] }}</h3>
+                <canvas id="{{ $g['id'] }}" height="250"></canvas>
             </div>
-        </div>
-
-        {{-- Pizza: Categorias --}}
-        <div class="col-md-6">
-            <div class="card shadow-sm border-0 p-3" style="height: 350px;">
-                <h6 class="mb-3">Distribuição por categoria</h6>
-                <canvas id="graficoCategoria" height="250"></canvas>
-            </div>
-        </div>
-
-        {{-- Barras: Centros de custo --}}
-        <div class="col-md-6">
-            <div class="card shadow-sm border-0 p-3" style="height: 350px;">
-                <h6 class="mb-3">Gastos por centro de custo</h6>
-                <canvas id="graficoCentro" height="250"></canvas>
-            </div>
-        </div>
-
-        {{-- Pizza: Forma de pagamento --}}
-        <div class="col-md-6">
-            <div class="card shadow-sm border-0 p-3" style="height: 350px;">
-                <h6 class="mb-3">Forma de pagamento</h6>
-                <canvas id="graficoForma" height="250"></canvas>
-            </div>
-        </div>
+        @endforeach
 
     </div>
 
 @endsection
-
 
 
 {{-- ========================================================= --}}

@@ -15,6 +15,7 @@ class ProfessorController extends Controller
         $search = $request->get('search');
 
         $professores = Professor::with('user')
+            ->withCount('disciplinas')
             ->when($search, function ($query) use ($search) {
                 $query->whereHas('user', function ($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%")
@@ -116,4 +117,18 @@ class ProfessorController extends Controller
         return redirect()->route('admin.professores.index')
             ->with('success', 'Professor removido com sucesso!');
     }
+
+    public function show($id)
+    {
+        $professor = Professor::with('user')->findOrFail($id);
+
+        $disciplinas = $professor->disciplinas()
+            ->paginate(10);
+
+        return view('admin.professores.show', compact(
+            'professor',
+            'disciplinas'
+        ));
+    }
+
 }

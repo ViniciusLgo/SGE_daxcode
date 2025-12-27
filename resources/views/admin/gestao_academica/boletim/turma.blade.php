@@ -2,97 +2,106 @@
 
 @section('content')
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    {{-- ================= HEADER ================= --}}
+    <div class="flex items-center justify-between mb-6">
         <div>
-            <h4 class="mb-1">Boletim da Turma</h4>
-            <p class="text-muted mb-0">
+            <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light">
+                📘 Boletim da Turma
+            </h1>
+            <p class="text-sm text-slate-500">
                 {{ $turma->nome }}
             </p>
         </div>
 
         <a href="{{ route('admin.turmas.show', $turma) }}"
-           class="btn btn-outline-secondary">
+           class="px-4 py-2 rounded-xl border
+              border-slate-300 dark:border-slate-700
+              hover:bg-slate-100 dark:hover:bg-slate-800">
             ← Voltar
         </a>
     </div>
 
-    <div class="card shadow-sm border-0">
-        <div class="card-body">
+    <div class="rounded-2xl border border-slate-200 dark:border-slate-800
+            bg-white dark:bg-dax-dark/60 p-6">
 
-            @if($boletins->isEmpty())
-                <div class="alert alert-info mb-0">
-                    Nenhum resultado lançado para esta turma ainda.
-                </div>
-            @else
-                <div class="table-responsive">
-                    <table class="table table-bordered align-middle">
-                        <thead class="table-light">
-                        <tr>
-                            <th>Aluno</th>
+        @if($boletins->isEmpty())
+            <div class="text-center text-slate-500">
+                Nenhum resultado lançado para esta turma ainda.
+            </div>
+        @else
+
+            <div class="overflow-x-auto">
+                <table class="min-w-full text-sm border
+              border-slate-200 dark:border-slate-800">
+
+                    <thead class="bg-slate-50 dark:bg-slate-900/40">
+                    <tr class="text-slate-600 dark:text-slate-300">
+                        <th class="px-4 py-2 text-left">Aluno</th>
+
+                        @foreach($disciplinas as $disciplina)
+                            <th class="px-4 py-2 text-center">{{ $disciplina->nome }}</th>
+                        @endforeach
+
+                        <th class="px-4 py-2 text-center">Média</th>
+                        <th class="px-4 py-2 text-center">Situação</th>
+                        <th class="px-4 py-2 text-center">Ações</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    @foreach($boletins as $item)
+                        @php
+                            $medias = $item['disciplinas']->pluck('media');
+                            $mediaGeral = $medias->count() ? round($medias->avg(), 2) : 0;
+
+                            $situacao = match(true) {
+                                $mediaGeral >= 6 => 'Aprovado',
+                                $mediaGeral >= 4 => 'Recuperação',
+                                default => 'Reprovado'
+                            };
+
+                            $situacaoClasses = match($situacao) {
+                                'Aprovado' => 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300',
+                                'Recuperação' => 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300',
+                                default => 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300',
+                            };
+                        @endphp
+
+                        <tr class="border-t border-slate-200 dark:border-slate-800">
+                            <td class="px-4 py-2 font-semibold text-dax-dark dark:text-dax-light">
+                                {{ $item['aluno']->user->name }}
+                            </td>
 
                             @foreach($disciplinas as $disciplina)
-                                <th class="text-center">{{ $disciplina->nome }}</th>
+                                <td class="px-4 py-2 text-center">
+                                    {{ optional($item['disciplinas']->get($disciplina->id))['media'] ?? '-' }}
+                                </td>
                             @endforeach
 
-                            <th class="text-center">Média</th>
-                            <th class="text-center">Situação</th>
-                            <th width="120">Ações</th>
+                            <td class="px-4 py-2 text-center font-black">
+                                {{ number_format($mediaGeral, 2, ',', '.') }}
+                            </td>
+
+                            <td class="px-4 py-2 text-center">
+        <span class="px-3 py-1 rounded-full text-sm font-semibold {{ $situacaoClasses }}">
+            {{ $situacao }}
+        </span>
+                            </td>
+
+                            <td class="px-4 py-2 text-center">
+                                <a href="{{ route('admin.boletim.aluno', $item['aluno']) }}"
+                                   class="text-blue-600 font-semibold hover:underline">
+                                    Ver
+                                </a>
+                            </td>
                         </tr>
-                        </thead>
+                    @endforeach
+                    </tbody>
 
-                        <tbody>
-                        @foreach($boletins as $item)
-                            @php
-                                $medias = $item['disciplinas']->pluck('media');
-                                $mediaGeral = $medias->count() ? round($medias->avg(), 2) : 0;
+                </table>
+            </div>
 
-                                $situacao = match(true) {
-                                    $mediaGeral >= 6 => 'Aprovado',
-                                    $mediaGeral >= 4 => 'Recuperação',
-                                    default => 'Reprovado'
-                                };
-                            @endphp
-
-                            <tr>
-                                <td>
-                                    <strong>{{ $item['aluno']->user->name }}</strong>
-                                </td>
-
-                                @foreach($disciplinas as $disciplina)
-                                    <td class="text-center">
-                                        {{ optional($item['disciplinas']->get($disciplina->id))['media'] ?? '-' }}
-                                    </td>
-                                @endforeach
-
-                                <td class="text-center fw-bold">
-                                    {{ $mediaGeral }}
-                                </td>
-
-                                <td class="text-center">
-                    <span class="badge
-                        @if($situacao === 'Aprovado') bg-success
-                        @elseif($situacao === 'Recuperação') bg-warning
-                        @else bg-danger
-                        @endif">
-                        {{ $situacao }}
-                    </span>
-                                </td>
-
-                                <td class="text-center">
-                                    <a href="{{ route('admin.boletim.aluno', $item['aluno']) }}"
-                                       class="btn btn-sm btn-outline-primary">
-                                        Ver
-                                    </a>
-                                </td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
-                </div>
-
-            @endif
-
-        </div>
+        @endif
     </div>
 
 @endsection

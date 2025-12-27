@@ -62,6 +62,17 @@ class SecretariaAtendimentoController extends Controller
     }
 
 
+
+    public function show(SecretariaAtendimento $atendimento)
+    {
+        // Garante que relações usadas na view estejam carregadas
+        $atendimento->load([
+            'aluno.user',
+            'responsavel.user',
+        ]);
+
+        return view('admin.secretaria.atendimentos.show', compact('atendimento'));
+    }
     public function update(Request $request, SecretariaAtendimento $atendimento)
     {
         $request->validate([

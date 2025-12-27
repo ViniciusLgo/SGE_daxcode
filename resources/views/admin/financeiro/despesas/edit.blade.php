@@ -1,17 +1,33 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h4 class="mb-0">Editar Despesa</h4>
-        <a href="{{ route('admin.financeiro.despesas.index') }}" class="btn btn-outline-secondary">
-            Voltar
+
+    {{-- ================= HEADER ================= --}}
+    <div class="flex items-center justify-between mb-6">
+        <div>
+            <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light">
+                ✏️ Editar Despesa
+            </h1>
+            <p class="text-sm text-slate-500">
+                Atualização dos dados da despesa financeira.
+            </p>
+        </div>
+
+        <a href="{{ route('admin.financeiro.despesas.index') }}"
+           class="px-4 py-2 rounded-xl border
+              border-slate-300 dark:border-slate-700
+              hover:bg-slate-100 dark:hover:bg-slate-800">
+            ← Voltar
         </a>
     </div>
 
+    {{-- ================= ERROS ================= --}}
     @if($errors->any())
-        <div class="alert alert-danger">
-            <strong>Ops!</strong> Verifique os campos abaixo.<br><br>
-            <ul class="mb-0">
+        <div class="mb-6 rounded-2xl border border-red-300 dark:border-red-700
+                bg-red-50 dark:bg-red-900/30 p-4
+                text-dax-dark dark:text-dax-light">
+            <strong>Ops!</strong> Verifique os campos abaixo.
+            <ul class="mt-2 list-disc list-inside text-sm">
                 @foreach($errors->all() as $erro)
                     <li>{{ $erro }}</li>
                 @endforeach
@@ -19,138 +35,232 @@
         </div>
     @endif
 
-    <div class="card shadow-sm border-0">
-        <div class="card-body">
-            <form action="{{ route('admin.financeiro.despesas.update', $despesa) }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                @method('PUT')
+    {{-- ================= CARD ================= --}}
+    <div class="rounded-2xl border border-slate-200 dark:border-slate-800
+            bg-white dark:bg-dax-dark/60 p-6">
 
-                <div class="row g-3">
+        <form action="{{ route('admin.financeiro.despesas.update', $despesa) }}"
+              method="POST"
+              enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
 
-                    {{-- DATA --}}
-                    <div class="col-md-4">
-                        <label class="form-label">Data <span class="text-danger">*</span></label>
-                        <input type="date" name="data" class="form-control"
-                               value="{{ old('data', $despesa->data) }}" required>
-                    </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
 
-                    {{-- CAT --}}
-                    <div class="col-md-4">
-                        <label class="form-label">Categoria <span class="text-danger">*</span></label>
-                        <select name="categoria_id" class="form-select" required>
-                            <option value="">Selecione...</option>
-                            @foreach($categorias as $cat)
-                                <option value="{{ $cat->id }}" @selected(old('categoria_id', $despesa->categoria_id) == $cat->id)>
-                                    {{ $cat->nome }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    {{-- CENTRO --}}
-                    <div class="col-md-4">
-                        <label class="form-label">Centro de Custo</label>
-                        <select name="centro_custo_id" class="form-select">
-                            <option value="">Opcional</option>
-                            @foreach($centros as $centro)
-                                <option value="{{ $centro->id }}" @selected(old('centro_custo_id', $despesa->centro_custo_id) == $centro->id)>
-                                    {{ $centro->nome }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    {{-- VALOR --}}
-                    <div class="col-md-4">
-                        <label class="form-label">Valor (R$) <span class="text-danger">*</span></label>
-                        <input type="number" step="0.01" name="valor" class="form-control"
-                               value="{{ old('valor', $despesa->valor) }}" required>
-                    </div>
-
-                    {{-- DESC --}}
-                    <div class="col-md-8">
-                        <label class="form-label">Descrição</label>
-                        <input type="text" name="descricao" class="form-control"
-                               value="{{ old('descricao', $despesa->descricao) }}">
-                    </div>
-
-                    {{-- NOVOS CAMPOS --}}
-
-                    <div class="col-md-6">
-                        <label class="form-label">Fornecedor</label>
-                        <input type="text" name="fornecedor" class="form-control"
-                               value="{{ old('fornecedor', $despesa->fornecedor) }}">
-                    </div>
-
-                    <div class="col-md-3">
-                        <label class="form-label">Forma de Pagamento</label>
-                        <select name="forma_pagamento" class="form-select">
-                            <option value="">Selecione...</option>
-                            <option value="pix" @selected(old('forma_pagamento', $despesa->forma_pagamento) == 'pix')>Pix</option>
-                            <option value="dinheiro" @selected(old('forma_pagamento', $despesa->forma_pagamento) == 'dinheiro')>Dinheiro</option>
-                            <option value="transferencia" @selected(old('forma_pagamento', $despesa->forma_pagamento) == 'transferencia')>Transferência</option>
-                            <option value="cartao" @selected(old('forma_pagamento', $despesa->forma_pagamento) == 'cartao')>Cartão</option>
-                            <option value="outros" @selected(old('forma_pagamento', $despesa->forma_pagamento) == 'outros')>Outros</option>
-                        </select>
-                    </div>
-
-                    <div class="col-md-3">
-                        <label class="form-label">Status</label>
-                        <select name="status_pagamento" class="form-select">
-                            <option value="pendente" @selected(old('status_pagamento', $despesa->status_pagamento) == 'pendente')>Pendente</option>
-                            <option value="pago" @selected(old('status_pagamento', $despesa->status_pagamento) == 'pago')>Pago</option>
-                            <option value="reembolsado" @selected(old('status_pagamento', $despesa->status_pagamento) == 'reembolsado')>Reembolsado</option>
-                            <option value="aguardando_nf" @selected(old('status_pagamento', $despesa->status_pagamento) == 'aguardando_nf')>Aguardando NF</option>
-                        </select>
-                    </div>
-
-                    <div class="col-md-4">
-                        <label class="form-label">Número NF</label>
-                        <input type="text" name="numero_nf" class="form-control"
-                               value="{{ old('numero_nf', $despesa->numero_nf) }}">
-                    </div>
-
-                    <div class="col-md-4">
-                        <label class="form-label">Conta / Fundo</label>
-                        <input type="text" name="conta" class="form-control"
-                               value="{{ old('conta', $despesa->conta) }}">
-                    </div>
-
-                    <div class="col-md-4">
-                        <label class="form-label">Responsável</label>
-                        <select name="responsavel_id" class="form-select">
-                            <option value="">Selecione...</option>
-                            @foreach($usuarios as $u)
-                                <option value="{{ $u->id }}" @selected(old('responsavel_id', $despesa->responsavel_id) == $u->id)>
-                                    {{ $u->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    {{-- ARQUIVO --}}
-                    <div class="col-md-6">
-                        <label class="form-label">Comprovante</label>
-                        <input type="file" name="arquivo" class="form-control">
-
-                        @if($despesa->arquivo)
-                            <small class="d-block mt-1">
-                                Arquivo atual:
-                                <a href="{{ asset('storage/'.$despesa->arquivo) }}" target="_blank">
-                                    Ver comprovante
-                                </a>
-                            </small>
-                        @endif
-                    </div>
-
+                {{-- DATA --}}
+                <div>
+                    <label class="block text-sm font-semibold mb-1 text-dax-dark dark:text-dax-light">
+                        Data <span class="text-red-500">*</span>
+                    </label>
+                    <input type="date" name="data" required
+                           value="{{ old('data', $despesa->data) }}"
+                           class="w-full rounded-xl px-4 py-2.5
+                      bg-white dark:bg-slate-900
+                      text-dax-dark dark:text-dax-light
+                      border border-slate-300 dark:border-slate-700">
                 </div>
 
-                <div class="mt-4">
-                    <button type="submit" class="btn btn-primary">
-                        Atualizar Despesa
-                    </button>
+                {{-- CATEGORIA --}}
+                <div>
+                    <label class="block text-sm font-semibold mb-1 text-dax-dark dark:text-dax-light">
+                        Categoria <span class="text-red-500">*</span>
+                    </label>
+                    <select name="categoria_id" required
+                            class="w-full rounded-xl px-4 py-2.5
+                       bg-white dark:bg-slate-900
+                       text-dax-dark dark:text-dax-light
+                       border border-slate-300 dark:border-slate-700">
+                        <option value="">Selecione…</option>
+                        @foreach($categorias as $cat)
+                            <option value="{{ $cat->id }}"
+                                @selected(old('categoria_id', $despesa->categoria_id) == $cat->id)>
+                                {{ $cat->nome }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
-            </form>
-        </div>
+
+                {{-- CENTRO DE CUSTO --}}
+                <div>
+                    <label class="block text-sm font-semibold mb-1 text-dax-dark dark:text-dax-light">
+                        Centro de Custo
+                    </label>
+                    <select name="centro_custo_id"
+                            class="w-full rounded-xl px-4 py-2.5
+                       bg-white dark:bg-slate-900
+                       text-dax-dark dark:text-dax-light
+                       border border-slate-300 dark:border-slate-700">
+                        <option value="">Opcional</option>
+                        @foreach($centros as $centro)
+                            <option value="{{ $centro->id }}"
+                                @selected(old('centro_custo_id', $despesa->centro_custo_id) == $centro->id)>
+                                {{ $centro->nome }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                {{-- VALOR --}}
+                <div>
+                    <label class="block text-sm font-semibold mb-1 text-dax-dark dark:text-dax-light">
+                        Valor (R$) <span class="text-red-500">*</span>
+                    </label>
+                    <input type="number" step="0.01" name="valor" required
+                           value="{{ old('valor', $despesa->valor) }}"
+                           class="w-full rounded-xl px-4 py-2.5
+                      bg-white dark:bg-slate-900
+                      text-dax-dark dark:text-dax-light
+                      border border-slate-300 dark:border-slate-700">
+                </div>
+
+                {{-- DESCRIÇÃO --}}
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-semibold mb-1 text-dax-dark dark:text-dax-light">
+                        Descrição
+                    </label>
+                    <input type="text" name="descricao"
+                           value="{{ old('descricao', $despesa->descricao) }}"
+                           class="w-full rounded-xl px-4 py-2.5
+                      bg-white dark:bg-slate-900
+                      text-dax-dark dark:text-dax-light
+                      border border-slate-300 dark:border-slate-700">
+                </div>
+
+                {{-- FORNECEDOR --}}
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-semibold mb-1 text-dax-dark dark:text-dax-light">
+                        Fornecedor
+                    </label>
+                    <input type="text" name="fornecedor"
+                           value="{{ old('fornecedor', $despesa->fornecedor) }}"
+                           class="w-full rounded-xl px-4 py-2.5
+                      bg-white dark:bg-slate-900
+                      text-dax-dark dark:text-dax-light
+                      border border-slate-300 dark:border-slate-700">
+                </div>
+
+                {{-- FORMA PAGAMENTO --}}
+                <div>
+                    <label class="block text-sm font-semibold mb-1 text-dax-dark dark:text-dax-light">
+                        Forma de Pagamento
+                    </label>
+                    <select name="forma_pagamento"
+                            class="w-full rounded-xl px-4 py-2.5
+                       bg-white dark:bg-slate-900
+                       text-dax-dark dark:text-dax-light
+                       border border-slate-300 dark:border-slate-700">
+                        <option value="">Selecione…</option>
+                        @foreach(['pix','dinheiro','transferencia','cartao','outros'] as $fp)
+                            <option value="{{ $fp }}"
+                                @selected(old('forma_pagamento', $despesa->forma_pagamento) == $fp)>
+                                {{ ucfirst($fp) }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                {{-- STATUS --}}
+                <div>
+                    <label class="block text-sm font-semibold mb-1 text-dax-dark dark:text-dax-light">
+                        Status do Pagamento
+                    </label>
+                    <select name="status_pagamento"
+                            class="w-full rounded-xl px-4 py-2.5
+                       bg-white dark:bg-slate-900
+                       text-dax-dark dark:text-dax-light
+                       border border-slate-300 dark:border-slate-700">
+                        @foreach(['pendente','pago','reembolsado','aguardando_nf'] as $st)
+                            <option value="{{ $st }}"
+                                @selected(old('status_pagamento', $despesa->status_pagamento) == $st)>
+                                {{ ucfirst(str_replace('_',' ', $st)) }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                {{-- NF --}}
+                <div>
+                    <label class="block text-sm font-semibold mb-1 text-dax-dark dark:text-dax-light">
+                        Nº Nota Fiscal
+                    </label>
+                    <input type="text" name="numero_nf"
+                           value="{{ old('numero_nf', $despesa->numero_nf) }}"
+                           class="w-full rounded-xl px-4 py-2.5
+                      bg-white dark:bg-slate-900
+                      text-dax-dark dark:text-dax-light
+                      border border-slate-300 dark:border-slate-700">
+                </div>
+
+                {{-- CONTA --}}
+                <div>
+                    <label class="block text-sm font-semibold mb-1 text-dax-dark dark:text-dax-light">
+                        Conta / Fundo
+                    </label>
+                    <input type="text" name="conta"
+                           value="{{ old('conta', $despesa->conta) }}"
+                           class="w-full rounded-xl px-4 py-2.5
+                      bg-white dark:bg-slate-900
+                      text-dax-dark dark:text-dax-light
+                      border border-slate-300 dark:border-slate-700">
+                </div>
+
+                {{-- RESPONSÁVEL --}}
+                <div>
+                    <label class="block text-sm font-semibold mb-1 text-dax-dark dark:text-dax-light">
+                        Responsável
+                    </label>
+                    <select name="responsavel_id"
+                            class="w-full rounded-xl px-4 py-2.5
+                       bg-white dark:bg-slate-900
+                       text-dax-dark dark:text-dax-light
+                       border border-slate-300 dark:border-slate-700">
+                        <option value="">Selecione…</option>
+                        @foreach($usuarios as $u)
+                            <option value="{{ $u->id }}"
+                                @selected(old('responsavel_id', $despesa->responsavel_id) == $u->id)>
+                                {{ $u->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                {{-- COMPROVANTE --}}
+                <div class="md:col-span-3">
+                    <label class="block text-sm font-semibold mb-1 text-dax-dark dark:text-dax-light">
+                        Comprovante
+                    </label>
+                    <input type="file" name="arquivo"
+                           class="block w-full text-sm
+                      text-dax-dark dark:text-dax-light">
+
+                    @if($despesa->arquivo)
+                        <p class="mt-1 text-sm">
+                            Arquivo atual:
+                            <a href="{{ asset('storage/'.$despesa->arquivo) }}"
+                               target="_blank"
+                               class="text-blue-600 hover:underline">
+                                Ver comprovante
+                            </a>
+                        </p>
+                    @endif
+                </div>
+
+            </div>
+
+            {{-- AÇÕES --}}
+            <div class="flex justify-end mt-6 gap-3">
+                <a href="{{ route('admin.financeiro.despesas.index') }}"
+                   class="px-4 py-2 rounded-xl border">
+                    Cancelar
+                </a>
+
+                <button type="submit"
+                        class="px-6 py-2 rounded-xl bg-dax-green text-white font-semibold">
+                    Atualizar Despesa
+                </button>
+            </div>
+
+        </form>
     </div>
+
 @endsection

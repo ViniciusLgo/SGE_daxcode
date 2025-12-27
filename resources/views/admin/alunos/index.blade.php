@@ -1,82 +1,101 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div class="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-            <h4 class="mb-1"><i class="bi bi-mortarboard-fill text-primary"></i> Alunos</h4>
-            <p class="text-muted mb-0">Gerencie os estudantes cadastrados no sistema.</p>
+            <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light flex gap-2">
+                <i class="bi bi-mortarboard"></i> Alunos
+            </h1>
+            <p class="text-slate-500 dark:text-slate-400">
+                Gerencie os estudantes cadastrados no sistema.
+            </p>
         </div>
     </div>
 
-    {{-- Filtro / Busca --}}
-    <form method="GET" class="row g-2 align-items-end mb-3">
-        <div class="col-md-4">
-            <label for="search" class="form-label">Busca</label>
-            <input type="search" id="search" name="search" value="{{ $search }}"
-                   class="form-control" placeholder="Nome, matrícula ou e-mail">
+    {{-- BUSCA --}}
+    <form method="GET" class="mb-4 flex flex-wrap gap-3 items-end">
+        <div class="w-full md:w-80">
+            <label class="text-sm font-semibold">Busca</label>
+            <input type="search"
+                   name="search"
+                   value="{{ $search }}"
+                   placeholder="Nome, matrícula ou e-mail"
+                   class="w-full rounded-xl border border-slate-300 dark:border-slate-700
+                      bg-white dark:bg-slate-900 px-4 py-2.5">
         </div>
-        <div class="col-md-auto">
-            <button type="submit" class="btn btn-outline-primary"><i class="bi bi-search"></i> Filtrar</button>
-        </div>
+
+        <button class="px-5 py-2.5 rounded-xl border
+                   border-dax-green text-dax-green font-bold
+                   hover:bg-dax-green hover:text-white transition">
+            <i class="bi bi-search"></i> Filtrar
+        </button>
+
         @if($search)
-            <div class="col-md-auto">
-                <a href="{{ route('admin.alunos.index') }}" class="btn btn-link text-decoration-none">Limpar</a>
-            </div>
+            <a href="{{ route('admin.alunos.index') }}"
+               class="px-4 py-2.5 text-slate-500 hover:underline">
+                Limpar
+            </a>
         @endif
     </form>
 
-    <div class="card shadow-sm border-0">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="table-light">
-                <tr>
-                    <th>Nome</th>
-                    <th>Matrícula</th>
-                    <th>E-mail</th>
-                    <th>Turma</th>
-                    <th class="text-end">Ações</th>
+    {{-- TABELA --}}
+    <div class="rounded-2xl bg-white dark:bg-dax-dark/60
+            border border-slate-200 dark:border-slate-800
+            shadow-sm overflow-hidden">
+
+        <table class="w-full text-sm">
+            <thead class="bg-slate-50 dark:bg-slate-900">
+            <tr class="text-left text-slate-500">
+                <th class="px-4 py-3">Nome</th>
+                <th class="px-4 py-3">Matrícula</th>
+                <th class="px-4 py-3">E-mail</th>
+                <th class="px-4 py-3">Turma</th>
+                <th class="px-4 py-3 text-right">Ações</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            @forelse($alunos as $aluno)
+                <tr class="border-t border-slate-200 dark:border-slate-800">
+                    <td class="px-4 py-3 font-semibold">
+                        {{ $aluno->user->name ?? '—' }}
+                    </td>
+                    <td class="px-4 py-3">{{ $aluno->matricula ?? '—' }}</td>
+                    <td class="px-4 py-3">{{ $aluno->user->email ?? '—' }}</td>
+                    <td class="px-4 py-3">{{ $aluno->turma->nome ?? '—' }}</td>
+                    <td class="px-4 py-3 text-right space-x-2">
+                        <a href="{{ route('admin.alunos.show', $aluno) }}"
+                           class="text-dax-blue hover:underline">Ver</a>
+
+                        <a href="{{ route('admin.alunos.edit', $aluno) }}"
+                           class="text-amber-500 hover:underline">Editar</a>
+
+                        <form action="{{ route('admin.alunos.destroy', $aluno) }}"
+                              method="POST" class="inline"
+                              onsubmit="return confirm('Excluir este aluno?')">
+                            @csrf @method('DELETE')
+                            <button class="text-red-500 hover:underline">
+                                Excluir
+                            </button>
+                        </form>
+                    </td>
                 </tr>
-                </thead>
-                <tbody>
-                @forelse($alunos as $aluno)
-                    <tr>
-                        <td>{{ $aluno->user->name ?? '—' }}</td>
-                        <td>{{ $aluno->matricula ?? '—' }}</td>
-                        <td>{{ $aluno->user->email ?? '—' }}</td>
-                        <td>{{ $aluno->turma->nome ?? '—' }}</td>
-                        <td class="text-end">
-                            <div class="btn-group btn-group-sm" role="group">
-                                <a href="{{ route('admin.alunos.show', $aluno) }}" class="btn btn-outline-info">
-                                    <i class="bi bi-eye"></i>
-                                </a>
-                                <a href="{{ route('admin.alunos.edit', $aluno) }}" class="btn btn-outline-warning">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
-                                <form action="{{ route('admin.alunos.destroy', $aluno) }}" method="POST" class="d-inline"
-                                      onsubmit="return confirm('Deseja realmente excluir este aluno?')">
-                                    @csrf @method('DELETE')
-                                    <button type="submit" class="btn btn-outline-danger">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="5" class="text-center text-muted py-4">
-                            Nenhum aluno encontrado.
-                        </td>
-                    </tr>
-                @endforelse
-                </tbody>
-            </table>
-        </div>
+            @empty
+                <tr>
+                    <td colspan="5" class="px-4 py-6 text-center text-slate-500">
+                        Nenhum aluno encontrado.
+                    </td>
+                </tr>
+            @endforelse
+            </tbody>
+        </table>
 
         @if($alunos->hasPages())
-            <div class="card-footer bg-white">
+            <div class="p-4 border-t border-slate-200 dark:border-slate-800">
                 {{ $alunos->links() }}
             </div>
         @endif
     </div>
+
 @endsection

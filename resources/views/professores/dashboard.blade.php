@@ -1,46 +1,74 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="dash-title mb-3 d-flex justify-content-between align-items-center">
+
+    {{-- ================= HEADER ================= --}}
+    <div class="mb-6 flex items-center justify-between">
         <div>
-            <h4 class="mb-1">Painel do Professor</h4>
-            <p class="text-muted mb-0">Bem-vindo, {{ auth()->user()->name }} 👨‍🏫</p>
+            <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light">
+                Painel do Professor
+            </h1>
+            <p class="text-sm text-slate-500">
+                Bem-vindo, {{ auth()->user()->name }} 👨‍🏫
+            </p>
         </div>
     </div>
 
-    <div class="row g-3 mb-4">
-        {{-- CARD DE DISCIPLINAS --}}
-        <div class="col-md-6">
-            <div class="card card-kpi p-3 border-0 shadow-sm bg-light">
-                <div class="d-flex justify-content-between"><span class="kpi-emoji">📚</span></div>
-                <div class="kpi-title mt-2 text-dark">DISCIPLINAS</div>
+    {{-- ================= KPIs ================= --}}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-                {{-- Corrigido: nome da tabela explicitado --}}
-                <div class="kpi-number text-primary">
+        {{-- ================= DISCIPLINAS ================= --}}
+        <div class="rounded-2xl bg-white dark:bg-dax-dark/60
+                    border border-slate-200 dark:border-slate-800
+                    p-6 flex flex-col justify-between">
+
+            <div class="flex items-start justify-between">
+                <span class="text-3xl">📚</span>
+            </div>
+
+            <div class="mt-4">
+                <p class="text-sm font-semibold text-slate-500">
+                    DISCIPLINAS
+                </p>
+
+                <div class="text-4xl font-black text-dax-green mt-1">
                     {{ \App\Models\Disciplina::whereHas('professores', fn($q) =>
                         $q->where('professores.id', auth()->id())
                     )->count() }}
                 </div>
 
-                <div class="kpi-foot text-muted">Disciplinas atribuídas</div>
+                <p class="text-sm text-slate-500 mt-1">
+                    Disciplinas atribuídas
+                </p>
             </div>
         </div>
 
-        {{-- CARD DE TURMAS --}}
-        <div class="col-md-6">
-            <div class="card card-kpi p-3 border-0 shadow-sm bg-light">
-                <div class="d-flex justify-content-between"><span class="kpi-emoji">🏫</span></div>
-                <div class="kpi-title mt-2 text-dark">TURMAS</div>
+        {{-- ================= TURMAS ================= --}}
+        <div class="rounded-2xl bg-white dark:bg-dax-dark/60
+                    border border-slate-200 dark:border-slate-800
+                    p-6 flex flex-col justify-between">
 
-                {{-- Corrigido: nome da tabela explicitado --}}
-                <div class="kpi-number text-primary">
+            <div class="flex items-start justify-between">
+                <span class="text-3xl">🏫</span>
+            </div>
+
+            <div class="mt-4">
+                <p class="text-sm font-semibold text-slate-500">
+                    TURMAS
+                </p>
+
+                <div class="text-4xl font-black text-dax-green mt-1">
                     {{ \App\Models\Turma::whereHas('professores', fn($q) =>
-                     $q->where('professores.id', auth()->id()))->count() }}
-
+                        $q->where('professores.id', auth()->id())
+                    )->count() }}
                 </div>
 
-                <div class="kpi-foot text-muted">Turmas vinculadas</div>
+                <p class="text-sm text-slate-500 mt-1">
+                    Turmas vinculadas
+                </p>
             </div>
         </div>
+
     </div>
+
 @endsection

@@ -1,51 +1,73 @@
-@csrf
-
 {{-- Nome --}}
-<div class="mb-3">
-    <label class="form-label fw-semibold">Nome</label>
-    <input type="text" name="nome" class="form-control shadow-sm"
-           value="{{ old('nome', optional($professor->user ?? null)->name) }}" required>
+<div>
+    <label class="block text-sm font-medium mb-1">Nome</label>
+    <input type="text" name="nome" required
+           value="{{ old('nome', optional($professor->user ?? null)->name) }}"
+           class="w-full rounded-xl border px-4 py-2.5
+                  bg-white dark:bg-dax-dark/60
+                  border-slate-200 dark:border-slate-800">
 </div>
 
 {{-- E-mail --}}
-<div class="mb-3">
-    <label class="form-label fw-semibold">E-mail</label>
-    <input type="email" name="email" class="form-control shadow-sm"
-           value="{{ old('email', optional($professor->user ?? null)->email) }}" required>
+<div>
+    <label class="block text-sm font-medium mb-1">E-mail</label>
+    <input type="email" name="email" required
+           value="{{ old('email', optional($professor->user ?? null)->email) }}"
+           class="w-full rounded-xl border px-4 py-2.5
+                  bg-white dark:bg-dax-dark/60
+                  border-slate-200 dark:border-slate-800">
 </div>
 
 {{-- Telefone --}}
-<div class="mb-3">
-    <label class="form-label fw-semibold">Telefone</label>
-    <input type="text" name="telefone" class="form-control shadow-sm"
-           value="{{ old('telefone', $professor->telefone ?? '') }}">
+<div>
+    <label class="block text-sm font-medium mb-1">Telefone</label>
+    <input type="text" name="telefone"
+           value="{{ old('telefone', $professor->telefone ?? '') }}"
+           placeholder="(00) 00000-0000"
+           class="w-full rounded-xl border px-4 py-2.5
+                  bg-white dark:bg-dax-dark/60
+                  border-slate-200 dark:border-slate-800">
 </div>
 
 {{-- Especialização --}}
-<div class="mb-3">
-    <label class="form-label fw-semibold">Especialização</label>
-    <input type="text" name="especializacao" class="form-control shadow-sm"
-           value="{{ old('especializacao', $professor->especializacao ?? '') }}">
+<div>
+    <label class="block text-sm font-medium mb-1">Especialização</label>
+    <input type="text" name="especializacao"
+           value="{{ old('especializacao', $professor->especializacao ?? '') }}"
+           placeholder="Ex: Matemática, História..."
+           class="w-full rounded-xl border px-4 py-2.5
+                  bg-white dark:bg-dax-dark/60
+                  border-slate-200 dark:border-slate-800">
 </div>
 
-{{-- Foto de perfil --}}
-<div class="mb-3">
-    <label class="form-label fw-semibold">Foto de Perfil</label>
-    <input type="file" name="foto_perfil" class="form-control">
+{{-- Foto --}}
+<div class="md:col-span-2">
+    <label class="block text-sm font-medium mb-1">Foto de Perfil</label>
+    <input type="file" name="foto_perfil"
+           class="w-full rounded-xl border px-4 py-2.5
+                  bg-white dark:bg-dax-dark/60
+                  border-slate-200 dark:border-slate-800">
+
     @if(!empty($professor->foto_perfil))
-        <div class="mt-2">
-            <img src="{{ asset('storage/' . $professor->foto_perfil) }}" alt="Foto"
-                 width="80" height="80" class="rounded border">
+        <div class="mt-3">
+            <img src="{{ asset('storage/' . $professor->foto_perfil) }}"
+                 alt="Foto do Professor"
+                 class="w-20 h-20 rounded-xl border
+                        border-slate-200 dark:border-slate-800">
         </div>
     @endif
 </div>
 
 {{-- Botões --}}
-<div class="text-end mt-3">
-    <a href="{{ route('admin.professores.index') }}" class="btn btn-secondary">
-        <i class="bi bi-arrow-left"></i> Cancelar
+<div class="md:col-span-2 flex justify-end gap-2 pt-4">
+    <a href="{{ route('admin.professores.index') }}"
+       class="px-4 py-2 rounded-xl border
+              border-slate-200 dark:border-slate-800">
+        <i class="bi bi-x-circle"></i> Cancelar
     </a>
-    <button type="submit" class="btn btn-primary">
+
+    <button type="submit"
+            class="px-4 py-2 rounded-xl bg-dax-green text-white">
         <i class="bi bi-save"></i> Salvar
     </button>
 </div>

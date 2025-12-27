@@ -2,173 +2,175 @@
 
 @section('content')
 
-    <div class="mb-4">
-        <h4>✏️ Editar Registro</h4>
-        <p class="text-muted">Atualize as informações deste registro.</p>
+    {{-- ================= HEADER ================= --}}
+    <div class="mb-6">
+        <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light">
+            ✏️ Editar Registro
+        </h1>
+        <p class="text-sm text-slate-500">
+            Atualize as informações deste registro.
+        </p>
     </div>
 
     @include('partials.alerts')
 
-    <div class="card shadow-sm border-0">
-        <div class="card-body">
+    {{-- ================= CARD FORM ================= --}}
+    <div class="rounded-2xl bg-white dark:bg-dax-dark/60 border border-slate-200 dark:border-slate-800 p-6">
 
-            {{-- FORMULÁRIO DE EDIÇÃO --}}
-            <form action="{{ route('admin.aluno_registros.update', $aluno_registro->id) }}"
-                  method="POST" enctype="multipart/form-data"
-                  class="row g-3">
+        <form action="{{ route('admin.aluno_registros.update', $aluno_registro->id) }}"
+              method="POST"
+              enctype="multipart/form-data"
+              class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                @csrf
-                @method('PUT')
+            @csrf
+            @method('PUT')
 
-                {{-- ===================================================== --}}
-                {{-- ALUNO --}}
-                {{-- ===================================================== --}}
-                <div class="col-md-6">
-                    <label class="form-label fw-bold">Aluno *</label>
-                    <select name="aluno_id" id="aluno_id" class="form-select" required>
-                        @foreach($alunos as $a)
-                            <option value="{{ $a->id }}"
-                                {{ $aluno_registro->aluno_id == $a->id ? 'selected' : '' }}>
-                                {{ $a->user->name ?? 'Sem nome' }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+            {{-- ================= ALUNO ================= --}}
+            <div>
+                <label class="block font-semibold mb-1">Aluno *</label>
+                <select name="aluno_id" id="aluno_id" required
+                        class="w-full rounded-xl border border-slate-300 dark:border-slate-700
+                               px-4 py-2.5 bg-white dark:bg-dax-dark/60
+                               text-dax-dark dark:text-dax-light">
+                    @foreach($alunos as $a)
+                        <option value="{{ $a->id }}"
+                            @selected($aluno_registro->aluno_id == $a->id)>
+                            {{ $a->user->name ?? 'Sem nome' }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
 
-                {{-- ===================================================== --}}
-                {{-- TURMA (AUTO PREENCHIDA, NÃO EDITÁVEL) --}}
-                {{-- ===================================================== --}}
-                <div class="col-md-6">
-                    <label class="form-label fw-bold">Turma</label>
+            {{-- ================= TURMA (AUTO) ================= --}}
+            <div>
+                <label class="block font-semibold mb-1">Turma</label>
 
-                    <input type="text" id="turma_nome"
-                           value="{{ $aluno_registro->turma->nome ?? 'Sem turma' }}"
-                           class="form-control bg-light" readonly>
+                <input type="text" id="turma_nome" readonly
+                       value="{{ $aluno_registro->turma->nome ?? 'Sem turma' }}"
+                       class="w-full rounded-xl border border-slate-300 dark:border-slate-700
+                              px-4 py-2.5 bg-slate-100 dark:bg-dax-dark
+                              text-slate-600 dark:text-slate-400 cursor-not-allowed">
 
-                    <input type="hidden" name="turma_id" id="turma_id"
-                           value="{{ $aluno_registro->turma_id }}">
-                </div>
+                <input type="hidden" name="turma_id" id="turma_id"
+                       value="{{ $aluno_registro->turma_id }}">
+            </div>
 
-                {{-- ===================================================== --}}
-                {{-- TIPO --}}
-                {{-- ===================================================== --}}
-                <div class="col-md-4">
-                    <label class="form-label fw-bold">Tipo *</label>
-                    <input type="text" name="tipo"
-                           class="form-control"
-                           value="{{ $aluno_registro->tipo }}" required>
-                </div>
+            {{-- ================= TIPO ================= --}}
+            <div>
+                <label class="block font-semibold mb-1">Tipo *</label>
+                <input type="text" name="tipo" required
+                       value="{{ $aluno_registro->tipo }}"
+                       class="w-full rounded-xl border border-slate-300 dark:border-slate-700
+                              px-4 py-2.5 bg-white dark:bg-dax-dark/60
+                              text-dax-dark dark:text-dax-light">
+            </div>
 
-                {{-- ===================================================== --}}
-                {{-- CATEGORIA --}}
-                {{-- ===================================================== --}}
-                <div class="col-md-4">
-                    <label class="form-label fw-bold">Categoria</label>
-                    <input type="text" name="categoria"
-                           class="form-control"
-                           value="{{ $aluno_registro->categoria }}">
-                </div>
+            {{-- ================= CATEGORIA ================= --}}
+            <div>
+                <label class="block font-semibold mb-1">Categoria</label>
+                <input type="text" name="categoria"
+                       value="{{ $aluno_registro->categoria }}"
+                       class="w-full rounded-xl border border-slate-300 dark:border-slate-700
+                              px-4 py-2.5 bg-white dark:bg-dax-dark/60
+                              text-dax-dark dark:text-dax-light">
+            </div>
 
-                {{-- ===================================================== --}}
-                {{-- DATA DO EVENTO --}}
-                {{-- ===================================================== --}}
-                <div class="col-md-4">
-                    <label class="form-label fw-bold">Data do evento</label>
-                    <input type="date" name="data_evento"
-                           class="form-control"
-                           value="{{ $aluno_registro->data_evento }}">
-                </div>
+            {{-- ================= DATA EVENTO ================= --}}
+            <div>
+                <label class="block font-semibold mb-1">Data do Evento</label>
+                <input type="date" name="data_evento"
+                       value="{{ $aluno_registro->data_evento }}"
+                       class="w-full rounded-xl border border-slate-300 dark:border-slate-700
+                              px-4 py-2.5 bg-white dark:bg-dax-dark/60
+                              text-dax-dark dark:text-dax-light">
+            </div>
 
-                {{-- ===================================================== --}}
-                {{-- DESCRIÇÃO --}}
-                {{-- ===================================================== --}}
-                <div class="col-md-12">
-                    <label class="form-label fw-bold">Descrição</label>
-                    <textarea name="descricao" rows="3"
-                              class="form-control">{{ $aluno_registro->descricao }}</textarea>
-                </div>
+            {{-- ================= STATUS ================= --}}
+            <div>
+                <label class="block font-semibold mb-1">Status</label>
+                <select name="status"
+                        class="w-full rounded-xl border border-slate-300 dark:border-slate-700
+                               px-4 py-2.5 bg-white dark:bg-dax-dark/60
+                               text-dax-dark dark:text-dax-light">
+                    @foreach(['pendente','validado','arquivado','expirado'] as $s)
+                        <option value="{{ $s }}" @selected($aluno_registro->status == $s)>
+                            {{ ucfirst($s) }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
 
-                {{-- ===================================================== --}}
-                {{-- STATUS --}}
-                {{-- ===================================================== --}}
-                <div class="col-md-6">
-                    <label class="form-label fw-bold">Status</label>
-                    <select name="status" class="form-select">
-                        @foreach(['pendente','validado','arquivado','expirado'] as $s)
-                            <option value="{{ $s }}"
-                                {{ $aluno_registro->status == $s ? 'selected' : '' }}>
-                                {{ ucfirst($s) }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+            {{-- ================= DESCRIÇÃO ================= --}}
+            <div class="md:col-span-2">
+                <label class="block font-semibold mb-1">Descrição</label>
+                <textarea name="descricao" rows="4"
+                          class="w-full rounded-xl border border-slate-300 dark:border-slate-700
+                                 px-4 py-2.5 bg-white dark:bg-dax-dark/60
+                                 text-dax-dark dark:text-dax-light">{{ $aluno_registro->descricao }}</textarea>
+            </div>
 
-                {{-- ===================================================== --}}
-                {{-- NOVO ARQUIVO --}}
-                {{-- ===================================================== --}}
-                <div class="col-md-6">
-                    <label class="form-label fw-bold">Novo arquivo (opcional)</label>
-                    <input type="file" name="arquivo" class="form-control">
+            {{-- ================= ARQUIVO ================= --}}
+            <div class="md:col-span-2">
+                <label class="block font-semibold mb-1">Novo Arquivo (opcional)</label>
+                <input type="file" name="arquivo"
+                       class="w-full rounded-xl border border-slate-300 dark:border-slate-700
+                              px-4 py-2 bg-white dark:bg-dax-dark/60
+                              text-dax-dark dark:text-dax-light">
 
-                    @if($aluno_registro->arquivo)
-                        <small class="text-muted d-block mt-2">
-                            📎 Arquivo atual:
-                            <a href="{{ asset($aluno_registro->arquivo) }}"
-                               target="_blank">
-                                Ver documento
-                            </a>
-                        </small>
-                    @endif
-                </div>
+                @if($aluno_registro->arquivo)
+                    <p class="mt-2 text-sm text-slate-500">
+                        📎 Arquivo atual:
+                        <a href="{{ asset($aluno_registro->arquivo) }}"
+                           target="_blank"
+                           class="text-dax-green font-semibold hover:underline">
+                            Ver documento
+                        </a>
+                    </p>
+                @endif
+            </div>
 
-                {{-- ===================================================== --}}
-                {{-- BOTÕES --}}
-                {{-- ===================================================== --}}
-                <div class="col-12 d-flex justify-content-between mt-3">
+            {{-- ================= BOTÕES ================= --}}
+            <div class="md:col-span-2 flex justify-between mt-4">
 
-                    <a href="{{ route('admin.aluno_registros.index') }}"
-                       class="btn btn-light">
-                        <i class="bi bi-arrow-left"></i> Voltar
-                    </a>
+                <a href="{{ route('admin.aluno_registros.index') }}"
+                   class="px-4 py-2 rounded-xl border border-slate-300 dark:border-slate-700
+                          hover:bg-slate-100 dark:hover:bg-dax-dark/80">
+                    ← Voltar
+                </a>
 
-                    <button class="btn btn-success">
-                        <i class="bi bi-save"></i> Atualizar
-                    </button>
+                <button type="submit"
+                        class="px-6 py-2 rounded-xl bg-dax-green text-white font-semibold
+                               hover:bg-dax-greenSoft transition">
+                    💾 Atualizar
+                </button>
 
-                </div>
+            </div>
 
-            </form>
-        </div>
+        </form>
     </div>
 
-    {{-- =============================================== --}}
-    {{-- JS PARA ATUALIZAR TURMA AO TROCAR DE ALUNO --}}
-    {{-- =============================================== --}}
+    {{-- ================= JS: BUSCAR TURMA ================= --}}
     <script>
         document.getElementById('aluno_id').addEventListener('change', function () {
 
-            let alunoId = this.value;
+            const alunoId = this.value;
             if (!alunoId) return;
 
             fetch(`/admin/buscar-turma-aluno/${alunoId}`)
-                .then(response => response.json())
+                .then(r => r.json())
                 .then(data => {
 
                     if (data.sem_turma) {
                         alert("⚠️ Este aluno não está vinculado a nenhuma turma!");
-                        document.getElementById('turma_nome').value = "";
-                        document.getElementById('turma_id').value = "";
+                        document.getElementById('turma_nome').value = '';
+                        document.getElementById('turma_id').value = '';
                         return;
                     }
 
-                    // Preenche turma nova
                     document.getElementById('turma_nome').value = data.turma;
                     document.getElementById('turma_id').value = data.turma_id;
                 })
-                .catch(() => {
-                    alert("Erro ao buscar turma do aluno.");
-                });
-
+                .catch(() => alert("Erro ao buscar turma do aluno."));
         });
     </script>
 

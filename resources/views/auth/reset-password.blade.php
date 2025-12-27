@@ -1,39 +1,93 @@
 <x-guest-layout>
-    <form method="POST" action="{{ route('password.store') }}">
+
+    {{-- Cabeçalho --}}
+    <div class="text-center mb-10">
+        <h1 class="text-3xl font-bold text-dax-dark">
+            Redefinir senha
+        </h1>
+        <p class="text-slate-500 mt-1">
+            Crie uma nova senha para acessar o sistema
+        </p>
+    </div>
+
+    <form method="POST" action="{{ route('password.store') }}" class="space-y-6">
         @csrf
 
-        <!-- Password Reset Token -->
+        {{-- Token --}}
         <input type="hidden" name="token" value="{{ $request->route('token') }}">
 
-        <!-- Email Address -->
+        {{-- Email --}}
         <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $request->email)" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+            <x-input-label for="email" value="E-mail" class="text-slate-700 font-semibold" />
+
+            <x-text-input
+                id="email"
+                type="email"
+                name="email"
+                :value="old('email', $request->email)"
+                required
+                autofocus
+                autocomplete="username"
+                class="mt-1 block w-full
+                       border border-slate-300
+                       text-slate-800
+                       focus:border-dax-green
+                       focus:ring-2 focus:ring-dax-green/20
+                       transition" />
+
+            <x-input-error :messages="$errors->get('email')" class="mt-2 text-dax-green" />
         </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-            <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+        {{-- Nova senha --}}
+        <div>
+            <x-input-label for="password" value="Nova senha" class="text-slate-700 font-semibold" />
+
+            <x-text-input
+                id="password"
+                type="password"
+                name="password"
+                required
+                autocomplete="new-password"
+                class="mt-1 block w-full
+                       border border-slate-300
+                       text-slate-800
+                       focus:border-dax-green
+                       focus:ring-2 focus:ring-dax-green/20
+                       transition" />
+
+            <x-input-error :messages="$errors->get('password')" class="mt-2 text-dax-green" />
         </div>
 
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
+        {{-- Confirmar senha --}}
+        <div>
+            <x-input-label for="password_confirmation" value="Confirmar nova senha" class="text-slate-700 font-semibold" />
 
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                                type="password"
-                                name="password_confirmation" required autocomplete="new-password" />
+            <x-text-input
+                id="password_confirmation"
+                type="password"
+                name="password_confirmation"
+                required
+                autocomplete="new-password"
+                class="mt-1 block w-full
+                       border border-slate-300
+                       text-slate-800
+                       focus:border-dax-green
+                       focus:ring-2 focus:ring-dax-green/20
+                       transition" />
 
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2 text-dax-green" />
         </div>
 
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Reset Password') }}
-            </x-primary-button>
-        </div>
+        {{-- Botão --}}
+        <button type="submit"
+                class="w-full py-3
+                       bg-dax-green hover:bg-dax-greenSoft
+                       text-white font-semibold
+                       rounded-md
+                       shadow-sm
+                       transition">
+            Redefinir senha
+        </button>
     </form>
+
 </x-guest-layout>

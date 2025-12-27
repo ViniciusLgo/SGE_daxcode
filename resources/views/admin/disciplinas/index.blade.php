@@ -1,79 +1,108 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h4 class="mb-1">
-                <i class="bi bi-journal-bookmark-fill text-primary me-2"></i> Disciplinas
-            </h4>
-            <p class="text-muted mb-0">Gerencie as disciplinas e seus vínculos com professores e turmas.</p>
-        </div>
-        <a href="{{ route('admin.disciplinas.create') }}" class="btn btn-primary">
-            <i class="bi bi-plus-circle"></i> Nova Disciplina
-        </a>
-    </div>
+    <div class="space-y-6">
 
-    {{-- Barra de busca --}}
-    <form method="GET" action="{{ route('admin.disciplinas.index') }}" class="mb-3">
-        <div class="input-group">
-            <input type="text" name="search" class="form-control" placeholder="Buscar disciplina..."
-                   value="{{ $search ?? '' }}">
-            <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search"></i></button>
-        </div>
-    </form>
+        {{-- Header --}}
+        <div class="flex justify-between items-start">
+            <div>
+                <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light flex items-center gap-2">
+                    <i class="bi bi-journal-bookmark-fill text-dax-yellow"></i>
+                    Disciplinas
+                </h1>
+                <p class="text-slate-500">
+                    Gerencie as disciplinas e seus vínculos com professores e turmas.
+                </p>
+            </div>
 
-    <div class="card shadow-sm border-0">
-        <div class="card-body p-0">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="table-light">
-                <tr>
-                    <th>Nome</th>
-                    <th>Carga Horária</th>
-                    <th>Professores</th>
-                    <th class="text-end">Ações</th>
+            <a href="{{ route('admin.disciplinas.create') }}"
+               class="px-4 py-2 rounded-xl bg-dax-green text-white">
+                <i class="bi bi-plus-circle"></i> Nova Disciplina
+            </a>
+        </div>
+
+        {{-- Busca --}}
+        <form method="GET" action="{{ route('admin.disciplinas.index') }}"
+              class="flex gap-2 max-w-md">
+            <input type="text" name="search"
+                   placeholder="Buscar disciplina..."
+                   value="{{ $search ?? '' }}"
+                   class="w-full rounded-xl border px-4 py-2.5
+                      bg-white dark:bg-dax-dark/60
+                      border-slate-200 dark:border-slate-800">
+            <button class="px-4 py-2.5 rounded-xl border
+                       border-slate-200 dark:border-slate-800">
+                <i class="bi bi-search"></i>
+            </button>
+        </form>
+
+        {{-- Tabela --}}
+        <div class="rounded-2xl border bg-white dark:bg-dax-dark/60
+                border-slate-200 dark:border-slate-800 overflow-hidden">
+
+            <table class="min-w-full text-sm">
+                <thead class="bg-slate-50 dark:bg-dax-dark">
+                <tr class="text-left text-slate-600 dark:text-slate-400">
+                    <th class="px-4 py-3">Nome</th>
+                    <th class="px-4 py-3">Carga Horária</th>
+                    <th class="px-4 py-3">Professores</th>
+                    <th class="px-4 py-3 text-right">Ações</th>
                 </tr>
                 </thead>
-                <tbody>
+
+                <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
                 @forelse ($disciplinas as $disciplina)
-                    <tr>
-                        <td>{{ $disciplina->nome }}</td>
-                        <td>{{ $disciplina->carga_horaria ? $disciplina->carga_horaria . 'h' : '—' }}</td>
-                        <td>
-                            @if ($disciplina->professores->count() > 0)
-                                @foreach ($disciplina->professores as $prof)
-                                    <span class="badge bg-secondary">{{ $prof->nome }}</span>
-                                @endforeach
-                            @else
-                                <span class="text-muted">Nenhum</span>
-                            @endif
+                    <tr class="hover:bg-slate-50 dark:hover:bg-dax-dark/80">
+                        <td class="px-4 py-3">{{ $disciplina->nome }}</td>
+                        <td class="px-4 py-3">
+                            {{ $disciplina->carga_horaria ? $disciplina->carga_horaria.'h' : '—' }}
                         </td>
-                        <td class="text-end">
-                            <a href="{{ route('admin.disciplinas.show', $disciplina->id) }}" class="btn btn-sm btn-outline-info">
-                                <i class="bi bi-eye"></i>
+                        <td class="px-4 py-3 space-x-1">
+                            @forelse ($disciplina->professores as $prof)
+                                <span class="inline-flex items-center px-2 py-1 rounded-full
+                                             bg-slate-200 dark:bg-slate-700 text-xs">
+                                    {{ $prof->nome }}
+                                </span>
+                            @empty
+                                <span class="text-slate-500 text-sm">Nenhum</span>
+                            @endforelse
+                        </td>
+                        <td class="px-4 py-3 text-right space-x-2">
+                            <a href="{{ route('admin.disciplinas.show', $disciplina) }}"
+                               class="text-sky-600 hover:underline">
+                                Ver
                             </a>
-                            <a href="{{ route('admin.disciplinas.edit', $disciplina->id) }}" class="btn btn-sm btn-outline-warning">
-                                <i class="bi bi-pencil"></i>
+                            <a href="{{ route('admin.disciplinas.edit', $disciplina) }}"
+                               class="text-yellow-600 hover:underline">
+                                Editar
                             </a>
-                            <form action="{{ route('admin.disciplinas.destroy', $disciplina->id) }}" method="POST" class="d-inline"
+                            <form action="{{ route('admin.disciplinas.destroy', $disciplina) }}"
+                                  method="POST" class="inline"
                                   onsubmit="return confirm('Deseja excluir esta disciplina?')">
                                 @csrf @method('DELETE')
-                                <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                                <button class="text-red-600 hover:underline">
+                                    Excluir
+                                </button>
                             </form>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="4" class="text-center text-muted py-3">Nenhuma disciplina cadastrada.</td>
+                        <td colspan="4"
+                            class="px-4 py-6 text-center text-slate-500">
+                            Nenhuma disciplina cadastrada.
+                        </td>
                     </tr>
                 @endforelse
                 </tbody>
             </table>
-        </div>
-    </div>
 
-    @if ($disciplinas instanceof \Illuminate\Pagination\LengthAwarePaginator && $disciplinas->hasPages())
-        <div class="mt-3">
-            {{ $disciplinas->links() }}
+            @if ($disciplinas->hasPages())
+                <div class="p-4 border-t border-slate-200 dark:border-slate-800">
+                    {{ $disciplinas->links() }}
+                </div>
+            @endif
         </div>
-    @endif
+
+    </div>
 @endsection

@@ -1,93 +1,139 @@
 @csrf
 @php($currentTurma = old('turma_id', $aluno->turma_id ?? ''))
 
-<div class="row g-3">
-    {{-- ================== CAMPOS DO USER ================== --}}
-    <div class="col-md-6">
-        <label for="user_name" class="form-label">Nome do Aluno</label>
-        <input type="text" name="user[name]" id="user_name"
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+    {{-- ================== DADOS DO USUÁRIO ================== --}}
+    <div>
+        <label class="block text-sm font-semibold mb-1">
+            Nome do Aluno
+        </label>
+        <input type="text"
+               name="user[name]"
                value="{{ old('user.name', $aluno->user->name ?? '') }}"
-               class="form-control @error('user.name') is-invalid @enderror" required>
+               required
+               class="w-full rounded-xl
+                      border border-slate-300 dark:border-slate-700
+                      bg-white dark:bg-slate-900
+                      px-4 py-2.5
+                      text-slate-800 dark:text-slate-100
+                      focus:border-dax-green
+                      focus:ring-2 focus:ring-dax-green/20 transition">
         @error('user.name')
-        <div class="invalid-feedback">{{ $message }}</div>
+        <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
         @enderror
     </div>
 
-    <div class="col-md-6">
-        <label for="user_email" class="form-label">E-mail</label>
-        <input type="email" name="user[email]" id="user_email"
+    <div>
+        <label class="block text-sm font-semibold mb-1">
+            E-mail
+        </label>
+        <input type="email"
+               name="user[email]"
                value="{{ old('user.email', $aluno->user->email ?? '') }}"
-               class="form-control @error('user.email') is-invalid @enderror" required>
+               required
+               class="w-full rounded-xl
+                      border border-slate-300 dark:border-slate-700
+                      bg-white dark:bg-slate-900
+                      px-4 py-2.5
+                      text-slate-800 dark:text-slate-100
+                      focus:border-dax-green
+                      focus:ring-2 focus:ring-dax-green/20 transition">
         @error('user.email')
-        <div class="invalid-feedback">{{ $message }}</div>
+        <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
         @enderror
     </div>
 
-    {{-- ================== CAMPOS DO ALUNO ================== --}}
-    <div class="col-md-6">
-        <label for="matricula" class="form-label">Matrícula</label>
-        <input type="text" name="matricula" id="matricula"
+    {{-- ================== DADOS DO ALUNO ================== --}}
+    <div>
+        <label class="block text-sm font-semibold mb-1">
+            Matrícula
+        </label>
+        <input type="text"
+               name="matricula"
                value="{{ old('matricula', $aluno->matricula ?? '') }}"
-               class="form-control @error('matricula') is-invalid @enderror" required>
+               required
+               class="w-full rounded-xl border border-slate-300 dark:border-slate-700
+                      bg-white dark:bg-slate-900 px-4 py-2.5">
         @error('matricula')
-        <div class="invalid-feedback">{{ $message }}</div>
+        <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
         @enderror
     </div>
 
-    <div class="col-md-6">
-        <label for="telefone" class="form-label">Telefone</label>
-        <input type="text" name="telefone" id="telefone"
+    <div>
+        <label class="block text-sm font-semibold mb-1">
+            Telefone
+        </label>
+        <input type="text"
+               name="telefone"
                value="{{ old('telefone', $aluno->telefone ?? '') }}"
-               class="form-control @error('telefone') is-invalid @enderror">
+               class="w-full rounded-xl border border-slate-300 dark:border-slate-700
+                      bg-white dark:bg-slate-900 px-4 py-2.5">
         @error('telefone')
-        <div class="invalid-feedback">{{ $message }}</div>
+        <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
         @enderror
     </div>
 
-    <div class="col-md-6">
-        <label for="data_nascimento" class="form-label">Data de Nascimento</label>
-        <input type="date" name="data_nascimento" id="data_nascimento"
+    <div>
+        <label class="block text-sm font-semibold mb-1">
+            Data de Nascimento
+        </label>
+        <input type="date"
+               name="data_nascimento"
                value="{{ old('data_nascimento', isset($aluno) && $aluno->data_nascimento ? $aluno->data_nascimento->format('Y-m-d') : '') }}"
-               class="form-control @error('data_nascimento') is-invalid @enderror">
-        @error('data_nascimento')
-        <div class="invalid-feedback">{{ $message }}</div>
-        @enderror
+               class="w-full rounded-xl border border-slate-300 dark:border-slate-700
+                      bg-white dark:bg-slate-900 px-4 py-2.5">
     </div>
 
-    <div class="col-md-6">
-        <label for="turma_id" class="form-label">Turma</label>
-        <select name="turma_id" id="turma_id" class="form-select @error('turma_id') is-invalid @enderror" required>
-            <option value="" disabled {{ !$currentTurma ? 'selected' : '' }}>Selecione a turma</option>
-            @foreach ($turmas as $turma)
-                <option value="{{ $turma->id }}" {{ (string) $turma->id === (string) $currentTurma ? 'selected' : '' }}>
+    <div>
+        <label class="block text-sm font-semibold mb-1">
+            Turma
+        </label>
+        <select name="turma_id"
+                required
+                class="w-full rounded-xl border border-slate-300 dark:border-slate-700
+                       bg-white dark:bg-slate-900 px-4 py-2.5">
+            <option value="">Selecione a turma</option>
+            @foreach($turmas as $turma)
+                <option value="{{ $turma->id }}"
+                    {{ (string)$turma->id === (string)$currentTurma ? 'selected' : '' }}>
                     {{ $turma->nome }}
                 </option>
             @endforeach
         </select>
-        @error('turma_id')
-        <div class="invalid-feedback">{{ $message }}</div>
-        @enderror
     </div>
 
-    <div class="col-md-6">
-        <label for="foto_perfil" class="form-label">Foto de Perfil</label>
-        <input type="file" name="foto_perfil" id="foto_perfil"
-               class="form-control @error('foto_perfil') is-invalid @enderror">
-        @error('foto_perfil')
-        <div class="invalid-feedback">{{ $message }}</div>
-        @enderror
+    {{-- Foto --}}
+    <div>
+        <label class="block text-sm font-semibold mb-1">
+            Foto de Perfil
+        </label>
+        <input type="file"
+               name="foto_perfil"
+               class="w-full rounded-xl border border-slate-300 dark:border-slate-700
+                      bg-white dark:bg-slate-900 px-3 py-2">
 
         @if(isset($aluno) && $aluno->foto_perfil)
-            <div class="mt-2">
-                <img src="{{ asset('storage/' . $aluno->foto_perfil) }}" alt="Foto atual" class="rounded" width="90">
+            <div class="mt-3">
+                <img src="{{ asset('storage/' . $aluno->foto_perfil) }}"
+                     class="rounded-xl w-24 border border-slate-300 dark:border-slate-700">
             </div>
         @endif
     </div>
+
 </div>
 
-<div class="d-flex justify-content-end gap-2 mt-4">
-    <a href="{{ route('admin.alunos.index') }}" class="btn btn-outline-secondary">Cancelar</a>
-    <button type="submit" class="btn btn-success">
+{{-- Ações --}}
+<div class="mt-8 flex justify-end gap-4">
+    <a href="{{ route('admin.alunos.index') }}"
+       class="px-5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700
+              text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
+        Cancelar
+    </a>
+
+    <button type="submit"
+            class="px-6 py-2.5 rounded-xl bg-dax-green text-white font-bold
+                   hover:bg-dax-greenSoft transition">
         {{ isset($aluno) ? 'Atualizar Aluno' : 'Salvar Aluno' }}
     </button>
 </div>

@@ -5,34 +5,39 @@ namespace App\Http\Controllers\Admin\Secretaria;
 use App\Http\Controllers\Controller;
 use App\Models\Aluno;
 use App\Models\Turma;
-use App\Models\UserDocument;
-use App\Models\User;
 use App\Models\SecretariaAtendimento;
-
 
 class SecretariaDashboardController extends Controller
 {
+    /**
+     * Dashboard da Secretaria
+     */
     public function index()
     {
-        // Totais simples (sem status)
+        // Totais gerais
         $totalAlunos = Aluno::count();
         $totalTurmas = Turma::count();
 
-        // EXEMPLO: Pendências de documentos (quando implementarmos documentos obrigatórios)
-        // Por enquanto: retorna zero
-        $pendencias = 0;
 
-        // EXEMPLO: Atendimentos recentes
-        // Futuro: tabela secretaria_atendimentos
-        // Por agora: mock para a tabela ficar exibida sem erro
-        $atendimentosRecentes = SecretariaAtendimento::latest()
-            ->limit(5)
+        $pendencias = Aluno::whereHas('documents', function ($q) {
+            $q->whereNull('arquivo');
+        })->count();
+
+
+        // Atendimentos pendentes
+        $atendimentosPendentes = SecretariaAtendimento::where('status', 'pendente')->count();
+
+        // Atendimentos recentes
+        $atendimentosRecentes = SecretariaAtendimento::with(['aluno.user'])
+            ->latest()
+            ->take(5)
             ->get();
 
         return view('admin.secretaria.dashboard', compact(
             'totalAlunos',
             'totalTurmas',
             'pendencias',
+            'atendimentosPendentes',
             'atendimentosRecentes'
         ));
     }

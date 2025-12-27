@@ -1,103 +1,126 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="mb-4 d-flex justify-content-between align-items-center">
-        <div>
-            <h4 class="mb-1"><i class="bi bi-person-vcard text-primary"></i> Ficha Completa do Aluno</h4>
-            <p class="text-muted mb-0">Informações gerais, responsáveis e documentos vinculados.</p>
-        </div>
-        <div>
-            <a href="{{ route('admin.alunos.edit', $aluno->id) }}" class="btn btn-warning btn-sm me-2">
-                <i class="bi bi-pencil-square"></i> Editar
-            </a>
-            <a href="{{ route('admin.alunos.index') }}" class="btn btn-secondary btn-sm">
-                <i class="bi bi-arrow-left"></i> Voltar
-            </a>
 
+    {{-- CABEÇALHO --}}
+    <div class="mb-6 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-black flex items-center gap-2 text-dax-dark dark:text-dax-light">
+                <i class="bi bi-person-vcard"></i> Ficha Completa do Aluno
+            </h1>
+            <p class="text-slate-500 dark:text-slate-400">
+                Informações gerais, responsáveis, documentos e registros vinculados.
+            </p>
+        </div>
+
+        <div class="flex flex-wrap gap-2">
             <a href="{{ route('admin.boletim.aluno', $aluno) }}"
-               class="btn btn-outline-primary">
+               class="px-4 py-2 rounded-xl border border-dax-green
+                  text-dax-green font-semibold hover:bg-dax-green hover:text-white transition">
                 📘 Ver Boletim
             </a>
 
+            <a href="{{ route('admin.alunos.edit', $aluno->id) }}"
+               class="px-4 py-2 rounded-xl bg-amber-500 text-white font-bold hover:bg-amber-600 transition">
+                <i class="bi bi-pencil-square"></i> Editar
+            </a>
+
+            <a href="{{ route('admin.alunos.index') }}"
+               class="px-4 py-2 rounded-xl border border-slate-300 dark:border-slate-700">
+                <i class="bi bi-arrow-left"></i> Voltar
+            </a>
         </div>
     </div>
 
     {{-- DADOS GERAIS --}}
-    <div class="card shadow-sm border-0 mb-4">
-        <div class="card-body">
-            <div class="row align-items-center">
-                <div class="col-md-3 text-center">
-                    @if($aluno->foto_perfil)
-                        <img src="{{ asset('storage/' . $aluno->foto_perfil) }}"
-                             class="rounded-circle shadow-sm border mb-2" width="110" height="110" style="object-fit: cover;">
-                    @else
-                        <i class="bi bi-person-circle text-secondary" style="font-size: 5rem;"></i>
-                    @endif
-                        <h5 class="mt-2 fw-bold">{{ $aluno->user->name }}</h5>
-                        <span class="badge bg-primary">{{ $aluno->turma->nome ?? 'Sem turma atribuída' }}</span>
-                </div>
+    <div class="rounded-2xl bg-white dark:bg-dax-dark/60
+            border border-slate-200 dark:border-slate-800
+            shadow-sm p-6 mb-6">
 
-                <div class="col-md-9">
-                    <table class="table table-sm mb-0">
-                        <tr>
-                            <th style="width: 180px;">Matrícula</th>
-                            <td>{{ $aluno->matricula ?? '—' }}</td>
-                        </tr>
-                        <tr>
-                            <th>E-mail</th>
-                            <td>{{ $aluno->user->email }}</td>
-                        </tr>
-                        <tr>
-                            <th>Telefone</th>
-                            <td>{{ $aluno->telefone ?? '—' }}</td>
-                        </tr>
-                        <tr>
-                            <th>Data de Nascimento</th>
-                            <td>{{ $aluno->data_nascimento ? \Carbon\Carbon::parse($aluno->data_nascimento)->format('d/m/Y') : '—' }}</td>
-                        </tr>
-                        <tr>
-                            <th>Data de Cadastro</th>
-                            <td>{{ $aluno->created_at->format('d/m/Y H:i') }}</td>
-                        </tr>
-                    </table>
+        <div class="flex flex-col md:flex-row gap-6 items-center">
+
+            {{-- FOTO / IDENTIDADE --}}
+            <div class="text-center w-full md:w-1/4">
+                @if($aluno->foto_perfil)
+                    <img src="{{ asset('storage/' . $aluno->foto_perfil) }}"
+                         class="w-28 h-28 rounded-full object-cover border mx-auto shadow">
+                @else
+                    <i class="bi bi-person-circle text-7xl text-slate-400"></i>
+                @endif
+
+                <h2 class="mt-3 font-black text-lg text-dax-dark dark:text-dax-light">
+                    {{ $aluno->user->name }}
+                </h2>
+
+                <span class="inline-block mt-1 px-3 py-1 text-xs rounded-full
+                         bg-dax-green/10 text-dax-green font-bold">
+                {{ $aluno->turma->nome ?? 'Sem turma atribuída' }}
+            </span>
+            </div>
+
+            {{-- INFORMAÇÕES --}}
+            <div class="flex-1">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div><strong>Matrícula:</strong> {{ $aluno->matricula ?? '—' }}</div>
+                    <div><strong>E-mail:</strong> {{ $aluno->user->email }}</div>
+                    <div><strong>Telefone:</strong> {{ $aluno->telefone ?? '—' }}</div>
+                    <div>
+                        <strong>Data de Nascimento:</strong>
+                        {{ $aluno->data_nascimento ? \Carbon\Carbon::parse($aluno->data_nascimento)->format('d/m/Y') : '—' }}
+                    </div>
+                    <div>
+                        <strong>Data de Cadastro:</strong>
+                        {{ $aluno->created_at->format('d/m/Y H:i') }}
+                    </div>
                 </div>
             </div>
+
         </div>
     </div>
 
     {{-- RESPONSÁVEIS --}}
-    <div class="card shadow-sm border-0 mb-4">
-        <div class="card-header bg-white border-bottom fw-bold d-flex justify-content-between align-items-center">
-            <span><i class="bi bi-people-fill text-primary"></i> Responsáveis do Aluno</span>
-            <a href="{{ route('admin.alunos.edit', $aluno->id) }}" class="btn btn-sm btn-outline-primary">
-                <i class="bi bi-pencil-square"></i> Gerenciar
+    <div class="rounded-2xl bg-white dark:bg-dax-dark/60
+            border border-slate-200 dark:border-slate-800
+            shadow-sm mb-6">
+
+        <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800
+                flex justify-between items-center">
+            <h3 class="font-black flex items-center gap-2">
+                <i class="bi bi-people-fill"></i> Responsáveis
+            </h3>
+
+            <a href="{{ route('admin.alunos.edit', $aluno->id) }}"
+               class="text-sm font-semibold text-dax-green hover:underline">
+                Gerenciar
             </a>
         </div>
-        <div class="card-body">
+
+        <div class="p-6">
             @if($aluno->responsaveis->isEmpty())
-                <p class="text-muted mb-0">Nenhum responsável vinculado a este aluno.</p>
+                <p class="text-slate-500">Nenhum responsável vinculado.</p>
             @else
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle">
-                        <thead class="table-light">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="text-slate-500">
                         <tr>
-                            <th>Nome</th>
-                            <th>Parentesco</th>
-                            <th>Telefone</th>
-                            <th>Email</th>
-                            <th class="text-end">Ações</th>
+                            <th class="py-2 text-left">Nome</th>
+                            <th class="py-2 text-left">Parentesco</th>
+                            <th class="py-2 text-left">Telefone</th>
+                            <th class="py-2 text-left">Email</th>
+                            <th class="py-2 text-right">Ações</th>
                         </tr>
                         </thead>
                         <tbody>
                         @foreach($aluno->responsaveis as $resp)
-                            <tr>
-                                <td>{{ $resp->nome }}</td>
-                                <td>{{ $resp->grau_parentesco ?? '—' }}</td>
-                                <td>{{ $resp->telefone ?? '—' }}</td>
-                                <td>{{ $resp->email ?? '—' }}</td>
-                                <td class="text-end">
-                                    <a href="{{ route('admin.responsaveis.show', $resp->id) }}" class="btn btn-sm btn-outline-primary">
-                                        <i class="bi bi-eye"></i> Ver
+                            <tr class="border-t border-slate-200 dark:border-slate-800">
+                                <td class="py-2">{{ $resp->nome }}</td>
+                                <td class="py-2">{{ $resp->grau_parentesco ?? '—' }}</td>
+                                <td class="py-2">{{ $resp->telefone ?? '—' }}</td>
+                                <td class="py-2">{{ $resp->email ?? '—' }}</td>
+                                <td class="py-2 text-right">
+                                    <a href="{{ route('admin.responsaveis.show', $resp->id) }}"
+                                       class="text-dax-green hover:underline">
+                                        Ver
                                     </a>
                                 </td>
                             </tr>
@@ -110,85 +133,109 @@
     </div>
 
     {{-- DOCUMENTOS --}}
-    <div class="card shadow-sm border-0">
-        <div class="card-header bg-white border-bottom fw-bold">
-            <i class="bi bi-folder2 text-primary"></i> Documentos do Aluno
+    <div class="rounded-2xl bg-white dark:bg-dax-dark/60
+            border border-slate-200 dark:border-slate-800
+            shadow-sm mb-6">
+
+        <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800">
+            <h3 class="font-black flex items-center gap-2">
+                <i class="bi bi-folder2"></i> Documentos
+            </h3>
         </div>
-        <div class="card-body">
+
+        <div class="p-6">
             @if($aluno->documentos->count())
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle">
-                        <thead class="table-light">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="text-slate-500">
                         <tr>
-                            <th>Tipo</th>
-                            <th>Arquivo</th>
-                            <th>Data</th>
-                            <th>Observações</th>
+                            <th class="py-2 text-left">Tipo</th>
+                            <th class="py-2 text-left">Arquivo</th>
+                            <th class="py-2 text-left">Data</th>
+                            <th class="py-2 text-left">Observações</th>
                         </tr>
                         </thead>
                         <tbody>
                         @foreach($aluno->documentos as $doc)
-                            <tr>
-                                <td>{{ $doc->tipo }}</td>
-                                <td>
-                                    <a href="{{ asset('storage/'.$doc->arquivo) }}" target="_blank" class="text-decoration-none">
+                            <tr class="border-t border-slate-200 dark:border-slate-800">
+                                <td class="py-2">{{ $doc->tipo }}</td>
+                                <td class="py-2">
+                                    <a href="{{ asset('storage/'.$doc->arquivo) }}"
+                                       target="_blank"
+                                       class="text-dax-green hover:underline">
                                         <i class="bi bi-paperclip"></i> Abrir
                                     </a>
                                 </td>
-                                <td>{{ $doc->created_at->format('d/m/Y H:i') }}</td>
-                                <td>{{ $doc->observacoes ?? '-' }}</td>
+                                <td class="py-2">{{ $doc->created_at->format('d/m/Y H:i') }}</td>
+                                <td class="py-2">{{ $doc->observacoes ?? '—' }}</td>
                             </tr>
                         @endforeach
                         </tbody>
                     </table>
                 </div>
             @else
-                <p class="text-muted mb-0">Nenhum documento enviado.</p>
+                <p class="text-slate-500">Nenhum documento enviado.</p>
             @endif
         </div>
     </div>
 
-    {{-- Registros do Aluno --}}
-    <div class="card shadow-sm border-0 mt-4">
-        <div class="card-header bg-white border-bottom fw-bold d-flex justify-content-between align-items-center">
-            <span><i class="bi bi-journal-text text-primary"></i> Registros do Aluno</span>
-            <a href="{{ route('admin.aluno_registros.create', ['aluno_id' => $aluno->id]) }}" class="btn btn-sm btn-outline-primary">
+    {{-- REGISTROS --}}
+    <div class="rounded-2xl bg-white dark:bg-dax-dark/60
+            border border-slate-200 dark:border-slate-800
+            shadow-sm">
+
+        <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800
+                flex justify-between items-center">
+            <h3 class="font-black flex items-center gap-2">
+                <i class="bi bi-journal-text"></i> Registros do Aluno
+            </h3>
+
+            <a href="{{ route('admin.aluno_registros.create', ['aluno_id' => $aluno->id]) }}"
+               class="px-4 py-2 rounded-xl bg-dax-green text-white font-bold hover:bg-dax-greenSoft transition">
                 <i class="bi bi-plus"></i> Novo Registro
             </a>
         </div>
-        <div class="card-body">
+
+        <div class="p-6">
             @if($aluno->registros->isEmpty())
-                <p class="text-muted mb-0">Nenhum registro encontrado.</p>
+                <p class="text-slate-500">Nenhum registro encontrado.</p>
             @else
-                <table class="table table-hover align-middle">
-                    <thead class="table-light">
-                    <tr>
-                        <th>Tipo</th>
-                        <th>Categoria</th>
-                        <th>Data</th>
-                        <th class="text-end">Ações</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @foreach($aluno->registros as $registro)
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="text-slate-500">
                         <tr>
-                            <td>{{ $registro->tipo }}</td>
-                            <td>{{ $registro->categoria ?? '-' }}</td>
-                            <td>{{ $registro->created_at->format('d/m/Y H:i') }}</td>
-                            <td class="text-end">
-                                <a href="{{ route('admin.aluno_registros.show', $registro->id) }}" class="btn btn-sm btn-outline-primary">Ver</a>
-                                <form action="{{ route('admin.aluno_registros.destroy', $registro->id) }}" method="POST" class="d-inline">
-                                    @csrf @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-outline-danger"
-                                            onclick="return confirm('Deseja excluir este registro?')">
-                                        Excluir
-                                    </button>
-                                </form>
-                            </td>
+                            <th class="py-2 text-left">Tipo</th>
+                            <th class="py-2 text-left">Categoria</th>
+                            <th class="py-2 text-left">Data</th>
+                            <th class="py-2 text-right">Ações</th>
                         </tr>
-                    @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                        @foreach($aluno->registros as $registro)
+                            <tr class="border-t border-slate-200 dark:border-slate-800">
+                                <td class="py-2">{{ $registro->tipo }}</td>
+                                <td class="py-2">{{ $registro->categoria ?? '—' }}</td>
+                                <td class="py-2">{{ $registro->created_at->format('d/m/Y H:i') }}</td>
+                                <td class="py-2 text-right space-x-2">
+                                    <a href="{{ route('admin.aluno_registros.show', $registro->id) }}"
+                                       class="text-dax-green hover:underline">
+                                        Ver
+                                    </a>
+
+                                    <form action="{{ route('admin.aluno_registros.destroy', $registro->id) }}"
+                                          method="POST" class="inline">
+                                        @csrf @method('DELETE')
+                                        <button class="text-red-500 hover:underline"
+                                                onclick="return confirm('Deseja excluir este registro?')">
+                                            Excluir
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
             @endif
         </div>
     </div>

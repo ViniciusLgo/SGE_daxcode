@@ -24,6 +24,9 @@ class CategoriaDespesa extends Model
      */
     public function despesas()
     {
-        return $this->hasMany(Despesa::class, 'categoria_id');
+        return $this->hasMany(
+            \App\Models\Despesa::class,
+            'categoria_id'
+        );
     }
 }

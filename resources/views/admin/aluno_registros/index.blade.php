@@ -2,177 +2,172 @@
 
 @section('content')
 
-    <div class="d-flex justify-content-between align-items-center mb-3">
+    {{-- ================= HEADER ================= --}}
+    <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-            <h4 class="mb-0">📄 Registros de Alunos</h4>
-            <small class="text-muted">Gerencie atestados, declarações e ocorrências dos alunos.</small>
+            <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light">
+                📄 Registros de Alunos
+            </h1>
+            <p class="text-sm text-slate-500">
+                Gerencie atestados, declarações e ocorrências dos alunos.
+            </p>
         </div>
 
-        <a href="{{ route('admin.aluno_registros.create') }}" class="btn btn-warning shadow-sm">
-            <i class="bi bi-plus-circle me-1"></i> Novo Registro
+        <a href="{{ route('admin.aluno_registros.create') }}"
+           class="px-4 py-2 rounded-xl bg-dax-green text-white font-semibold hover:bg-dax-greenSoft transition">
+            ➕ Novo Registro
         </a>
     </div>
 
-    {{-- Mensagens --}}
     @include('partials.alerts')
 
-    {{-- ========================================================= --}}
-    {{-- FILTROS --}}
-    {{-- ========================================================= --}}
-    <form method="GET" class="row g-2 mb-4">
+    {{-- ================= FILTROS ================= --}}
+    <form method="GET"
+          class="mb-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
 
-        <div class="col-md-3">
-            <input type="text" name="tipo" class="form-control"
-                   placeholder="Tipo (Atestado, Declaração...)"
-                   value="{{ request('tipo') }}">
-        </div>
+        <input type="text" name="tipo"
+               value="{{ request('tipo') }}"
+               placeholder="Tipo (Atestado, Declaração...)"
+               class="rounded-xl border border-slate-300 dark:border-slate-700
+                      px-4 py-2.5 text-sm
+                      bg-white dark:bg-dax-dark/60
+                      text-dax-dark dark:text-dax-light">
 
-        <div class="col-md-2">
-            <input type="text" name="categoria" class="form-control"
-                   placeholder="Categoria"
-                   value="{{ request('categoria') }}">
-        </div>
+        <input type="text" name="categoria"
+               value="{{ request('categoria') }}"
+               placeholder="Categoria"
+               class="rounded-xl border border-slate-300 dark:border-slate-700
+                      px-4 py-2.5 text-sm
+                      bg-white dark:bg-dax-dark/60
+                      text-dax-dark dark:text-dax-light">
 
-        <div class="col-md-2">
-            <select name="status" class="form-select">
-                <option value="">Status</option>
-                @foreach(['pendente','validado','arquivado','expirado'] as $s)
-                    <option value="{{ $s }}"
-                        {{ request('status') == $s ? 'selected' : '' }}>
-                        {{ ucfirst($s) }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
+        <select name="status"
+                class="rounded-xl border border-slate-300 dark:border-slate-700
+                       px-4 py-2.5 text-sm
+                       bg-white dark:bg-dax-dark/60
+                       text-dax-dark dark:text-dax-light">
+            <option value="">Status</option>
+            @foreach(['pendente','validado','arquivado','expirado'] as $s)
+                <option value="{{ $s }}" @selected(request('status') == $s)>
+                    {{ ucfirst($s) }}
+                </option>
+            @endforeach
+        </select>
 
-        <div class="col-md-3">
-            <select name="turma_id" class="form-select">
-                <option value="">Turma</option>
-                @foreach($turmas as $turma)
-                    <option value="{{ $turma->id }}"
-                        {{ request('turma_id') == $turma->id ? 'selected' : '' }}>
-                        {{ $turma->nome }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
+        <select name="turma_id"
+                class="rounded-xl border border-slate-300 dark:border-slate-700
+                       px-4 py-2.5 text-sm
+                       bg-white dark:bg-dax-dark/60
+                       text-dax-dark dark:text-dax-light">
+            <option value="">Turma</option>
+            @foreach($turmas as $turma)
+                <option value="{{ $turma->id }}" @selected(request('turma_id') == $turma->id)>
+                    {{ $turma->nome }}
+                </option>
+            @endforeach
+        </select>
 
-        <div class="col-md-2 d-grid">
-            <button class="btn btn-outline-secondary">
-                <i class="bi bi-funnel"></i> Filtrar
+        <div class="sm:col-span-2 lg:col-span-1">
+            <button type="submit"
+                    class="w-full px-4 py-2.5 rounded-xl border
+                           border-slate-300 dark:border-slate-700
+                           font-semibold text-sm
+                           hover:bg-slate-100 dark:hover:bg-dax-dark/80">
+                🔍 Filtrar
             </button>
         </div>
     </form>
 
+    {{-- ================= TABELA ================= --}}
+    <div class="rounded-2xl bg-white dark:bg-dax-dark/60 border border-slate-200 dark:border-slate-800 overflow-x-auto">
 
+        <table class="min-w-full text-sm">
+            <thead class="bg-slate-50 dark:bg-dax-dark">
+            <tr class="text-left text-slate-600 dark:text-slate-300">
+                <th class="px-6 py-3">Aluno</th>
+                <th class="px-6 py-3">Tipo</th>
+                <th class="px-6 py-3">Categoria</th>
+                <th class="px-6 py-3">Data</th>
+                <th class="px-6 py-3">Status</th>
+                <th class="px-6 py-3">Turma</th>
+                <th class="px-6 py-3 text-right">Ações</th>
+            </tr>
+            </thead>
 
-    {{-- ========================================================= --}}
-    {{-- TABELA --}}
-    {{-- ========================================================= --}}
-    <div class="card shadow-sm border-0">
-        <div class="card-body table-responsive">
+            <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
+            @forelse($registros as $r)
+                <tr class="hover:bg-slate-50 dark:hover:bg-dax-dark/80 transition">
 
-            <table class="table align-middle mb-0">
-                <thead>
-                <tr>
-                    <th>Aluno</th>
-                    <th>Tipo</th>
-                    <th>Categoria</th>
-                    <th>Data</th>
-                    <th>Status</th>
-                    <th>Turma</th>
-                    <th class="text-end">Ações</th>
+                    <td class="px-6 py-3 font-medium">
+                        {{ $r->aluno->user->name ?? 'Não informado' }}
+                    </td>
+
+                    <td class="px-6 py-3">{{ $r->tipo }}</td>
+
+                    <td class="px-6 py-3">{{ $r->categoria ?? '—' }}</td>
+
+                    <td class="px-6 py-3">
+                        {{ $r->data_evento
+                            ? \Carbon\Carbon::parse($r->data_evento)->format('d/m/Y')
+                            : '—'
+                        }}
+                    </td>
+
+                    <td class="px-6 py-3">
+                        @php
+                            $badge = match($r->status) {
+                                'pendente'  => 'bg-yellow-100 text-yellow-800',
+                                'validado'  => 'bg-green-100 text-green-800',
+                                'arquivado' => 'bg-slate-200 text-slate-700',
+                                default     => 'bg-red-100 text-red-800',
+                            };
+                        @endphp
+                        <span class="px-3 py-1 text-xs font-semibold rounded-full {{ $badge }}">
+                            {{ ucfirst($r->status) }}
+                        </span>
+                    </td>
+
+                    <td class="px-6 py-3">
+                        {{ $r->turma->nome ?? 'Sem turma' }}
+                    </td>
+
+                    <td class="px-6 py-3 text-right space-x-3">
+                        <a href="{{ route('admin.aluno_registros.show', $r->id) }}"
+                           class="text-blue-600 font-semibold hover:underline text-sm">
+                            Ver
+                        </a>
+
+                        <a href="{{ route('admin.aluno_registros.edit', $r->id) }}"
+                           class="text-dax-green font-semibold hover:underline text-sm">
+                            Editar
+                        </a>
+
+                        <form action="{{ route('admin.aluno_registros.destroy', $r->id) }}"
+                              method="POST" class="inline">
+                            @csrf
+                            @method('DELETE')
+                            <button onclick="return confirm('Excluir este registro?')"
+                                    class="text-red-600 font-semibold hover:underline text-sm">
+                                Excluir
+                            </button>
+                        </form>
+                    </td>
                 </tr>
-                </thead>
+            @empty
+                <tr>
+                    <td colspan="7" class="px-6 py-6 text-center text-slate-500">
+                        Nenhum registro encontrado.
+                    </td>
+                </tr>
+            @endforelse
+            </tbody>
+        </table>
 
-                <tbody>
-                @forelse($registros as $r)
-                    <tr>
-
-                        {{-- ========================= --}}
-                        {{-- ALUNO (CORRIGIDO) --}}
-                        {{-- ========================= --}}
-                        <td>
-                            {{ $r->aluno->user->name ?? 'Não informado' }}
-                        </td>
-
-                        <td>{{ $r->tipo }}</td>
-
-                        <td>{{ $r->categoria ?? '-' }}</td>
-
-                        {{-- ========================= --}}
-                        {{-- DATA FORMATADA --}}
-                        {{-- ========================= --}}
-                        <td>
-                            {{ $r->data_evento ? \Carbon\Carbon::parse($r->data_evento)->format('d/m/Y') : '-' }}
-                        </td>
-
-                        {{-- ========================= --}}
-                        {{-- STATUS COM BADGE COLORIDA --}}
-                        {{-- ========================= --}}
-                        <td>
-                            <span class="badge
-                                @if($r->status == 'pendente') bg-warning text-dark
-                                @elseif($r->status == 'validado') bg-success
-                                @elseif($r->status == 'arquivado') bg-secondary
-                                @else bg-danger @endif">
-                                {{ ucfirst($r->status) }}
-                            </span>
-                        </td>
-
-                        {{-- ========================= --}}
-                        {{-- TURMA --}}
-                        {{-- ========================= --}}
-                        <td>{{ $r->turma->nome ?? 'Sem turma' }}</td>
-
-                        {{-- ========================= --}}
-                        {{-- AÇÕES --}}
-                        {{-- ========================= --}}
-                        <td class="text-end">
-
-                            <a href="{{ route('admin.aluno_registros.show', $r->id) }}"
-                               class="btn btn-sm btn-outline-info">
-                                <i class="bi bi-eye"></i>
-                            </a>
-
-                            <a href="{{ route('admin.aluno_registros.edit', $r->id) }}"
-                               class="btn btn-sm btn-outline-warning">
-                                <i class="bi bi-pencil"></i>
-                            </a>
-
-                            <form action="{{ route('admin.aluno_registros.destroy', $r->id) }}"
-                                  method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-
-                                <button class="btn btn-sm btn-outline-danger"
-                                        onclick="return confirm('Excluir este registro?')">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-
-                            </form>
-
-                        </td>
-                    </tr>
-
-                @empty
-                    <tr>
-                        <td colspan="7" class="text-center text-muted">
-                            Nenhum registro encontrado.
-                        </td>
-                    </tr>
-                @endforelse
-
-                </tbody>
-            </table>
-
+        {{-- ================= PAGINAÇÃO ================= --}}
+        <div class="px-6 py-4 border-t border-slate-200 dark:border-slate-800">
+            {{ $registros->withQueryString()->links() }}
         </div>
-    </div>
 
-
-    {{-- PAGINADOR --}}
-    <div class="mt-3">
-        {{ $registros->withQueryString()->links() }}
     </div>
 
 @endsection

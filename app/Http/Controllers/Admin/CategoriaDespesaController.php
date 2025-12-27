@@ -5,13 +5,27 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\CategoriaDespesa;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CategoriaDespesaController extends Controller
 {
     public function index()
     {
-        $categorias = CategoriaDespesa::orderBy('nome')->get();
-        return view('admin.financeiro.categorias.index', compact('categorias'));
+        $categorias = CategoriaDespesa::withCount('despesas')
+            ->withSum('despesas as total_gasto', 'valor')
+            ->orderBy('nome')
+            ->get();
+
+        // Dados para gráfico
+        $graficoCategorias = $categorias->map(fn ($c) => [
+            'nome'  => $c->nome,
+            'total' => $c->total_gasto ?? 0,
+        ]);
+
+        return view(
+            'admin.financeiro.categorias.index',
+            compact('categorias', 'graficoCategorias')
+        );
     }
 
     public function create()
@@ -63,5 +77,18 @@ class CategoriaDespesaController extends Controller
         return redirect()
             ->route('admin.financeiro.categorias.index')
             ->with('success', 'Categoria excluída com sucesso!');
+    }
+
+    public function show(CategoriaDespesa $categoria)
+    {
+        // Carrega despesas vinculadas + centro de custo
+        $categoria->load([
+            'despesas.centroCusto'
+        ]);
+
+        return view(
+            'admin.financeiro.categorias.show',
+            compact('categoria')
+        );
     }
 }

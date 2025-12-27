@@ -15,6 +15,7 @@ class ResponsavelController extends Controller
         $search = $request->get('search');
 
         $responsaveis = Responsavel::with('user')
+            ->withCount('alunos')
             ->when($search, function ($query) use ($search) {
                 $query->whereHas('user', function ($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%")
@@ -110,4 +111,16 @@ class ResponsavelController extends Controller
         return redirect()->route('admin.responsaveis.index')
             ->with('success', 'Responsável removido com sucesso!');
     }
+
+    public function show($id)
+    {
+        $responsavel = Responsavel::with([
+            'user',
+            'alunos.user',
+            'alunos.turma'
+        ])->findOrFail($id);
+
+        return view('admin.responsaveis.show', compact('responsavel'));
+    }
+
 }
