@@ -72,7 +72,7 @@
                                 </span>
                             @else — @endif
                         </td>
-                        <td class="px-4 py-3">{{ $turma->alunos_count }}</td>
+                        <td class="px-4 py-3">{{ $turma->alunos_ativos_count }}</td>
                         <td class="px-4 py-3 text-right space-x-2">
                             <a href="{{ route('admin.boletins.turmas.show', $turma) }}"
                                class="text-sky-600 hover:underline">

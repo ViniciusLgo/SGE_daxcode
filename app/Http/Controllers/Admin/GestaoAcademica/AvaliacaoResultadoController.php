@@ -9,7 +9,6 @@ use App\Models\AvaliacaoResultado;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
-
 class AvaliacaoResultadoController extends Controller
 {
     /**
@@ -17,20 +16,35 @@ class AvaliacaoResultadoController extends Controller
      */
     public function index(Avaliacao $avaliacao)
     {
-        // Regra: se avaliação encerrada, tela será somente leitura
+        /**
+         * Se a avaliação estiver encerrada,
+         * a tela passa a ser somente leitura
+         */
         $somenteLeitura = $avaliacao->status === 'encerrada';
 
-        // Alunos da turma da avaliação
-        $alunos = Aluno::with('user')
-            ->join('users', 'users.id', '=', 'alunos.user_id')
-            ->where('alunos.turma_id', $avaliacao->turma_id)
-            ->orderBy('users.name')
-            ->select('alunos.*')
+        /**
+         * Alunos ATIVOS da turma vinculada à avaliação
+         * Regra correta:
+         * - aluno ativo
+         * - matrícula ativa
+         * - mesma turma da avaliação
+         */
+        $alunos = Aluno::ativos()
+            ->with('user')
+            ->whereHas('matriculaModel', function ($q) use ($avaliacao) {
+                $q->where('turma_id', $avaliacao->turma_id);
+            })
+            ->orderBy(
+            // Ordena pelo nome do usuário
+                \App\Models\User::select('name')
+                    ->whereColumn('users.id', 'alunos.user_id')
+            )
             ->get();
 
-
-
-        // Resultados já existentes (indexados por aluno_id)
+        /**
+         * Resultados já lançados,
+         * indexados por aluno_id
+         */
         $resultados = AvaliacaoResultado::where('avaliacao_id', $avaliacao->id)
             ->get()
             ->keyBy('aluno_id');
@@ -48,30 +62,42 @@ class AvaliacaoResultadoController extends Controller
      */
     public function store(Request $request, Avaliacao $avaliacao)
     {
-        // Bloqueio de segurança
+        /**
+         * Bloqueio de segurança:
+         * avaliação encerrada não pode ser alterada
+         */
         if ($avaliacao->status === 'encerrada') {
-            return back()->with('error', 'Avaliação encerrada. Não é possível alterar resultados.');
+            return back()->with(
+                'error',
+                'Avaliação encerrada. Não é possível alterar resultados.'
+            );
         }
 
         $dados = $request->input('resultados', []);
 
         foreach ($dados as $alunoId => $resultado) {
 
+            /**
+             * Cria ou atualiza o resultado do aluno
+             */
             $registro = AvaliacaoResultado::firstOrNew([
                 'avaliacao_id' => $avaliacao->id,
                 'aluno_id'     => $alunoId,
             ]);
 
-            $registro->nota = $resultado['nota'] ?? null;
+            $registro->nota       = $resultado['nota'] ?? null;
             $registro->observacao = $resultado['observacao'] ?? null;
-            $registro->entregue = isset($resultado['entregue']);
+            $registro->entregue   = isset($resultado['entregue']);
 
-            // Upload de arquivo (se houver)
+            /**
+             * Upload do arquivo (se houver)
+             */
             if ($request->hasFile("resultados.$alunoId.arquivo")) {
+
                 $path = $request->file("resultados.$alunoId.arquivo")
                     ->store('avaliacoes/resultados', 'public');
 
-                // Remove arquivo antigo, se existir
+                // Remove arquivo antigo
                 if ($registro->arquivo) {
                     Storage::disk('public')->delete($registro->arquivo);
                 }

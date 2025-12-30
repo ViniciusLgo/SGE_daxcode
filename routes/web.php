@@ -29,7 +29,9 @@ use App\Http\Controllers\Admin\{
     DisciplinaTurmaController,
     SettingController,
     AlunoDocumentController,
-    ResponsavelController
+    ResponsavelController,
+    MatriculaStatusController,
+    AulaController
 };
 
 /*
@@ -37,10 +39,12 @@ use App\Http\Controllers\Admin\{
 | Controllers Admin – Financeiro
 |--------------------------------------------------------------------------
 */
-use App\Http\Controllers\Admin\FinanceiroDashboardController;
-use App\Http\Controllers\Admin\CategoriaDespesaController;
-use App\Http\Controllers\Admin\CentroCustoController;
-use App\Http\Controllers\Admin\DespesaController;
+use App\Http\Controllers\Admin\{
+    FinanceiroDashboardController,
+    CategoriaDespesaController,
+    CentroCustoController,
+    DespesaController
+};
 
 /*
 |--------------------------------------------------------------------------
@@ -57,9 +61,21 @@ use App\Http\Controllers\Admin\Secretaria\{
 | Controllers Admin – Gestão Acadêmica
 |--------------------------------------------------------------------------
 */
-use App\Http\Controllers\Admin\GestaoAcademica\AvaliacaoController;
-use App\Http\Controllers\Admin\GestaoAcademica\AvaliacaoResultadoController;
-use App\Http\Controllers\Admin\GestaoAcademica\BoletimController;
+use App\Http\Controllers\Admin\GestaoAcademica\{
+    AvaliacaoController,
+    AvaliacaoResultadoController,
+    BoletimController
+};
+
+/*
+|--------------------------------------------------------------------------
+| Controllers Admin – Relatórios
+|--------------------------------------------------------------------------
+*/
+use App\Http\Controllers\Admin\Relatorios\RelatoriosEvasaoController;
+use App\Http\Controllers\Admin\Relatorios\CargaHorariaProfessorController;
+use App\Http\Controllers\Admin\Relatorios\RelatorioHorasController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -108,13 +124,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::prefix('admin')
-        ->as('admin.')
         ->middleware('is_admin')
+        ->name('admin.')
         ->group(function () {
-
-            Route::get('usuarios', [UserController::class, 'index'])
-                ->name('usuarios.index');
-
 
             /*
             |--------------------------------------------------------------------------
@@ -126,7 +138,23 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
             /*
             |--------------------------------------------------------------------------
-            | MÓDULO FINANCEIRO
+            | Usuários
+            |--------------------------------------------------------------------------
+            */
+            Route::resource('usuarios', UserController::class)
+                ->parameters(['usuarios' => 'usuario']);
+
+            /*
+            |--------------------------------------------------------------------------
+            | MÓDULO DE AULAS / CARGA HORÁRIA
+            |--------------------------------------------------------------------------
+            */
+            Route::resource('aulas', AulaController::class)
+                ->parameters(['aulas' => 'aula']);
+
+            /*
+            |--------------------------------------------------------------------------
+            | FINANCEIRO
             |--------------------------------------------------------------------------
             */
             Route::prefix('financeiro')->name('financeiro.')->group(function () {
@@ -158,9 +186,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             | CRUDs PRINCIPAIS
             |--------------------------------------------------------------------------
             */
-            Route::resource('usuarios', UserController::class)
-                ->parameters(['usuarios' => 'usuario']);
-
             Route::resource('alunos', AlunoController::class)
                 ->parameters(['alunos' => 'aluno']);
 
@@ -178,7 +203,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
             /*
             |--------------------------------------------------------------------------
-            | SECRETARIA ESCOLAR
+            | SECRETARIA
             |--------------------------------------------------------------------------
             */
             Route::prefix('secretaria')->name('secretaria.')->group(function () {
@@ -188,9 +213,40 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
                 Route::resource('atendimentos', SecretariaAtendimentoController::class);
 
-                Route::get('alunos/{aluno}/responsaveis',
+                Route::get(
+                    'alunos/{aluno}/responsaveis',
                     [SecretariaAtendimentoController::class, 'responsaveisDoAluno']
                 )->name('alunos.responsaveis');
+            });
+
+            /*
+            |--------------------------------------------------------------------------
+            | MATRÍCULA / STATUS
+            |--------------------------------------------------------------------------
+            */
+            Route::post('alunos/{aluno}/desistir', [MatriculaStatusController::class, 'desistir'])
+                ->name('alunos.desistir');
+
+            Route::post('alunos/{aluno}/reativar', [MatriculaStatusController::class, 'reativar'])
+                ->name('alunos.reativar');
+
+
+            /*
+|--------------------------------------------------------------------------
+| RELATÓRIOS
+|--------------------------------------------------------------------------
+*/
+            Route::prefix('relatorios')->name('relatorios.')->group(function () {
+
+                Route::get('evasao', [RelatoriosEvasaoController::class, 'index'])
+                    ->name('evasao.index');
+
+                Route::get('carga-horaria-professores', [CargaHorariaProfessorController::class, 'index'])
+                    ->name('carga_horaria_professores.index');
+
+                Route::get('horas', [RelatorioHorasController::class, 'index'])
+                    ->name('horas.index');
+
             });
 
             /*
@@ -211,21 +267,24 @@ Route::middleware(['auth', 'verified'])->group(function () {
                     Route::delete('disciplinas/{vinculo}', [DisciplinaTurmaController::class, 'destroy'])
                         ->name('disciplinas.destroy');
 
-                    Route::post('disciplinas/{vinculo}/professores',
+                    Route::post(
+                        'disciplinas/{vinculo}/professores',
                         [DisciplinaTurmaController::class, 'vincularProfessor']
                     )->name('disciplinas.professores.store');
 
-                    Route::delete('disciplinas/{vinculo}/professores/{professor}',
+                    Route::delete(
+                        'disciplinas/{vinculo}/professores/{professor}',
                         [DisciplinaTurmaController::class, 'removerProfessor']
                     )->name('disciplinas.professores.destroy');
                 });
 
             /*
             |--------------------------------------------------------------------------
-            | VÍNCULO ALUNO ↔ TURMA
+            | TURMA ↔ ALUNO
             |--------------------------------------------------------------------------
             */
-            Route::post('turmas/{turma}/atribuir-aluno',
+            Route::post(
+                'turmas/{turma}/atribuir-aluno',
                 [TurmaController::class, 'atribuirAluno']
             )->name('turmas.atribuirAluno');
 
@@ -237,14 +296,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::resource('aluno_registros', AlunoRegistroController::class)
                 ->parameters(['aluno_registros' => 'aluno_registro']);
 
-            Route::post('alunos/{aluno}/documentos',
+            Route::post(
+                'alunos/{aluno}/documentos',
                 [AlunoDocumentController::class, 'store']
             )->name('alunos.documentos.store');
 
-            Route::delete('documentos/{documento}',
+            Route::delete(
+                'documentos/{documento}',
                 [AlunoDocumentController::class, 'destroy']
             )->name('documentos.destroy');
-
 
             Route::get(
                 'buscar-turma-aluno/{aluno}',
@@ -252,32 +312,27 @@ Route::middleware(['auth', 'verified'])->group(function () {
             )->name('buscar_turma_aluno');
 
             /*
- |--------------------------------------------------------------------------
- | GESTÃO ACADÊMICA — AVALIAÇÕES
- |--------------------------------------------------------------------------
- */
+            |--------------------------------------------------------------------------
+            | GESTÃO ACADÊMICA — AVALIAÇÕES
+            |--------------------------------------------------------------------------
+            */
             Route::prefix('gestao-academica')
                 ->name('gestao_academica.')
                 ->group(function () {
 
-                    // CRUD de Avaliações (EVENTO)
                     Route::resource('avaliacoes', AvaliacaoController::class)
                         ->parameters(['avaliacoes' => 'avaliacao']);
 
                     Route::patch(
                         'avaliacoes/{avaliacao}/reabrir',
-                        [\App\Http\Controllers\Admin\GestaoAcademica\AvaliacaoController::class, 'reabrir']
+                        [AvaliacaoController::class, 'reabrir']
                     )->name('avaliacoes.reabrir');
 
-
-
-                    // Encerrar avaliação
                     Route::patch(
                         'avaliacoes/{avaliacao}/encerrar',
                         [AvaliacaoController::class, 'encerrar']
                     )->name('avaliacoes.encerrar');
 
-                    // Resultados da avaliação (POR ALUNO)
                     Route::get(
                         'avaliacoes/{avaliacao}/resultados',
                         [AvaliacaoResultadoController::class, 'index']
@@ -289,23 +344,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
                     )->name('avaliacoes.resultados.store');
                 });
 
-
             /*
-|--------------------------------------------------------------------------
-| BOLETIM
-|--------------------------------------------------------------------------
-*/
-            Route::prefix('boletim')
-                ->name('boletim.')
-                ->group(function () {
-
-                    Route::get(
-                        'alunos/{aluno}',
-                        [BoletimController::class, 'aluno']
-                    )->name('aluno');
-                });
-
+            |--------------------------------------------------------------------------
+            | BOLETIM
+            |--------------------------------------------------------------------------
+            */
             Route::prefix('boletim')->name('boletim.')->group(function () {
+
+                Route::get('/', fn () =>
+                view('admin.gestao_academica.boletim.index')
+                )->name('index');
 
                 Route::get('alunos/{aluno}', [BoletimController::class, 'aluno'])
                     ->name('aluno');
@@ -313,27 +361,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 Route::get('turmas/{turma}', [BoletimController::class, 'turma'])
                     ->name('turma');
             });
-
-
-            Route::prefix('boletim')
-                ->name('boletim.')
-                ->group(function () {
-
-                    Route::get('/', function () {
-                        return view('admin.gestao_academica.boletim.index');
-                    })->name('index');
-
-                    Route::get('alunos/{aluno}', [BoletimController::class, 'aluno'])
-                        ->name('aluno');
-
-                    Route::get('turmas/{turma}', [BoletimController::class, 'turma'])
-                        ->name('turma');
-                });
-
-            Route::get(
-                'boletins/turmas/{turma}',
-                [BoletimController::class, 'turma']
-            )->name('boletins.turmas.show');
 
             /*
             |--------------------------------------------------------------------------
@@ -351,29 +378,25 @@ Route::middleware(['auth', 'verified'])->group(function () {
     | PERFIL DO USUÁRIO
     |--------------------------------------------------------------------------
     */
-    Route::middleware('auth')->group(function () {
-        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-        Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    });
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     /*
     |--------------------------------------------------------------------------
     | PRIMEIRO ACESSO
     |--------------------------------------------------------------------------
     */
-    Route::middleware('auth')->group(function () {
-        Route::get('/first-access', [FirstAccessController::class, 'index'])
-            ->name('auth.first_access');
+    Route::get('/first-access', [FirstAccessController::class, 'index'])
+        ->name('auth.first_access');
 
-        Route::post('/first-access', [FirstAccessController::class, 'update'])
-            ->name('auth.first_access.update');
-    });
+    Route::post('/first-access', [FirstAccessController::class, 'update'])
+        ->name('auth.first_access.update');
 });
 
 /*
 |--------------------------------------------------------------------------
-| Autenticação (Laravel Breeze / Jetstream / Fortify)
+| Autenticação (Breeze / Jetstream / Fortify)
 |--------------------------------------------------------------------------
 */
 require __DIR__ . '/auth.php';

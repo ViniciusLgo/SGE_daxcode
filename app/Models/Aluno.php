@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Matricula;
+use Illuminate\Database\Eloquent\Builder;
+
 
 class Aluno extends Model
 {
@@ -69,5 +72,18 @@ class Aluno extends Model
             'aluno_id',
             'id'
         );
+    }
+
+    public function matriculaModel()
+    {
+        return $this->hasOne(Matricula::class);
+    }
+
+
+    public function scopeAtivos(Builder $query): Builder
+    {
+        return $query->whereHas('matriculaModel', function ($q) {
+            $q->where('status', 'ativo');
+        });
     }
 }

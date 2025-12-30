@@ -65,4 +65,10 @@ class Professor extends Model
     {
         return $this->user->email ?? null;
     }
+
+    public function aulas()
+    {
+        return $this->hasMany(Aula::class);
+    }
+
 }

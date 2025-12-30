@@ -14,8 +14,10 @@
 
     <div class="bg-white dark:bg-dax-dark/60 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-6">
         <form method="POST" action="{{ route('admin.alunos.store') }}" enctype="multipart/form-data">
-            @include('admin.alunos._form')
+            @csrf
+            @include('admin.alunos._form', ['user' => $user ?? null])
         </form>
+
     </div>
 
 @endsection

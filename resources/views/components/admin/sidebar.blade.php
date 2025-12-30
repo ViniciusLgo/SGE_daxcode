@@ -17,6 +17,15 @@
     $isAtendimentos= request()->routeIs('admin.secretaria.atendimentos.*');
     $isRegistros   = request()->routeIs('admin.aluno_registros.*');
 
+    $isCargaHoraria = request()->routeIs('admin.relatorios.carga_horaria_professores.*');
+
+    $isRelatorios = request()->routeIs('admin.relatorios.*');
+    $isEvasao     = request()->routeIs('admin.relatorios.evasao.*');
+
+    $isAulas      = request()->routeIs('admin.aulas.*');
+    $isIndicadoresAulas = request()->routeIs('admin.indicadores.aulas.*');
+
+
     $isFinanceiro  = request()->routeIs('admin.financeiro.*');
     $isSettings    = request()->routeIs('admin.settings.*');
 @endphp
@@ -66,30 +75,50 @@
         </a>
 
         {{-- ACADÊMICO --}}
-        <div class="mt-6 text-xs font-bold uppercase text-slate-400 px-4">Acadêmico</div>
+        <div class="mt-6 text-xs font-bold uppercase text-slate-400 px-4">
+            Acadêmico
+        </div>
 
-        <a href="{{ route('admin.disciplinas.index') }}" class="sidebar-link {{ $isDisciplinas ? 'sidebar-link-active' : '' }}">
-            <i class="bi bi-book"></i> Disciplinas
+        <a href="{{ route('admin.disciplinas.index') }}"
+           class="sidebar-link {{ $isDisciplinas ? 'sidebar-link-active' : '' }}">
+            <i class="bi bi-book"></i>
+            Disciplinas
         </a>
 
-        <a href="{{ route('admin.turmas.index') }}" class="sidebar-link {{ $isTurmas ? 'sidebar-link-active' : '' }}">
-            <i class="bi bi-building"></i> Turmas
+        <a href="{{ route('admin.turmas.index') }}"
+           class="sidebar-link {{ $isTurmas ? 'sidebar-link-active' : '' }}">
+            <i class="bi bi-building"></i>
+            Turmas
         </a>
 
         <a href="{{ route('admin.turmas.index') }}"
            class="sidebar-link {{ $isVinculos ? 'sidebar-link-active' : '' }}">
-            <i class="bi bi-diagram-3"></i> Disciplinas por Turma
+            <i class="bi bi-diagram-3"></i>
+            Disciplinas por Turma
         </a>
 
         <a href="{{ route('admin.gestao_academica.avaliacoes.index') }}"
            class="sidebar-link {{ $isAvaliacoes ? 'sidebar-link-active' : '' }}">
-            <i class="bi bi-clipboard-check"></i> Avaliações
+            <i class="bi bi-clipboard-check"></i>
+            Avaliações
+        </a>
+
+        {{-- 🔹 REGISTRO DE AULAS --}}
+        <a href="{{ route('admin.aulas.index') }}"
+           class="sidebar-link {{ $isAulas ? 'sidebar-link-active' : '' }}">
+            <i class="bi bi-calendar-check"></i>
+            Registro de Aulas
         </a>
 
         <a href="{{ route('admin.boletim.index') }}"
            class="sidebar-link {{ $isBoletim ? 'sidebar-link-active' : '' }}">
-            <i class="bi bi-journal-text"></i> Boletins
+            <i class="bi bi-journal-text"></i>
+            Boletins
         </a>
+
+
+
+
 
         {{-- SECRETARIA --}}
         <div class="mt-6 text-xs font-bold uppercase text-slate-400 px-4">Secretaria</div>
@@ -133,25 +162,36 @@
         </a>
 
 
+
         {{-- RELATÓRIOS --}}
         <div class="mt-6 text-xs font-bold uppercase text-slate-400 px-4">
             Relatórios
         </div>
 
-        <a href="#" class="sidebar-link">
+        <a href="{{ route('admin.relatorios.evasao.index') }}"
+           class="sidebar-link {{ $isEvasao ? 'sidebar-link-active' : '' }}">
             <i class="bi bi-graph-up"></i>
-            Relatórios Acadêmicos
+            Evasão Escolar
         </a>
 
-        <a href="#" class="sidebar-link">
+        <a href="{{ route('admin.relatorios.carga_horaria_professores.index') }}"
+           class="sidebar-link {{ $isCargaHoraria ? 'sidebar-link-active' : '' }}">
+            <i class="bi bi-clock-history"></i>
+            Carga Horária (Professores)
+        </a>
+
+        <a href="#"
+           class="sidebar-link opacity-50 cursor-not-allowed">
             <i class="bi bi-bar-chart"></i>
-            Indicadores
+            Indicadores (em breve)
         </a>
 
-        <a href="#" class="sidebar-link">
+        <a href="#"
+           class="sidebar-link opacity-50 cursor-not-allowed">
             <i class="bi bi-file-earmark-bar-graph"></i>
-            Exportações
+            Exportações (em breve)
         </a>
+
 
         {{-- CONFIGURAÇÕES --}}
         <div class="mt-6 border-t border-slate-200 dark:border-slate-800 pt-4">

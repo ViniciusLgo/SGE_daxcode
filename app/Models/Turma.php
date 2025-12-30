@@ -56,4 +56,14 @@ class Turma extends Model
     {
         return $this->hasMany(DisciplinaTurma::class, 'turma_id');
     }
+
+
+    public function alunosAtivos()
+    {
+        return $this->hasMany(Aluno::class)
+            ->whereHas('matriculaModel', function ($q) {
+                $q->where('status', 'ativo');
+            });
+    }
+
 }

@@ -24,7 +24,7 @@ class TurmaController extends Controller
                         ->orWhere('descricao', 'like', "%{$search}%");
                 });
             })
-            ->withCount('alunos')
+            ->withCount('alunosAtivos')
             ->orderBy('nome')
             ->paginate(self::PER_PAGE)
             ->withQueryString();
@@ -55,25 +55,34 @@ class TurmaController extends Controller
 
     public function show($id)
     {
+
         $turma = Turma::with([
             'disciplinaTurmas.disciplina',
             'disciplinaTurmas.professores.user'
         ])->findOrFail($id);
 
         // Alunos já vinculados à turma (tabela principal)
-        $alunos = Aluno::with('user')
-            ->where('turma_id', $id)
+        $alunos = Aluno::ativos()
+            ->with('user')
+            ->whereHas('matriculaModel', function ($q) use ($id) {
+                $q->where('turma_id', $id);
+            })
             ->paginate(10);
+
 
         // Alunos disponíveis para atribuir no modal:
         // - ou não têm turma
         // - ou estão em outra turma (mas mostramos qual)
-        $alunosDisponiveis = Aluno::with(['user', 'turma'])
+        $alunosDisponiveis = Aluno::ativos()
+            ->with(['user', 'turma'])
             ->where(function ($q) use ($id) {
-                $q->whereNull('turma_id')
-                    ->orWhere('turma_id', '!=', $id);
+                $q->whereHas('matriculaModel', function ($m) use ($id) {
+                    $m->whereNull('turma_id')
+                        ->orWhere('turma_id', '!=', $id);
+                });
             })
             ->get();
+
 
         return view('admin.turmas.show', compact(
             'turma',
