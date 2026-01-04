@@ -64,7 +64,8 @@ use App\Http\Controllers\Admin\Secretaria\{
 use App\Http\Controllers\Admin\GestaoAcademica\{
     AvaliacaoController,
     AvaliacaoResultadoController,
-    BoletimController
+    BoletimController,
+    PresencaController
 };
 
 /*
@@ -75,7 +76,6 @@ use App\Http\Controllers\Admin\GestaoAcademica\{
 use App\Http\Controllers\Admin\Relatorios\RelatoriosEvasaoController;
 use App\Http\Controllers\Admin\Relatorios\CargaHorariaProfessorController;
 use App\Http\Controllers\Admin\Relatorios\RelatorioHorasController;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -151,6 +151,46 @@ Route::middleware(['auth', 'verified'])->group(function () {
             */
             Route::resource('aulas', AulaController::class)
                 ->parameters(['aulas' => 'aula']);
+
+            /*
+            |--------------------------------------------------------------------------
+            | PRESENÇAS — MÓDULO COMPLETO
+            |--------------------------------------------------------------------------
+            */
+            Route::get('presencas', [PresencaController::class, 'index'])
+                ->name('presencas.index');
+
+            Route::get('presencas/{presenca}', [PresencaController::class, 'show'])
+                ->name('presencas.show');
+
+            Route::get('presencas/{presenca}/edit', [PresencaController::class, 'edit'])
+                ->name('presencas.edit');
+
+            Route::put('presencas/{presenca}', [PresencaController::class, 'update'])
+                ->name('presencas.update');
+
+            /*
+            |--------------------------------------------------------------------------
+            | PRESENÇA VINCULADA À AULA (FLUXO PRINCIPAL)
+            |--------------------------------------------------------------------------
+            */
+            Route::get('aulas/{aula}/presenca', [PresencaController::class, 'editFromAula'])
+                ->name('aulas.presenca.edit');
+
+            Route::put('aulas/{aula}/presenca', [PresencaController::class, 'updateFromAula'])
+                ->name('aulas.presenca.update');
+
+            /*
+            |--------------------------------------------------------------------------
+            | BOLETINS
+            |--------------------------------------------------------------------------
+            */
+            Route::prefix('boletins')->name('boletins.')->group(function () {
+                Route::get(
+                    'turmas/{turma}',
+                    [BoletimController::class, 'turma']
+                )->name('turmas.show');
+            });
 
             /*
             |--------------------------------------------------------------------------
@@ -230,12 +270,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('alunos/{aluno}/reativar', [MatriculaStatusController::class, 'reativar'])
                 ->name('alunos.reativar');
 
-
             /*
-|--------------------------------------------------------------------------
-| RELATÓRIOS
-|--------------------------------------------------------------------------
-*/
+            |--------------------------------------------------------------------------
+            | RELATÓRIOS
+            |--------------------------------------------------------------------------
+            */
             Route::prefix('relatorios')->name('relatorios.')->group(function () {
 
                 Route::get('evasao', [RelatoriosEvasaoController::class, 'index'])
@@ -246,7 +285,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
                 Route::get('horas', [RelatorioHorasController::class, 'index'])
                     ->name('horas.index');
-
             });
 
             /*

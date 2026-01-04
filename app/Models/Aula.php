@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Presenca;
 
 class Aula extends Model
 {
@@ -92,4 +93,10 @@ class Aula extends Model
     {
         return $query->where('professor_id', $professorId);
     }
+
+    public function presenca()
+    {
+        return $this->hasOne(Presenca::class);
+    }
+
 }

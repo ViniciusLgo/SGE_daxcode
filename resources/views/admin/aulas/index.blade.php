@@ -52,7 +52,7 @@
                         class="w-full rounded-xl border px-4 py-2.5
                            bg-white dark:bg-dax-dark">
                     <option value="">Todos</option>
-                    @foreach($professores as $prof)
+                    @foreach    ($professores as $prof)
                         <option value="{{ $prof->id }}"
                             {{ request('professor_id') == $prof->id ? 'selected' : '' }}>
                             {{ $prof->user->name }}
@@ -111,7 +111,10 @@
                     Filtrar
                 </button>
 
-                @if(request()->query())
+
+
+
+            @if(request()->query())
                     <a href="{{ route('admin.aulas.index') }}"
                        class="px-4 py-2.5 rounded-xl border text-slate-500">
                         Limpar
@@ -141,6 +144,33 @@
                     <th class="px-4 py-3 text-right">Ações</th>
                 </tr>
                 </thead>
+
+                {{-- ================= ACTION BAR ================= --}}
+                <div class="rounded-2xl
+            bg-white dark:bg-dax-dark/60
+            border border-slate-200 dark:border-slate-800
+            px-5 py-3">
+
+                    <div class="flex flex-wrap items-center gap-3">
+
+                        {{-- Atalho Presenças --}}
+                        <a href="{{ route('admin.presencas.index') }}"
+                           class="inline-flex items-center gap-2
+                  px-4 py-2 rounded-xl
+                  border border-slate-300 dark:border-slate-700
+                  text-dax-dark dark:text-dax-light
+                  hover:bg-slate-100 dark:hover:bg-slate-800
+                  transition">
+                            <i class="bi bi-clipboard2-check"></i>
+                            Presenças
+                        </a>
+
+                        {{-- espaço para futuros atalhos --}}
+                        {{-- Relatórios, Exportações, etc --}}
+
+                    </div>
+                </div>
+
 
                 <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
                 @forelse($aulas as $aula)

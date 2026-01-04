@@ -17,6 +17,9 @@
     $isAtendimentos= request()->routeIs('admin.secretaria.atendimentos.*');
     $isRegistros   = request()->routeIs('admin.aluno_registros.*');
 
+      $isPresencas = request()->routeIs('admin.presencas.*')
+        || request()->routeIs('admin.aulas.presenca.*');
+
     $isCargaHoraria = request()->routeIs('admin.relatorios.carga_horaria_professores.*');
 
     $isRelatorios = request()->routeIs('admin.relatorios.*');
@@ -103,12 +106,20 @@
             Avaliações
         </a>
 
-        {{-- 🔹 REGISTRO DE AULAS --}}
+        {{-- REGISTRO DE AULAS --}}
         <a href="{{ route('admin.aulas.index') }}"
            class="sidebar-link {{ $isAulas ? 'sidebar-link-active' : '' }}">
             <i class="bi bi-calendar-check"></i>
             Registro de Aulas
         </a>
+
+        {{-- PRESENÇAS --}}
+        <a href="{{ route('admin.presencas.index') }}"
+           class="sidebar-link {{ $isPresencas ? 'sidebar-link-active' : '' }}">
+            <i class="bi bi-clipboard2-check"></i>
+            Presenças
+        </a>
+
 
         <a href="{{ route('admin.boletim.index') }}"
            class="sidebar-link {{ $isBoletim ? 'sidebar-link-active' : '' }}">

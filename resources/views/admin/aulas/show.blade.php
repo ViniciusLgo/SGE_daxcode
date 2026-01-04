@@ -139,6 +139,52 @@
                 </div>
             </div>
 
+            {{-- ================= PRESENÇA ================= --}}
+            <div class="rounded-2xl border
+            bg-white dark:bg-dax-dark/60
+            border-slate-200 dark:border-slate-800
+            p-6 space-y-4">
+
+                <h2 class="font-semibold text-lg">
+                    📋 Presença
+                </h2>
+
+                @php
+                    $presenca = $aula->presenca;
+                @endphp
+
+                @if($presenca)
+                    <div class="flex items-center justify-between">
+                        <div class="text-sm text-slate-600 dark:text-slate-300">
+                            <strong>Status:</strong>
+                            <span class="ml-1 inline-flex px-3 py-1 rounded-full text-xs font-semibold
+                    {{ $presenca->status === 'finalizada'
+                        ? 'bg-green-100 text-green-700'
+                        : 'bg-yellow-100 text-yellow-700' }}">
+                    {{ ucfirst($presenca->status) }}
+                </span>
+                        </div>
+
+                        <a href="{{ route('admin.aulas.presenca.edit', $aula) }}"
+                           class="inline-flex items-center gap-2
+                      px-4 py-2 rounded-xl
+                      bg-sky-600 text-white font-semibold
+                      hover:bg-sky-700 transition">
+                            ✍️ Editar Presença
+                        </a>
+                    </div>
+                @else
+                    <a href="{{ route('admin.aulas.presenca.edit', $aula) }}"
+                       class="inline-flex items-center gap-2
+                  px-4 py-2 rounded-xl
+                  bg-dax-green text-white font-semibold
+                  hover:bg-dax-greenSoft transition">
+                        ➕ Registrar Presença
+                    </a>
+                @endif
+            </div>
+
+
         </div>
     </div>
 @endsection
