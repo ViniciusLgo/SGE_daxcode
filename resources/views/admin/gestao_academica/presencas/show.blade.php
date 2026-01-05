@@ -1,9 +1,37 @@
+{{-- ============================================================================
+| resources/views/admin/gestao_academica/presencas/show.blade.php
+|
+| VIEW: Visualização / Histórico da Presença
+|
+| FINALIDADE:
+| - Exibir a presença CONSOLIDADA de uma aula
+| - Servir como registro histórico oficial
+|
+| REGRAS DE NEGÓCIO APLICADAS NESTA VIEW:
+| 1) ALUNOS INATIVOS (desistentes, transferidos, etc.)
+|    - NÃO DEVEM SER EXIBIDOS
+|    - São completamente ocultados (hidden lógico)
+|
+| 2) JUSTIFICATIVAS
+|    - Podem aparecer mesmo que hoje estejam inativas
+|    - Isso preserva o histórico fiel do que foi registrado
+|
+| 3) BLOCO DE PRESENÇA
+|    - Mostra ✔ ou ✖ conforme o valor salvo
+|
+| 4) VIEW SOMENTE LEITURA
+|    - Nenhum campo editável
+|    - A edição ocorre exclusivamente via edit.blade.php
+============================================================================ --}}
+
 @extends('layouts.app')
 
 @section('content')
     <div class="space-y-6">
 
-        {{-- ================= HEADER ================= --}}
+        {{-- ============================================================
+            HEADER
+        ============================================================ --}}
         <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
             <div>
                 <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light">
@@ -33,7 +61,9 @@
             </div>
         </div>
 
-        {{-- ================= DADOS DA AULA ================= --}}
+        {{-- ============================================================
+            DADOS DA AULA
+        ============================================================ --}}
         <div class="rounded-2xl border
                 bg-white dark:bg-dax-dark/60
                 border-slate-200 dark:border-slate-800
@@ -83,19 +113,23 @@
                 <div>
                     <dt class="text-slate-500">Status</dt>
                     <dd>
-                    <span class="inline-flex px-3 py-1 rounded-full text-xs font-semibold
-                        {{ $presenca->status === 'finalizada'
-                            ? 'bg-green-100 text-green-700'
-                            : 'bg-yellow-100 text-yellow-700' }}">
-                        {{ ucfirst($presenca->status) }}
-                    </span>
+                        <span class="inline-flex px-3 py-1 rounded-full text-xs font-semibold
+                            {{ $presenca->status === 'finalizada'
+                                ? 'bg-green-100 text-green-700'
+                                : 'bg-yellow-100 text-yellow-700' }}">
+                            {{ ucfirst($presenca->status) }}
+                        </span>
                     </dd>
                 </div>
 
             </dl>
         </div>
 
-        {{-- ================= LISTA DE ALUNOS ================= --}}
+        {{-- ============================================================
+            LISTA DE ALUNOS (APENAS ATIVOS)
+            REGRA:
+            - Aluno com matrícula != ativo é OCULTADO (não renderiza)
+        ============================================================ --}}
         <div class="rounded-2xl border
                 bg-white dark:bg-dax-dark/60
                 border-slate-200 dark:border-slate-800
@@ -122,19 +156,41 @@
                 </thead>
 
                 <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
-                @foreach($presenca->alunos as $item)
+
+                @php
+                    /**
+                     * Filtra APENAS alunos ativos.
+                     * Tudo que não for status === 'ativo' é ocultado.
+                     */
+                    $alunosAtivos = $presenca->alunos->filter(function ($item) {
+                        return ($item->aluno->matriculaModel?->status ?? null) === 'ativo';
+                    });
+                @endphp
+
+                @if($alunosAtivos->isEmpty())
+                    <tr>
+                        <td colspan="{{ 3 + (int)$presenca->quantidade_blocos }}"
+                            class="px-4 py-8 text-center text-slate-500">
+                            Nenhum aluno ativo encontrado nesta presença.
+                        </td>
+                    </tr>
+                @endif
+
+                @foreach($alunosAtivos as $item)
                     <tr>
 
-                        {{-- Aluno --}}
+                        {{-- ====================================================
+                            ALUNO
+                        ==================================================== --}}
                         <td class="px-4 py-3 font-semibold">
                             {{ $item->aluno->user->name }}
                         </td>
 
-                        {{-- Blocos --}}
+                        {{-- ====================================================
+                            BLOCOS (✔ / ✖)
+                        ==================================================== --}}
                         @for($i = 1; $i <= $presenca->quantidade_blocos; $i++)
-                            @php
-                                $campo = 'bloco_'.$i;
-                            @endphp
+                            @php $campo = 'bloco_'.$i; @endphp
                             <td class="px-4 py-3 text-center">
                                 @if($item->$campo)
                                     <span class="text-green-600 font-bold">✔</span>
@@ -144,18 +200,23 @@
                             </td>
                         @endfor
 
-                        {{-- Justificativa --}}
+                        {{-- ====================================================
+                            JUSTIFICATIVA (histórico)
+                        ==================================================== --}}
                         <td class="px-4 py-3">
                             {{ $item->justificativa?->nome ?? '—' }}
                         </td>
 
-                        {{-- Observação --}}
+                        {{-- ====================================================
+                            OBSERVAÇÃO
+                        ==================================================== --}}
                         <td class="px-4 py-3 text-slate-500">
                             {{ $item->observacao ?? '—' }}
                         </td>
 
                     </tr>
                 @endforeach
+
                 </tbody>
             </table>
         </div>

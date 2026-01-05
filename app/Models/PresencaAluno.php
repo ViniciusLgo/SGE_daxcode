@@ -46,8 +46,18 @@ class PresencaAluno extends Model
         return $this->belongsTo(Aluno::class);
     }
 
+
+// Histórico (mostra tudo)
     public function justificativa()
     {
         return $this->belongsTo(JustificativaFalta::class, 'justificativa_falta_id');
     }
+
+// Apenas ativas (para formulários, se quiser usar)
+    public function justificativaAtiva()
+    {
+        return $this->belongsTo(JustificativaFalta::class, 'justificativa_falta_id')
+            ->where('ativo', true);
+    }
+
 }

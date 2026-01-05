@@ -1,81 +1,86 @@
+{{-- ============================================================================
+| resources/views/admin/gestao_academica/presencas/_table.blade.php
+|
+| COMPONENTE DE TABELA
+|
+| RESPONSABILIDADE:
+| - Renderizar listagem de aulas com status de presença
+| - Usado em index, relatórios e dashboards
+|
+| REGRA IMPORTANTE:
+| - CONTAGEM DE ALUNOS CONSIDERA APENAS MATRÍCULAS ATIVAS
+============================================================================ --}}
+
 <table class="min-w-full text-sm">
     <thead class="bg-slate-50 dark:bg-slate-900/60 text-slate-500">
     <tr>
         <th class="px-4 py-3 text-left">Data</th>
+        <th class="px-4 py-3 text-left">Professor</th>
         <th class="px-4 py-3 text-left">Turma</th>
         <th class="px-4 py-3 text-left">Disciplina</th>
-        <th class="px-4 py-3 text-left">Professor</th>
         <th class="px-4 py-3 text-center">h/a</th>
-        <th class="px-4 py-3 text-center">Alunos</th>
         <th class="px-4 py-3 text-center">Status</th>
         <th class="px-4 py-3 text-right">Ações</th>
     </tr>
     </thead>
 
     <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
-    @forelse($presencas as $presenca)
-        <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition">
 
-            {{-- Data --}}
+    @forelse($aulas as $aula)
+        @php
+            $p = $aula->presenca;
+            $status = $p?->status ?? 'sem_presenca';
+        @endphp
+
+        <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40">
             <td class="px-4 py-3 font-semibold">
-                {{ \Carbon\Carbon::parse($presenca->data)->format('d/m/Y') }}
+                {{ $aula->data->format('d/m/Y') }}
+                <div class="text-xs text-slate-500">
+                    {{ $aula->hora_inicio }} → {{ $aula->hora_fim }}
+                </div>
             </td>
 
-            {{-- Turma --}}
-            <td class="px-4 py-3">
-                {{ $presenca->turma->nome }}
-            </td>
+            <td class="px-4 py-3">{{ $aula->professor->user->name }}</td>
+            <td class="px-4 py-3">{{ $aula->turma->nome }}</td>
+            <td class="px-4 py-3">{{ $aula->disciplina->nome }}</td>
 
-            {{-- Disciplina --}}
-            <td class="px-4 py-3">
-                {{ $presenca->disciplina->nome }}
-            </td>
-
-            {{-- Professor --}}
-            <td class="px-4 py-3">
-                {{ $presenca->professor->user->name }}
-            </td>
-
-            {{-- Hora-aula --}}
             <td class="px-4 py-3 text-center font-bold">
-                {{ $presenca->quantidade_blocos }}
+                {{ $aula->quantidade_blocos }}
             </td>
 
-            {{-- Total alunos --}}
             <td class="px-4 py-3 text-center">
-                {{ $presenca->alunos->count() }}
+                @if($status === 'finalizada')
+                    <span class="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700">Finalizada</span>
+                @elseif($status === 'aberta')
+                    <span class="px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-700">Aberta</span>
+                @else
+                    <span class="px-3 py-1 rounded-full text-xs font-semibold bg-slate-200 text-slate-700">Sem presença</span>
+                @endif
             </td>
 
-            {{-- Status --}}
-            <td class="px-4 py-3 text-center">
-                <span class="inline-flex px-3 py-1 rounded-full text-xs font-semibold
-                    {{ $presenca->status === 'finalizada'
-                        ? 'bg-green-100 text-green-700'
-                        : 'bg-yellow-100 text-yellow-700' }}">
-                    {{ ucfirst($presenca->status) }}
-                </span>
-            </td>
-
-            {{-- Ações --}}
             <td class="px-4 py-3 text-right space-x-3 font-semibold">
-                <a href="{{ route('admin.presencas.show', $presenca) }}"
-                   class="text-sky-600 hover:underline">
-                    Ver
-                </a>
+                <a href="{{ route('admin.aulas.show', $aula) }}" class="text-sky-600 hover:underline">Ver aula</a>
+                <a href="{{ route('admin.aulas.presenca.edit', $aula) }}" class="text-amber-600 hover:underline">Presença</a>
 
-                <a href="{{ route('admin.presencas.edit', $presenca) }}"
-                   class="text-amber-600 hover:underline">
-                    Editar
-                </a>
+                @if($p)
+                    <a href="{{ route('admin.presencas.show', $p) }}" class="text-slate-600 hover:underline">Ver</a>
+                @endif
             </td>
         </tr>
+
     @empty
         <tr>
-            <td colspan="8"
-                class="px-4 py-8 text-center text-slate-500">
-                Nenhuma presença registrada até o momento.
+            <td colspan="7" class="px-4 py-8 text-center text-slate-500">
+                Nenhuma aula encontrada no período.
             </td>
         </tr>
     @endforelse
+
     </tbody>
 </table>
+
+@if($aulas->hasPages())
+    <div class="p-4 border-t">
+        {{ $aulas->links() }}
+    </div>
+@endif

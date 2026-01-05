@@ -1,9 +1,38 @@
+{{-- ============================================================================
+| resources/views/admin/gestao_academica/presencas/edit.blade.php
+|
+| VIEW: Editar Presença
+|
+| Finalidade:
+| - Editar uma presença JÁ EXISTENTE
+| - Permitir correções posteriores (ex: justificativa, observação, blocos)
+|
+| REGRAS IMPORTANTES:
+| 1) Histórico:
+|    - Pode exibir alunos que hoje estão inativos/desistentes
+|    - Pode exibir justificativas que hoje estão inativas
+|
+| 2) Edição:
+|    - Apenas alunos ATIVOS devem ser editáveis
+|    - Alunos INATIVOS aparecem bloqueados (somente leitura)
+|
+| 3) Justificativas:
+|    - Select mostra SOMENTE justificativas ATIVAS
+|    - Se já houver justificativa inativa salva, ela é exibida como texto
+|
+| 4) Observação:
+|    - Pode ser obrigatória conforme justificativa (exige_observacao)
+|    - Validação garantida também no backend (controller)
+============================================================================ --}}
+
 @extends('layouts.app')
 
 @section('content')
     <div class="space-y-6">
 
-        {{-- ================= HEADER ================= --}}
+        {{-- ============================================================
+            HEADER
+        ============================================================ --}}
         <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
             <div>
                 <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light">
@@ -25,7 +54,9 @@
             </div>
         </div>
 
-        {{-- ================= FORM ================= --}}
+        {{-- ============================================================
+            FORM
+        ============================================================ --}}
         <form method="POST"
               action="{{ route('admin.presencas.update', $presenca) }}"
               class="rounded-2xl
@@ -36,7 +67,23 @@
             @csrf
             @method('PUT')
 
-            {{-- ================= DADOS DA AULA ================= --}}
+            {{-- ============================================================
+                ERROS GERAIS
+            ============================================================ --}}
+            @if($errors->any())
+                <div class="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                    <div class="font-semibold mb-2">Verifique os campos abaixo:</div>
+                    <ul class="list-disc pl-5 space-y-1">
+                        @foreach($errors->all() as $err)
+                            <li>{{ $err }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            {{-- ============================================================
+                DADOS DA AULA
+            ============================================================ --}}
             <div>
                 <h2 class="font-semibold text-lg mb-4">
                     📘 Dados da Aula
@@ -75,7 +122,9 @@
                 </dl>
             </div>
 
-            {{-- ================= STATUS ================= --}}
+            {{-- ============================================================
+                STATUS
+            ============================================================ --}}
             <div>
                 <label class="block text-sm font-semibold mb-1">
                     Status da presença
@@ -94,7 +143,9 @@
                 </select>
             </div>
 
-            {{-- ================= TABELA DE ALUNOS ================= --}}
+            {{-- ============================================================
+                TABELA DE ALUNOS
+            ============================================================ --}}
             <div class="overflow-x-auto">
                 <table class="min-w-full text-sm">
                     <thead class="bg-slate-50 dark:bg-slate-900/60 text-slate-500">
@@ -113,62 +164,107 @@
                     </thead>
 
                     <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
-                    @foreach($presenca->alunos as $item)
-                        <tr>
 
-                            {{-- Aluno --}}
+                    @foreach($presenca->alunos as $item)
+
+                        @php
+                            $ativo = ($item->aluno->matriculaModel?->status ?? null) === 'ativo';
+                        @endphp
+
+                        <tr class="{{ !$ativo ? 'opacity-60 bg-slate-50 dark:bg-slate-900/40' : '' }}">
+
+                            {{-- ====================================================
+                                ALUNO
+                            ==================================================== --}}
                             <td class="px-4 py-3 font-semibold">
                                 {{ $item->aluno->user->name }}
+                                @if(!$ativo)
+                                    <div class="text-xs text-red-600 font-semibold">
+                                        (Aluno inativo)
+                                    </div>
+                                @endif
                             </td>
 
-                            {{-- Blocos --}}
+                            {{-- ====================================================
+                                BLOCOS
+                                - Inativo: somente leitura
+                            ==================================================== --}}
                             @for($i = 1; $i <= $presenca->quantidade_blocos; $i++)
                                 @php $campo = 'bloco_'.$i; @endphp
                                 <td class="px-4 py-3 text-center">
-                                    <input type="checkbox"
-                                           name="presencas[{{ $item->aluno_id }}][{{ $campo }}]"
-                                           value="1"
-                                           {{ $item->$campo ? 'checked' : '' }}
-                                           class="rounded border-slate-300 dark:border-slate-700">
+                                    @if($ativo)
+                                        <input type="checkbox"
+                                               name="presencas[{{ $item->aluno_id }}][{{ $campo }}]"
+                                               value="1"
+                                               {{ $item->$campo ? 'checked' : '' }}
+                                               class="rounded border-slate-300 dark:border-slate-700">
+                                    @else
+                                        {{ $item->$campo ? '✔' : '✖' }}
+                                    @endif
                                 </td>
                             @endfor
 
-                            {{-- Justificativa --}}
+                            {{-- ====================================================
+                                JUSTIFICATIVA
+                                - Ativo: select
+                                - Inativo: texto fixo
+                            ==================================================== --}}
                             <td class="px-4 py-3">
-                                <select name="presencas[{{ $item->aluno_id }}][justificativa_falta_id]"
-                                        class="w-full rounded-xl border
-                                           border-slate-300 dark:border-slate-700
-                                           px-3 py-2
-                                           bg-white dark:bg-dax-dark text-sm">
-                                    <option value="">—</option>
-                                    @foreach($justificativas as $just)
-                                        <option value="{{ $just->id }}"
-                                            {{ $item->justificativa_falta_id == $just->id ? 'selected' : '' }}>
-                                            {{ $just->nome }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                                @if($ativo)
+                                    <select name="presencas[{{ $item->aluno_id }}][justificativa_falta_id]"
+                                            class="w-full rounded-xl border
+                                               border-slate-300 dark:border-slate-700
+                                               px-3 py-2
+                                               bg-white dark:bg-dax-dark text-sm">
+                                        <option value="">— Selecione —</option>
+
+                                        @foreach($justificativas as $just)
+                                            <option value="{{ $just->id }}"
+                                                    data-exige-observacao="{{ $just->exige_observacao ? '1' : '0' }}"
+                                                {{ (string)$item->justificativa_falta_id === (string)$just->id ? 'selected' : '' }}>
+                                                {{ $just->nome }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                @else
+                                    {{ $item->justificativa?->nome ?? '—' }}
+                                @endif
                             </td>
 
-                            {{-- Observação --}}
+                            {{-- ====================================================
+                                OBSERVAÇÃO
+                            ==================================================== --}}
                             <td class="px-4 py-3">
-                                <input type="text"
-                                       name="presencas[{{ $item->aluno_id }}][observacao]"
-                                       value="{{ $item->observacao }}"
-                                       placeholder="Opcional"
-                                       class="w-full rounded-xl border
-                                          border-slate-300 dark:border-slate-700
-                                          px-3 py-2
-                                          bg-white dark:bg-dax-dark text-sm">
+                                @if($ativo)
+                                    <input type="text"
+                                           name="presencas[{{ $item->aluno_id }}][observacao]"
+                                           value="{{ old("presencas.$item->aluno_id.observacao", $item->observacao) }}"
+                                           placeholder="Opcional"
+                                           class="w-full rounded-xl border
+                                              border-slate-300 dark:border-slate-700
+                                              px-3 py-2
+                                              bg-white dark:bg-dax-dark text-sm">
+
+                                    @error("presencas.$item->aluno_id.observacao")
+                                    <div class="mt-1 text-xs text-red-600 font-semibold">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                @else
+                                    {{ $item->observacao ?? '—' }}
+                                @endif
                             </td>
 
                         </tr>
                     @endforeach
+
                     </tbody>
                 </table>
             </div>
 
-            {{-- ================= AÇÕES ================= --}}
+            {{-- ============================================================
+                AÇÕES
+            ============================================================ --}}
             <div class="flex justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
                 <a href="{{ route('admin.presencas.show', $presenca) }}"
                    class="px-4 py-2.5 rounded-xl border
@@ -187,4 +283,37 @@
 
         </form>
     </div>
+
+    {{-- ============================================================
+        SCRIPT – Obrigatoriedade da Observação (UX)
+    ============================================================ --}}
+    @push('scripts')
+        <script>
+            document.querySelectorAll('select[name*="[justificativa_falta_id]"]').forEach(select => {
+
+                const row = select.closest('tr');
+                const observacaoInput = row.querySelector('input[name*="[observacao]"]');
+
+                if (!observacaoInput) return;
+
+                function toggleObrigatoriedade() {
+                    const exige = select.selectedOptions[0]?.dataset.exigeObservacao === '1';
+
+                    if (exige) {
+                        observacaoInput.required = true;
+                        observacaoInput.placeholder = 'Observação obrigatória';
+                        observacaoInput.classList.add('border-red-400');
+                    } else {
+                        observacaoInput.required = false;
+                        observacaoInput.placeholder = 'Opcional';
+                        observacaoInput.classList.remove('border-red-400');
+                    }
+                }
+
+                select.addEventListener('change', toggleObrigatoriedade);
+                toggleObrigatoriedade();
+            });
+        </script>
+    @endpush
+
 @endsection
