@@ -54,15 +54,15 @@
                     <th class="px-4 py-3">Nome</th>
                     <th class="px-4 py-3">E-mail</th>
                     <th class="px-4 py-3">Disciplinas</th>
-                    <th class="px-4 py-3 text-right">Ações</th>
+                    <th class="px-4 py-3 text-right">Acoes</th>
                 </tr>
                 </thead>
 
                 <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
                 @forelse($professores as $prof)
                     <tr class="hover:bg-slate-50 dark:hover:bg-dax-dark/80">
-                        <td class="px-4 py-3">{{ $prof->user->name ?? '—' }}</td>
-                        <td class="px-4 py-3">{{ $prof->user->email ?? '—' }}</td>
+                        <td class="px-4 py-3">{{ $prof->user->name ?? '' }}</td>
+                        <td class="px-4 py-3">{{ $prof->user->email ?? '' }}</td>
                         <td class="px-4 py-3">{{ $prof->disciplinas_count ?? 0 }}</td>
                         <td class="px-4 py-3 text-right space-x-2">
                             <a href="{{ route('admin.professores.show', $prof) }}"
@@ -94,7 +94,7 @@
                 </tbody>
             </table>
 
-            {{-- Paginação --}}
+            {{-- Paginacao --}}
             @if($professores->hasPages())
                 <div class="p-4 border-t border-slate-200 dark:border-slate-800">
                     {{ $professores->links() }}

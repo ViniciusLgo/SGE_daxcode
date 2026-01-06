@@ -29,7 +29,7 @@ class ProfessorController extends Controller
     }
 
     /**
-     * CREATE — recebe user_id
+     * CREATE  recebe user_id
      */
     public function create(Request $request)
     {

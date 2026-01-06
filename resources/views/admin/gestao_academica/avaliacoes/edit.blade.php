@@ -6,10 +6,10 @@
     <div class="flex items-center justify-between mb-6">
         <div>
             <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light">
-                ✏️ Editar Avaliação
+                 Editar Avaliacao
             </h1>
             <p class="text-sm text-slate-500">
-                Atualização dos dados da avaliação.
+                Atualizacao dos dados da avaliacao.
             </p>
         </div>
 
@@ -17,7 +17,7 @@
            class="px-4 py-2 rounded-xl border
               border-slate-300 dark:border-slate-700
               hover:bg-slate-100 dark:hover:bg-slate-800">
-            ← Voltar
+             Voltar
         </a>
     </div>
 
@@ -29,8 +29,8 @@
                 text-dax-dark dark:text-dax-light">
             <div class="flex justify-between items-center">
                 <div class="text-sm">
-                    <strong>Avaliação encerrada.</strong>
-                    Para editar ou lançar novos resultados, é necessário reabrir a avaliação.
+                    <strong>Avaliacao encerrada.</strong>
+                    Para editar ou lancar novos resultados, e necessario reabrir a avaliacao.
                 </div>
 
                 <form method="POST"
@@ -38,7 +38,7 @@
                     @csrf
                     @method('PATCH')
                     <button class="px-4 py-2 rounded-xl bg-dax-green text-white font-semibold">
-                        🔓 Reabrir
+                         Reabrir
                     </button>
                 </form>
             </div>
@@ -96,10 +96,10 @@
                     </select>
                 </div>
 
-                {{-- Título --}}
+                {{-- Titulo --}}
                 <div class="md:col-span-2">
                     <label class="block text-sm font-semibold mb-1 text-dax-dark dark:text-dax-light">
-                        Título
+                        Titulo
                     </label>
                     <input type="text"
                            name="titulo"
@@ -135,7 +135,7 @@
                 {{-- Data --}}
                 <div>
                     <label class="block text-sm font-semibold mb-1 text-dax-dark dark:text-dax-light">
-                        Data da Avaliação
+                        Data da Avaliacao
                     </label>
                     <input type="date"
                            name="data_avaliacao"
@@ -169,7 +169,7 @@
 
             </div>
 
-            {{-- AÇÕES --}}
+            {{-- ACOES --}}
             <div class="flex justify-end gap-3 mt-6">
                 <a href="{{ route('admin.gestao_academica.avaliacoes.index') }}"
                    class="px-4 py-2 rounded-xl border
@@ -178,7 +178,7 @@
                 </a>
 
                 <button class="px-5 py-2 rounded-xl bg-dax-green text-white font-semibold">
-                    💾 Atualizar Avaliação
+                     Atualizar Avaliacao
                 </button>
             </div>
 
@@ -186,17 +186,17 @@
 
         <hr class="my-6 border-slate-200 dark:border-slate-800">
 
-        {{-- EXCLUSÃO --}}
+        {{-- EXCLUSAO --}}
         <form method="POST"
               action="{{ route('admin.gestao_academica.avaliacoes.destroy', $avaliacao) }}"
-              onsubmit="return confirm('Deseja excluir esta avaliação? Esta ação não pode ser desfeita.')">
+              onsubmit="return confirm('Deseja excluir esta avaliacao? Esta acao nao pode ser desfeita.')">
             @csrf
             @method('DELETE')
 
             <button class="px-4 py-2 rounded-xl
                border border-red-500
                text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20">
-                🗑️ Excluir Avaliação
+                 Excluir Avaliacao
             </button>
         </form>
 

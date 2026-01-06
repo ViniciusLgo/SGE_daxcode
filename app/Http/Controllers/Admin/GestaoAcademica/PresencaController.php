@@ -18,35 +18,35 @@ use Illuminate\Validation\ValidationException;
 /**
  * PresencaController
  *
- * Responsável por:
- * - Listagem de aulas + indicadores de presença (index)
- * - Visualização da presença consolidada (show)
- * - Edição da presença (edit/update) pelo módulo de Presenças
- * - Registro/Edição de presença a partir da Aula (editFromAula/updateFromAula)
+ * Responsavel por:
+ * - Listagem de aulas + indicadores de presenca (index)
+ * - Visualizacao da presenca consolidada (show)
+ * - Edicao da presenca (edit/update) pelo modulo de Presencas
+ * - Registro/Edicao de presenca a partir da Aula (editFromAula/updateFromAula)
  *
- * Regras de negócio principais:
+ * Regras de negocio principais:
  * 1) Justificativas:
- *    - No formulário, listar apenas justificativas ATIVAS (ativo = true)
- *    - No histórico (show), pode exibir justificativas mesmo que tenham sido desativadas depois
+ *    - No formulario, listar apenas justificativas ATIVAS (ativo = true)
+ *    - No historico (show), pode exibir justificativas mesmo que tenham sido desativadas depois
  * 2) Alunos desistentes/inativos:
- *    - NÃO entram em novas presenças (editFromAula sincroniza apenas ALUNOS ATIVOS)
- *    - NÃO aparecem nas telas de edição (views filtram)
- *    - PODEM aparecer no histórico (show), mantendo rastreabilidade
+ *    - NAO entram em novas presencas (editFromAula sincroniza apenas ALUNOS ATIVOS)
+ *    - NAO aparecem nas telas de edicao (views filtram)
+ *    - PODEM aparecer no historico (show), mantendo rastreabilidade
  * 3) Blocos:
- *    - Respeitar quantidade_blocos da aula/presença
- *    - Campos além do max são forçados para false
- * 4) Observação obrigatória:
- *    - Se a justificativa exige_observacao = true, a observação deve ser preenchida
+ *    - Respeitar quantidade_blocos da aula/presenca
+ *    - Campos alem do max sao forcados para false
+ * 4) Observacao obrigatoria:
+ *    - Se a justificativa exige_observacao = true, a observacao deve ser preenchida
  */
 class PresencaController extends Controller
 {
     /* =====================================================
-     * INDEX – LISTAGEM DE AULAS + KPIs + FILTROS + GRÁFICO
+     * INDEX  LISTAGEM DE AULAS + KPIs + FILTROS + GRAFICO
      * ===================================================== */
     public function index(Request $request)
     {
-        // ================= PERÍODO =================
-        // Se usuário não informar, assume últimos 30 dias.
+        // ================= PERIODO =================
+        // Se usuario nao informar, assume ultimos 30 dias.
         $inicio = $request->filled('data_inicio')
             ? Carbon::createFromFormat('Y-m-d', $request->data_inicio)->startOfDay()
             : now()->subDays(30)->startOfDay();
@@ -56,7 +56,7 @@ class PresencaController extends Controller
             : now()->endOfDay();
 
         // ================= QUERY BASE =================
-        // A ideia do index: sempre listar "aulas" e anexar "presença" se existir.
+        // A ideia do index: sempre listar "aulas" e anexar "presenca" se existir.
         $query = Aula::with(['turma', 'disciplina', 'professor.user', 'presenca'])
             ->whereBetween('data', [$inicio->toDateString(), $fim->toDateString()])
             ->orderByDesc('data')
@@ -64,8 +64,8 @@ class PresencaController extends Controller
 
         // ================= FILTRO SIMPLES: STATUS =================
         // status:
-        // - sem_presenca: aulas que não têm presença ainda
-        // - aberta/finalizada: aulas com presença e status específico
+        // - sem_presenca: aulas que nao tem presenca ainda
+        // - aberta/finalizada: aulas com presenca e status especifico
         if ($request->filled('status')) {
             if ($request->status === 'sem_presenca') {
                 $query->whereDoesntHave('presenca');
@@ -76,7 +76,7 @@ class PresencaController extends Controller
             }
         }
 
-        // ================= FILTROS AVANÇADOS =================
+        // ================= FILTROS AVANCADOS =================
         if ($request->filled('turma_id')) {
             $query->where('turma_id', $request->turma_id);
         }
@@ -89,11 +89,11 @@ class PresencaController extends Controller
             $query->where('disciplina_id', $request->disciplina_id);
         }
 
-        // ================= PAGINAÇÃO =================
+        // ================= PAGINACAO =================
         $aulas = $query->paginate(15)->withQueryString();
 
         // ================= KPIs =================
-        // Observação: clone para não interferir na query principal.
+        // Observacao: clone para nao interferir na query principal.
         $totalAulas = (clone $query)->count();
 
         $comPresenca = (clone $query)->whereHas('presenca')->count();
@@ -112,7 +112,7 @@ class PresencaController extends Controller
             ? round(($comPresenca / $totalAulas) * 100, 1)
             : 0;
 
-        // ================= ALERTA: AULAS SEM PRESENÇA HÁ X DIAS =================
+        // ================= ALERTA: AULAS SEM PRESENCA HA X DIAS =================
         $limiteDias = 7;
 
         $aulasPendentesAntigas = (clone $query)
@@ -120,9 +120,9 @@ class PresencaController extends Controller
             ->where('data', '<=', now()->subDays($limiteDias)->toDateString())
             ->count();
 
-        // ================= DADOS DO GRÁFICO =================
+        // ================= DADOS DO GRAFICO =================
         $chartStatus = [
-            'labels' => ['Sem presença', 'Aberta', 'Finalizada'],
+            'labels' => ['Sem presenca', 'Aberta', 'Finalizada'],
             'data'   => [$semPresenca, $abertas, $finalizadas],
         ];
 
@@ -148,14 +148,14 @@ class PresencaController extends Controller
     }
 
     /* =====================================================
-     * SHOW – VISUALIZAÇÃO CONSOLIDADA (HISTÓRICO)
+     * SHOW  VISUALIZACAO CONSOLIDADA (HISTORICO)
      * ===================================================== */
     public function show(Presenca $presenca)
     {
         // IMPORTANTE:
-        // - Aqui mostramos histórico completo da presença.
-        // - Alunos desistentes podem aparecer (rastreamento histórico).
-        // - Justificativas desativadas podem aparecer (rastreamento histórico).
+        // - Aqui mostramos historico completo da presenca.
+        // - Alunos desistentes podem aparecer (rastreamento historico).
+        // - Justificativas desativadas podem aparecer (rastreamento historico).
         $presenca->load([
             'aula',
             'turma',
@@ -163,29 +163,29 @@ class PresencaController extends Controller
             'professor.user',
             'alunos.aluno.user',
             'alunos.aluno.matriculaModel', // para exibir status no show
-            'alunos.justificativa',        // histórico (pode incluir inativas)
+            'alunos.justificativa',        // historico (pode incluir inativas)
         ]);
 
         return view('admin.gestao_academica.presencas.show', compact('presenca'));
     }
 
     /* =====================================================
-     * EDIT – EDIÇÃO DA PRESENÇA (MÓDULO PRESENÇAS)
+     * EDIT  EDICAO DA PRESENCA (MODULO PRESENCAS)
      * ===================================================== */
     public function edit(Presenca $presenca)
     {
-        // Carrega dados para a tela de edição
+        // Carrega dados para a tela de edicao
         $presenca->load([
             'aula',
             'turma',
             'disciplina',
             'professor.user',
             'alunos.aluno.user',
-            'alunos.aluno.matriculaModel', // necessário para filtrar ativos na view
+            'alunos.aluno.matriculaModel', // necessario para filtrar ativos na view
             'alunos.justificativa',        // pode carregar tudo; a view filtra o aluno
         ]);
 
-        // No formulário: somente justificativas ATIVAS
+        // No formulario: somente justificativas ATIVAS
         $justificativas = JustificativaFalta::where('ativo', true)
             ->orderBy('nome')
             ->get();
@@ -197,17 +197,17 @@ class PresencaController extends Controller
     }
 
     /* =====================================================
-     * UPDATE – SALVA EDIÇÃO DA PRESENÇA (MÓDULO PRESENÇAS)
+     * UPDATE  SALVA EDICAO DA PRESENCA (MODULO PRESENCAS)
      * ===================================================== */
     public function update(Request $request, Presenca $presenca)
     {
-        // Validação básica dos campos
+        // Validacao basica dos campos
         $data = $request->validate([
             'status' => 'required|in:aberta,finalizada',
 
             'presencas' => 'required|array',
 
-            // Blocos possíveis (o update usa quantidade_blocos para limitar o que importa)
+            // Blocos possiveis (o update usa quantidade_blocos para limitar o que importa)
             'presencas.*.bloco_1' => 'nullable|boolean',
             'presencas.*.bloco_2' => 'nullable|boolean',
             'presencas.*.bloco_3' => 'nullable|boolean',
@@ -221,7 +221,7 @@ class PresencaController extends Controller
 
         DB::transaction(function () use ($presenca, $data) {
 
-            // Atualiza status da presença
+            // Atualiza status da presenca
             $presenca->update([
                 'status' => $data['status'],
             ]);
@@ -229,7 +229,7 @@ class PresencaController extends Controller
             // Atualiza registros por aluno
             foreach ($data['presencas'] as $alunoId => $payload) {
 
-                // Localiza item existente (não cria aqui, pois a presença já existe)
+                // Localiza item existente (nao cria aqui, pois a presenca ja existe)
                 $item = $presenca->alunos()
                     ->where('aluno_id', $alunoId)
                     ->first();
@@ -238,19 +238,19 @@ class PresencaController extends Controller
                     continue;
                 }
 
-                // REGRA: justificativa pode exigir observação
+                // REGRA: justificativa pode exigir observacao
                 if (!empty($payload['justificativa_falta_id'])) {
                     $just = JustificativaFalta::find($payload['justificativa_falta_id']);
 
                     if ($just && $just->exige_observacao && empty($payload['observacao'])) {
                         throw ValidationException::withMessages([
                             "presencas.$alunoId.observacao" =>
-                                "A justificativa '{$just->nome}' exige observação.",
+                                "A justificativa '{$just->nome}' exige observacao.",
                         ]);
                     }
                 }
 
-                // Limita os blocos conforme a quantidade configurada na presença
+                // Limita os blocos conforme a quantidade configurada na presenca
                 $max = (int) $presenca->quantidade_blocos;
 
                 $item->update([
@@ -269,26 +269,26 @@ class PresencaController extends Controller
 
         return redirect()
             ->route('admin.presencas.show', $presenca)
-            ->with('success', 'Presença atualizada com sucesso.');
+            ->with('success', 'Presenca atualizada com sucesso.');
     }
 
     /* =====================================================
      * EDIT FROM AULA
      *
-     * Abre a tela de presença da Aula.
-     * - Cria Presenca automaticamente se não existir (1 por aula)
+     * Abre a tela de presenca da Aula.
+     * - Cria Presenca automaticamente se nao existir (1 por aula)
      * - Sincroniza APENAS alunos ATIVOS (evita desistentes na chamada)
      * ===================================================== */
     public function editFromAula(Aula $aula)
     {
         // Carrega contexto da aula
-        // Observação: evitamos carregar turma.alunos diretamente sem filtro,
-        // pois a sincronização será feita via query ->ativos().
+        // Observacao: evitamos carregar turma.alunos diretamente sem filtro,
+        // pois a sincronizacao sera feita via query ->ativos().
         $aula->load(['turma', 'disciplina', 'professor.user', 'presenca']);
 
         $presenca = DB::transaction(function () use ($aula) {
 
-            // 1) Cria (ou pega) a presença desta aula
+            // 1) Cria (ou pega) a presenca desta aula
             $presenca = Presenca::firstOrCreate(
                 ['aula_id' => $aula->id],
                 [
@@ -302,7 +302,7 @@ class PresencaController extends Controller
             );
 
             // 2) Sincroniza APENAS alunos ATIVOS da turma em presenca_alunos
-            // Usa o scopeAtivos() do model Aluno (baseado no status da matrícula).
+            // Usa o scopeAtivos() do model Aluno (baseado no status da matricula).
             $alunosAtivosIds = $aula->turma
                 ->alunos()
                 ->ativos()
@@ -316,7 +316,7 @@ class PresencaController extends Controller
                         'aluno_id'    => $alunoId,
                     ],
                     [
-                        // defaults (garante consistência)
+                        // defaults (garante consistencia)
                         'bloco_1' => false,
                         'bloco_2' => false,
                         'bloco_3' => false,
@@ -330,14 +330,14 @@ class PresencaController extends Controller
             return $presenca;
         });
 
-        // Carrega itens já sincronizados (inclui aluno + matrícula para a view filtrar)
+        // Carrega itens ja sincronizados (inclui aluno + matricula para a view filtrar)
         $presenca->load([
             'alunos.aluno.user',
             'alunos.aluno.matriculaModel',
-            'alunos.justificativa', // histórico (pode incluir inativas), select usa $justificativas (ativas)
+            'alunos.justificativa', // historico (pode incluir inativas), select usa $justificativas (ativas)
         ]);
 
-        // No formulário: somente justificativas ATIVAS
+        // No formulario: somente justificativas ATIVAS
         $justificativas = JustificativaFalta::where('ativo', true)
             ->orderBy('nome')
             ->get();
@@ -352,20 +352,20 @@ class PresencaController extends Controller
     /* =====================================================
      * UPDATE FROM AULA
      *
-     * Salva/atualiza a presença da Aula.
+     * Salva/atualiza a presenca da Aula.
      * Espera inputs no formato:
      * presencas[ALUNO_ID][bloco_1] = 1
      * presencas[ALUNO_ID][justificativa_falta_id] = X
      * presencas[ALUNO_ID][observacao] = "..."
      *
      * Regras aplicadas:
-     * - Só permite atualizar alunos ATIVOS da turma
-     * - Justificativa pode exigir observação
+     * - So permite atualizar alunos ATIVOS da turma
+     * - Justificativa pode exigir observacao
      * - Limita blocos conforme quantidade_blocos
      * ===================================================== */
     public function updateFromAula(Request $request, Aula $aula)
     {
-        // Carrega turma para validação de pertinência
+        // Carrega turma para validacao de pertinencia
         $aula->load(['turma']);
 
         $data = $request->validate([
@@ -386,7 +386,7 @@ class PresencaController extends Controller
 
         DB::transaction(function () use ($aula, $data) {
 
-            // 1) Garante existência da presença
+            // 1) Garante existencia da presenca
             $presenca = Presenca::firstOrCreate(
                 ['aula_id' => $aula->id],
                 [
@@ -404,7 +404,7 @@ class PresencaController extends Controller
                 $presenca->update(['status' => $data['status']]);
             }
 
-            // 3) Lista de alunos ATIVOS (blindagem de segurança)
+            // 3) Lista de alunos ATIVOS (blindagem de seguranca)
             // Isso impede que um payload "manual" atualize desistentes.
             $idsAtivos = $aula->turma
                 ->alunos()
@@ -419,19 +419,19 @@ class PresencaController extends Controller
             foreach ($data['presencas'] as $alunoId => $payload) {
                 $alunoId = (int) $alunoId;
 
-                // Segurança: só permite alunos ATIVOS da turma
+                // Seguranca: so permite alunos ATIVOS da turma
                 if (!isset($idsAtivosLookup[$alunoId])) {
                     continue;
                 }
 
-                // REGRA: justificativa exige observação
+                // REGRA: justificativa exige observacao
                 if (!empty($payload['justificativa_falta_id'])) {
                     $just = JustificativaFalta::find($payload['justificativa_falta_id']);
 
                     if ($just && $just->exige_observacao && empty($payload['observacao'])) {
                         throw ValidationException::withMessages([
                             "presencas.$alunoId.observacao" =>
-                                "A justificativa '{$just->nome}' exige observação.",
+                                "A justificativa '{$just->nome}' exige observacao.",
                         ]);
                     }
                 }
@@ -444,7 +444,7 @@ class PresencaController extends Controller
                     ]
                 );
 
-                // Limita blocos conforme quantidade da presença
+                // Limita blocos conforme quantidade da presenca
                 $max = (int) $presenca->quantidade_blocos;
 
                 $item->update([
@@ -463,6 +463,6 @@ class PresencaController extends Controller
 
         return redirect()
             ->route('admin.aulas.show', $aula)
-            ->with('success', 'Presenças atualizadas com sucesso.');
+            ->with('success', 'Presencas atualizadas com sucesso.');
     }
 }

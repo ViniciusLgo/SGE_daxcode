@@ -1,28 +1,28 @@
 {{-- ============================================================================
 | resources/views/admin/gestao_academica/presencas/edit.blade.php
 |
-| VIEW: Editar Presença
+| VIEW: Editar Presenca
 |
 | Finalidade:
-| - Editar uma presença JÁ EXISTENTE
-| - Permitir correções posteriores (ex: justificativa, observação, blocos)
+| - Editar uma presenca JA EXISTENTE
+| - Permitir correcoes posteriores (ex: justificativa, observacao, blocos)
 |
 | REGRAS IMPORTANTES:
-| 1) Histórico:
-|    - Pode exibir alunos que hoje estão inativos/desistentes
-|    - Pode exibir justificativas que hoje estão inativas
+| 1) Historico:
+|    - Pode exibir alunos que hoje estao inativos/desistentes
+|    - Pode exibir justificativas que hoje estao inativas
 |
-| 2) Edição:
-|    - Apenas alunos ATIVOS devem ser editáveis
+| 2) Edicao:
+|    - Apenas alunos ATIVOS devem ser editaveis
 |    - Alunos INATIVOS aparecem bloqueados (somente leitura)
 |
 | 3) Justificativas:
 |    - Select mostra SOMENTE justificativas ATIVAS
-|    - Se já houver justificativa inativa salva, ela é exibida como texto
+|    - Se ja houver justificativa inativa salva, ela e exibida como texto
 |
-| 4) Observação:
-|    - Pode ser obrigatória conforme justificativa (exige_observacao)
-|    - Validação garantida também no backend (controller)
+| 4) Observacao:
+|    - Pode ser obrigatoria conforme justificativa (exige_observacao)
+|    - Validacao garantida tambem no backend (controller)
 ============================================================================ --}}
 
 @extends('layouts.app')
@@ -36,10 +36,10 @@
         <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
             <div>
                 <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light">
-                    ✏️ Editar Presença
+                     Editar Presenca
                 </h1>
                 <p class="text-sm text-slate-500">
-                    Edição completa da lista de presença da aula
+                    Edicao completa da lista de presenca da aula
                 </p>
             </div>
 
@@ -86,7 +86,7 @@
             ============================================================ --}}
             <div>
                 <h2 class="font-semibold text-lg mb-4">
-                    📘 Dados da Aula
+                     Dados da Aula
                 </h2>
 
                 <dl class="grid grid-cols-1 md:grid-cols-4 gap-x-6 gap-y-4 text-sm">
@@ -127,7 +127,7 @@
             ============================================================ --}}
             <div>
                 <label class="block text-sm font-semibold mb-1">
-                    Status da presença
+                    Status da presenca
                 </label>
                 <select name="status"
                         class="w-full md:w-64 rounded-xl border
@@ -159,7 +159,7 @@
                         @endfor
 
                         <th class="px-4 py-3 text-left">Justificativa</th>
-                        <th class="px-4 py-3 text-left">Observação</th>
+                        <th class="px-4 py-3 text-left">Observacao</th>
                     </tr>
                     </thead>
 
@@ -199,7 +199,7 @@
                                                {{ $item->$campo ? 'checked' : '' }}
                                                class="rounded border-slate-300 dark:border-slate-700">
                                     @else
-                                        {{ $item->$campo ? '✔' : '✖' }}
+                                        {{ $item->$campo ? '' : '' }}
                                     @endif
                                 </td>
                             @endfor
@@ -216,7 +216,7 @@
                                                border-slate-300 dark:border-slate-700
                                                px-3 py-2
                                                bg-white dark:bg-dax-dark text-sm">
-                                        <option value="">— Selecione —</option>
+                                        <option value=""> Selecione </option>
 
                                         @foreach($justificativas as $just)
                                             <option value="{{ $just->id }}"
@@ -227,12 +227,12 @@
                                         @endforeach
                                     </select>
                                 @else
-                                    {{ $item->justificativa?->nome ?? '—' }}
+                                    {{ $item->justificativa?->nome ?? '' }}
                                 @endif
                             </td>
 
                             {{-- ====================================================
-                                OBSERVAÇÃO
+                                OBSERVACAO
                             ==================================================== --}}
                             <td class="px-4 py-3">
                                 @if($ativo)
@@ -251,7 +251,7 @@
                                     </div>
                                     @enderror
                                 @else
-                                    {{ $item->observacao ?? '—' }}
+                                    {{ $item->observacao ?? '' }}
                                 @endif
                             </td>
 
@@ -263,7 +263,7 @@
             </div>
 
             {{-- ============================================================
-                AÇÕES
+                ACOES
             ============================================================ --}}
             <div class="flex justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
                 <a href="{{ route('admin.presencas.show', $presenca) }}"
@@ -277,7 +277,7 @@
                         class="px-6 py-2.5 rounded-xl
                            bg-dax-green text-white font-bold
                            hover:bg-dax-greenSoft transition">
-                    Salvar Presença
+                    Salvar Presenca
                 </button>
             </div>
 
@@ -285,7 +285,7 @@
     </div>
 
     {{-- ============================================================
-        SCRIPT – Obrigatoriedade da Observação (UX)
+        SCRIPT  Obrigatoriedade da Observacao (UX)
     ============================================================ --}}
     @push('scripts')
         <script>
@@ -301,7 +301,7 @@
 
                     if (exige) {
                         observacaoInput.required = true;
-                        observacaoInput.placeholder = 'Observação obrigatória';
+                        observacaoInput.placeholder = 'Observacao obrigatoria';
                         observacaoInput.classList.add('border-red-400');
                     } else {
                         observacaoInput.required = false;

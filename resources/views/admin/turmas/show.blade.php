@@ -12,7 +12,7 @@
                     {{ $turma->nome }}
                 </h1>
                 <p class="text-slate-500">
-                    Visão geral da turma, disciplinas, professores e alunos.
+                    Visao geral da turma, disciplinas, professores e alunos.
                 </p>
             </div>
 
@@ -35,10 +35,10 @@
         <!-- ========================== -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-            <!-- CARD INFORMAÇÕES -->
+            <!-- CARD INFORMACOES -->
             <div class="rounded-2xl border bg-white dark:bg-dax-dark/60
                     border-slate-200 dark:border-slate-800 p-6">
-                <h2 class="font-semibold mb-4">📌 Informações da Turma</h2>
+                <h2 class="font-semibold mb-4"> Informacoes da Turma</h2>
 
                 <dl class="grid grid-cols-2 gap-y-3 text-sm">
                     <dt class="text-slate-500">Nome</dt>
@@ -58,9 +58,9 @@
                 </dl>
 
                 <div class="mt-4">
-                    <h3 class="font-medium">📝 Descrição</h3>
+                    <h3 class="font-medium"> Descricao</h3>
                     <p class="text-slate-500 mt-1">
-                        {{ $turma->descricao ?: 'Nenhuma descrição informada.' }}
+                        {{ $turma->descricao ?: 'Nenhuma descricao informada.' }}
                     </p>
                 </div>
             </div>
@@ -68,19 +68,19 @@
             <!-- CARD DISCIPLINAS -->
             <div class="lg:col-span-2 rounded-2xl border bg-white dark:bg-dax-dark/60
                     border-slate-200 dark:border-slate-800 p-6">
-                <h2 class="font-semibold mb-4">📚 Disciplinas da Turma</h2>
+                <h2 class="font-semibold mb-4"> Disciplinas da Turma</h2>
 
                 @forelse ($turma->disciplinaTurmas as $vinculo)
                     <div class="border rounded-xl p-4 mb-4 dark:border-slate-800">
                         <h3 class="font-semibold">{{ $vinculo->disciplina->nome }}</h3>
 
                         <p class="text-sm text-slate-500">
-                            <strong>Ano letivo:</strong> {{ $vinculo->ano_letivo ?? '—' }} <br>
-                            <strong>Observação:</strong> {{ $vinculo->observacao ?? '—' }}
+                            <strong>Ano letivo:</strong> {{ $vinculo->ano_letivo ?? '' }} <br>
+                            <strong>Observacao:</strong> {{ $vinculo->observacao ?? '' }}
                         </p>
 
                         <div class="mt-2">
-                            <p class="font-medium">👨‍🏫 Professores</p>
+                            <p class="font-medium"> Professores</p>
 
                             @if($vinculo->professores->isEmpty())
                                 <p class="text-sm text-slate-500">Nenhum professor vinculado.</p>
@@ -113,7 +113,7 @@
                 border-slate-200 dark:border-slate-800 p-6">
 
             <div class="flex justify-between items-center mb-4">
-                <h2 class="font-semibold">🧑‍🎓 Alunos da Turma</h2>
+                <h2 class="font-semibold"> Alunos da Turma</h2>
 
                 <button @click="modalAluno = true"
                         class="px-3 py-2 rounded-xl bg-dax-green text-white text-sm">
@@ -126,9 +126,9 @@
                     <thead class="text-left text-slate-500">
                     <tr>
                         <th class="py-2">Nome</th>
-                        <th class="py-2">Matrícula</th>
+                        <th class="py-2">Matricula</th>
                         <th class="py-2">Email</th>
-                        <th class="py-2 text-right">Ações</th>
+                        <th class="py-2 text-right">Acoes</th>
                     </tr>
                     </thead>
 
@@ -175,13 +175,13 @@
                   class="bg-white dark:bg-dax-dark rounded-2xl p-6 w-full max-w-xl">
                 @csrf
 
-                <h3 class="font-semibold mb-3">Atribuir Aluno à Turma</h3>
+                <h3 class="font-semibold mb-3">Atribuir Aluno a Turma</h3>
 
                 <!-- FILTROS -->
                 <div class="space-y-2 mb-3">
                     <input id="filtroAlunoNome"
                            type="text"
-                           placeholder="Buscar por nome, matrícula ou turma..."
+                           placeholder="Buscar por nome, matricula ou turma..."
                            class="w-full rounded-xl border px-3 py-2
                               bg-white dark:bg-dax-dark/60
                               border-slate-200 dark:border-slate-800">
@@ -193,7 +193,7 @@
                                    border-slate-200 dark:border-slate-800">
                             <option value="">Ordenar por...</option>
                             <option value="nome">Nome</option>
-                            <option value="matricula">Matrícula</option>
+                            <option value="matricula">Matricula</option>
                             <option value="turma">Turma</option>
                         </select>
 
@@ -232,8 +232,8 @@
                                 data-turma="{{ $turmaLower }}"
                                 data-sem-turma="{{ $a->turma ? '0' : '1' }}">
                             {{ $a->user->name }}
-                            @if($a->matricula) — {{ $a->matricula }} @endif
-                            @if($turmaNome) — {{ $turmaNome }} @endif
+                            @if($a->matricula)  {{ $a->matricula }} @endif
+                            @if($turmaNome)  {{ $turmaNome }} @endif
                         </option>
                     @endforeach
                 </select>
@@ -254,7 +254,7 @@
     </div>
 
     <!-- ========================== -->
-    <!-- SCRIPT – FILTRO AO VIVO -->
+    <!-- SCRIPT  FILTRO AO VIVO -->
     <!-- ========================== -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {

@@ -7,7 +7,7 @@
     {{-- ========================================================= --}}
     @if ($errors->any())
         <div class="alert alert-danger rounded-3 shadow-sm p-3 mb-4" style="animation: fadeIn .3s;">
-            <strong>⚠️ Existem erros no formulário:</strong>
+            <strong> Existem erros no formulario:</strong>
             <ul class="mt-2 mb-0 ps-3">
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
@@ -24,7 +24,7 @@
             <div class="toast show align-items-center text-white bg-success border-0 shadow-lg" role="alert">
                 <div class="d-flex">
                     <div class="toast-body">
-                        ✅ {{ session('success') }}
+                         {{ session('success') }}
                     </div>
                     <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
                 </div>
@@ -40,7 +40,7 @@
             <div class="toast show align-items-center text-white bg-danger border-0 shadow-lg" role="alert">
                 <div class="d-flex">
                     <div class="toast-body">
-                        ❌ {{ session('error') }}
+                         {{ session('error') }}
                     </div>
                     <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
                 </div>
@@ -49,7 +49,7 @@
     @endif
 
     {{-- ========================================================= --}}
-    {{-- ESTILOS GERAIS DO PAINEL DE CONFIGURAÇÕES                --}}
+    {{-- ESTILOS GERAIS DO PAINEL DE CONFIGURACOES                --}}
     {{-- ========================================================= --}}
     <style>
         .settings-wrapper {
@@ -90,7 +90,7 @@
         }
 
         /* ================================ */
-        /* SIDEBAR (Gerais, Acadêmicas, ...) */
+        /* SIDEBAR (Gerais, Academicas, ...) */
         /* ================================ */
         .settings-sidebar {
             border-right: 1px solid rgba(0,0,0,0.05);
@@ -239,7 +239,7 @@
         .d-none-important { display: none !important; }
 
         /* ====================================================== */
-        /* SUB-ABAS ACADÊMICAS (Estilo 1, grande horizontal)      */
+        /* SUB-ABAS ACADEMICAS (Estilo 1, grande horizontal)      */
         /* ====================================================== */
         .academic-subnav-wrapper {
             position: sticky;
@@ -301,12 +301,12 @@
         {{-- HEADER / HERO --}}
         <div class="settings-hero">
             <div>
-                <div class="settings-hero-title">Configurações do Sistema</div>
+                <div class="settings-hero-title">Configuracoes do Sistema</div>
                 <div class="settings-hero-subtitle">
-                    Personalize a identidade, regras acadêmicas e comportamento geral do SGE DaxCode.
+                    Personalize a identidade, regras academicas e comportamento geral do SGE DaxCode.
                 </div>
             </div>
-            <div class="settings-hero-icon">⚙️</div>
+            <div class="settings-hero-icon"></div>
         </div>
 
         <div class="row">
@@ -314,23 +314,23 @@
             {{-- SIDEBAR LATERAL                    --}}
             {{-- ================================== --}}
             <div class="col-md-3 settings-sidebar">
-                <div class="settings-sidebar-title">Seções</div>
+                <div class="settings-sidebar-title">Secoes</div>
                 <ul class="settings-nav">
-                    <li><a href="#tab-geral" class="tab-link active"><span class="icon">⚙️</span> <span>Gerais</span></a></li>
-                    <li><a href="#tab-academico" class="tab-link"><span class="icon">📚</span> <span>Acadêmicas</span></a></li>
-                    <li><a href="#tab-documentos" class="tab-link"><span class="icon">📄</span> <span>Documentos & PDFs</span></a></li>
-                    <li><a href="#tab-usuarios" class="tab-link"><span class="icon">👤</span> <span>Usuários & Acesso</span></a></li>
-                    <li><a href="#tab-notificacoes" class="tab-link"><span class="icon">🔔</span> <span>Notificações</span></a></li>
-                    <li><a href="#tab-financeiro" class="tab-link"><span class="icon">💰</span> <span>Financeiro</span></a></li>
-                    <li><a href="#tab-comunicacao" class="tab-link"><span class="icon">📢</span> <span>Comunicação</span></a></li>
-                    <li><a href="#tab-logs" class="tab-link"><span class="icon">📝</span> <span>Logs & Auditoria</span></a></li>
-                    <li><a href="#tab-backup" class="tab-link"><span class="icon">💾</span> <span>Backup</span></a></li>
-                    <li><a href="#tab-avancado" class="tab-link"><span class="icon">⚡</span> <span>Avançado</span></a></li>
+                    <li><a href="#tab-geral" class="tab-link active"><span class="icon"></span> <span>Gerais</span></a></li>
+                    <li><a href="#tab-academico" class="tab-link"><span class="icon"></span> <span>Academicas</span></a></li>
+                    <li><a href="#tab-documentos" class="tab-link"><span class="icon"></span> <span>Documentos & PDFs</span></a></li>
+                    <li><a href="#tab-usuarios" class="tab-link"><span class="icon"></span> <span>Usuarios & Acesso</span></a></li>
+                    <li><a href="#tab-notificacoes" class="tab-link"><span class="icon"></span> <span>Notificacoes</span></a></li>
+                    <li><a href="#tab-financeiro" class="tab-link"><span class="icon"></span> <span>Financeiro</span></a></li>
+                    <li><a href="#tab-comunicacao" class="tab-link"><span class="icon"></span> <span>Comunicacao</span></a></li>
+                    <li><a href="#tab-logs" class="tab-link"><span class="icon"></span> <span>Logs & Auditoria</span></a></li>
+                    <li><a href="#tab-backup" class="tab-link"><span class="icon"></span> <span>Backup</span></a></li>
+                    <li><a href="#tab-avancado" class="tab-link"><span class="icon"></span> <span>Avancado</span></a></li>
                 </ul>
             </div>
 
             {{-- ================================== --}}
-            {{-- CONTEÚDO PRINCIPAL                 --}}
+            {{-- CONTEUDO PRINCIPAL                 --}}
             {{-- ================================== --}}
             <div class="col-md-9">
 
@@ -344,18 +344,18 @@
                     <div id="tab-geral" class="tab-content-settings">
                         <div class="card settings-card mb-3">
                             <div class="settings-card-header">
-                                <h5><span class="emoji">🏫</span>Identidade da Instituição</h5>
+                                <h5><span class="emoji"></span>Identidade da Instituicao</h5>
                                 <div class="settings-card-subtitle">
-                                    Informações básicas usadas em relatórios, cabeçalhos e comunicação oficial.
+                                    Informacoes basicas usadas em relatorios, cabecalhos e comunicacao oficial.
                                 </div>
                             </div>
 
                             <div class="settings-card-body">
-                                <div class="settings-group-label">Informações principais</div>
+                                <div class="settings-group-label">Informacoes principais</div>
 
                                 <div class="row mb-3">
                                     <div class="col-md-6">
-                                        <label class="form-label">Nome da Instituição</label>
+                                        <label class="form-label">Nome da Instituicao</label>
                                         <input type="text" class="form-control" name="school_name"
                                                value="{{ $settings->school_name ?? '' }}">
                                     </div>
@@ -374,7 +374,7 @@
                                     </div>
 
                                     <div class="col-md-6">
-                                        <label class="form-label">Endereço</label>
+                                        <label class="form-label">Endereco</label>
                                         <input type="text" class="form-control" name="address"
                                                value="{{ $settings->address ?? '' }}">
                                     </div>
@@ -388,11 +388,11 @@
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Logotipo (PNG/JPG)</label>
                                         <input type="file" class="form-control" name="logo">
-                                        {{-- Se quiser exibir preview do logo atual, você pode tratar aqui futuramente --}}
+                                        {{-- Se quiser exibir preview do logo atual, voce pode tratar aqui futuramente --}}
                                     </div>
 
                                     <div class="col-md-3 mb-3">
-                                        <label class="form-label">Versão do Sistema</label>
+                                        <label class="form-label">Versao do Sistema</label>
                                         <input type="text" class="form-control" name="version"
                                                value="{{ $settings->version ?? '' }}">
                                     </div>
@@ -403,83 +403,83 @@
                     </div>
 
                     {{-- ===================================================== --}}
-                    {{-- TAB: ACADÊMICAS – COM SUB-ABAS GRANDES (ESTILO 1)    --}}
+                    {{-- TAB: ACADEMICAS  COM SUB-ABAS GRANDES (ESTILO 1)    --}}
                     {{-- ===================================================== --}}
                     <div id="tab-academico" class="tab-content-settings d-none-important">
 
-                        {{-- ====== SUBNAV HORIZONTAL (botões grandes) ====== --}}
+                        {{-- ====== SUBNAV HORIZONTAL (botoes grandes) ====== --}}
                         <div class="academic-subnav-wrapper">
                             <div class="academic-subnav">
 
-                                {{-- Cada botão ativa uma seção abaixo via data-section --}}
+                                {{-- Cada botao ativa uma secao abaixo via data-section --}}
                                 <button type="button"
                                         class="academic-subnav-btn active"
                                         data-section="ano-letivo">
-                                    <span class="icon">📅</span>
-                                    <span>Ano letivo & Avaliação</span>
+                                    <span class="icon"></span>
+                                    <span>Ano letivo & Avaliacao</span>
                                 </button>
 
                                 <button type="button"
                                         class="academic-subnav-btn"
                                         data-section="calendario">
-                                    <span class="icon">🗓️</span>
-                                    <span>Calendário escolar</span>
+                                    <span class="icon"></span>
+                                    <span>Calendario escolar</span>
                                 </button>
 
                                 <button type="button"
                                         class="academic-subnav-btn"
                                         data-section="feriados">
-                                    <span class="icon">🎉</span>
-                                    <span>Feriados & dias não letivos</span>
+                                    <span class="icon"></span>
+                                    <span>Feriados & dias nao letivos</span>
                                 </button>
 
                                 <button type="button"
                                         class="academic-subnav-btn"
                                         data-section="turnos">
-                                    <span class="icon">🕒</span>
+                                    <span class="icon"></span>
                                     <span>Turnos da escola</span>
                                 </button>
 
                                 <button type="button"
                                         class="academic-subnav-btn"
                                         data-section="modulos">
-                                    <span class="icon">📚</span>
+                                    <span class="icon"></span>
                                     <span>Estrutura modular</span>
                                 </button>
 
                                 <button type="button"
                                         class="academic-subnav-btn"
                                         data-section="carga-curso">
-                                    <span class="icon">🎓</span>
-                                    <span>Carga horária / curso</span>
+                                    <span class="icon"></span>
+                                    <span>Carga horaria / curso</span>
                                 </button>
 
                                 <button type="button"
                                         class="academic-subnav-btn"
                                         data-section="fechamento">
-                                    <span class="icon">✅</span>
+                                    <span class="icon"></span>
                                     <span>Fechamento de notas</span>
                                 </button>
 
                                 <button type="button"
                                         class="academic-subnav-btn"
                                         data-section="promocao">
-                                    <span class="icon">📈</span>
-                                    <span>Promoção & Globais</span>
+                                    <span class="icon"></span>
+                                    <span>Promocao & Globais</span>
                                 </button>
                             </div>
                         </div>
 
-                        {{-- ============= SEÇÃO 1 – ANO LETIVO & AVALIAÇÃO ============= --}}
+                        {{-- ============= SECAO 1  ANO LETIVO & AVALIACAO ============= --}}
                         <div class="academic-section" data-section="ano-letivo">
                             <div class="card settings-card mb-3">
                                 <div class="settings-card-header">
                                     <h5>
-                                        <span class="emoji">📚</span>
-                                        Configurações Acadêmicas — Ano Letivo & Avaliações
+                                        <span class="emoji"></span>
+                                        Configuracoes Academicas  Ano Letivo & Avaliacoes
                                     </h5>
                                     <div class="settings-card-subtitle">
-                                        Parâmetros gerais do ano letivo, regras de avaliação e frequência.
+                                        Parametros gerais do ano letivo, regras de avaliacao e frequencia.
                                     </div>
                                 </div>
 
@@ -503,25 +503,25 @@
                                                 <option value="bimestre"  {{ $modelo=='bimestre' ? 'selected':'' }}>Bimestral</option>
                                                 <option value="trimestre" {{ $modelo=='trimestre' ? 'selected':'' }}>Trimestral</option>
                                                 <option value="anual"     {{ $modelo=='anual' ? 'selected':'' }}>Anual</option>
-                                                <option value="modulos"   {{ $modelo=='modulos' ? 'selected':'' }}>Por módulos</option>
+                                                <option value="modulos"   {{ $modelo=='modulos' ? 'selected':'' }}>Por modulos</option>
                                             </select>
                                         </div>
 
                                         <div class="col-md-4">
-                                            <label class="form-label">Dias Letivos Mínimos</label>
+                                            <label class="form-label">Dias Letivos Minimos</label>
                                             <input type="number" class="form-control"
                                                    name="academic_settings[dias_letivos]"
                                                    value="{{ $settings->academic_settings['dias_letivos'] ?? '' }}">
                                         </div>
                                     </div>
 
-                                    {{-- GRUPO: Avaliações --}}
+                                    {{-- GRUPO: Avaliacoes --}}
                                     <hr>
-                                    <div class="settings-group-label">Avaliações</div>
+                                    <div class="settings-group-label">Avaliacoes</div>
 
                                     <div class="row mb-3">
                                         <div class="col-md-4">
-                                            <label class="form-label">Média Mínima para Aprovação</label>
+                                            <label class="form-label">Media Minima para Aprovacao</label>
                                             <input type="number" step="0.1" class="form-control"
                                                    name="academic_settings[media_minima]"
                                                    value="{{ $settings->academic_settings['media_minima'] ?? '' }}">
@@ -538,19 +538,19 @@
                                         </div>
 
                                         <div class="col-md-4">
-                                            <label class="form-label">Política de Aprovação</label>
+                                            <label class="form-label">Politica de Aprovacao</label>
                                             @php $pol = $settings->academic_settings['politica_aprovacao'] ?? 'media_final'; @endphp
                                             <select class="form-select" name="academic_settings[politica_aprovacao]">
-                                                <option value="media_final" {{ $pol=='media_final' ? 'selected':'' }}>Média Final</option>
-                                                <option value="media_e_frequencia" {{ $pol=='media_e_frequencia' ? 'selected':'' }}>Média + Frequência</option>
+                                                <option value="media_final" {{ $pol=='media_final' ? 'selected':'' }}>Media Final</option>
+                                                <option value="media_e_frequencia" {{ $pol=='media_e_frequencia' ? 'selected':'' }}>Media + Frequencia</option>
                                                 <option value="conceitual" {{ $pol=='conceitual' ? 'selected':'' }}>Conceitual</option>
                                             </select>
                                         </div>
                                     </div>
 
-                                    {{-- GRUPO: Frequência --}}
+                                    {{-- GRUPO: Frequencia --}}
                                     <hr>
-                                    <div class="settings-group-label">Frequência</div>
+                                    <div class="settings-group-label">Frequencia</div>
 
                                     <div class="row mb-3">
                                         <div class="col-md-4">
@@ -565,25 +565,25 @@
                             </div>
                         </div>
 
-                        {{-- ============= SEÇÃO 2 – CALENDÁRIO ESCOLAR ============= --}}
+                        {{-- ============= SECAO 2  CALENDARIO ESCOLAR ============= --}}
                         <div class="academic-section d-none-important" data-section="calendario">
                             <div class="card settings-card mb-3">
                                 <div class="settings-card-header">
                                     <h5>
-                                        <span class="emoji">🗓️</span>
-                                        Calendário Escolar
+                                        <span class="emoji"></span>
+                                        Calendario Escolar
                                     </h5>
                                     <div class="settings-card-subtitle">
-                                        Datas oficiais de início e fim do ano letivo e observações gerais.
+                                        Datas oficiais de inicio e fim do ano letivo e observacoes gerais.
                                     </div>
                                 </div>
 
                                 <div class="settings-card-body">
-                                    <div class="settings-group-label">Período Letivo</div>
+                                    <div class="settings-group-label">Periodo Letivo</div>
 
                                     <div class="row mb-3">
                                         <div class="col-md-4">
-                                            <label class="form-label">Início do Ano Letivo</label>
+                                            <label class="form-label">Inicio do Ano Letivo</label>
                                             <input type="date" class="form-control"
                                                    name="academic_settings[inicio_ano_letivo]"
                                                    value="{{ $settings->academic_settings['inicio_ano_letivo'] ?? '' }}">
@@ -595,7 +595,7 @@
                                                    value="{{ $settings->academic_settings['fim_ano_letivo'] ?? '' }}">
                                         </div>
                                         <div class="col-md-4">
-                                            <label class="form-label">Observações gerais</label>
+                                            <label class="form-label">Observacoes gerais</label>
                                             <input type="text" class="form-control"
                                                    name="academic_settings[observacoes_ano_letivo]"
                                                    value="{{ $settings->academic_settings['observacoes_ano_letivo'] ?? '' }}">
@@ -605,13 +605,13 @@
                             </div>
                         </div>
 
-                        {{-- ============= SEÇÃO 3 – FERIADOS & DIAS NÃO LETIVOS ============= --}}
+                        {{-- ============= SECAO 3  FERIADOS & DIAS NAO LETIVOS ============= --}}
                         <div class="academic-section d-none-important" data-section="feriados">
                             <div class="card settings-card mb-3">
                                 <div class="settings-card-header">
                                     <h5>
-                                        <span class="emoji">🎉</span>
-                                        Feriados e Dias Não Letivos
+                                        <span class="emoji"></span>
+                                        Feriados e Dias Nao Letivos
                                     </h5>
                                     <div class="settings-card-subtitle">
                                         Cadastre feriados nacionais, municipais e institucionais importantes.
@@ -683,16 +683,16 @@
                             </div>
                         </div>
 
-                        {{-- ============= SEÇÃO 4 – TURNOS DA ESCOLA ============= --}}
+                        {{-- ============= SECAO 4  TURNOS DA ESCOLA ============= --}}
                         <div class="academic-section d-none-important" data-section="turnos">
                             <div class="card settings-card mb-3">
                                 <div class="settings-card-header">
                                     <h5>
-                                        <span class="emoji">🕒</span>
+                                        <span class="emoji"></span>
                                         Turnos da Escola
                                     </h5>
                                     <div class="settings-card-subtitle">
-                                        Configure horários e estrutura de aulas para cada turno.
+                                        Configure horarios e estrutura de aulas para cada turno.
                                     </div>
                                 </div>
 
@@ -700,9 +700,9 @@
 
                                     @php
                                         $turnos = [
-                                            'matutino' => '☀️ Matutino',
-                                            'vespertino' => '🌤️ Vespertino',
-                                            'noturno' => '🌙 Noturno',
+                                            'matutino' => ' Matutino',
+                                            'vespertino' => ' Vespertino',
+                                            'noturno' => ' Noturno',
                                         ];
                                     @endphp
 
@@ -734,7 +734,7 @@
                                             <div id="turno-{{ $key }}" class="{{ ($t['ativo'] ?? false) ? '' : 'd-none' }}">
                                                 <div class="row mb-3">
                                                     <div class="col-md-4">
-                                                        <label class="form-label">Início (hh:mm)</label>
+                                                        <label class="form-label">Inicio (hh:mm)</label>
                                                         <input type="time" class="form-control"
                                                                name="academic_settings[turnos][{{ $key }}][inicio]"
                                                                value="{{ $t['inicio'] }}">
@@ -746,7 +746,7 @@
                                                                value="{{ $t['fim'] }}">
                                                     </div>
                                                     <div class="col-md-4">
-                                                        <label class="form-label">Duração da Aula (min)</label>
+                                                        <label class="form-label">Duracao da Aula (min)</label>
                                                         <input type="number" class="form-control"
                                                                name="academic_settings[turnos][{{ $key }}][duracao_aula]"
                                                                value="{{ $t['duracao_aula'] }}">
@@ -781,16 +781,16 @@
                             </div>
                         </div>
 
-                        {{-- ============= SEÇÃO 5 – ESTRUTURA MODULAR (2ª EDIÇÃO) ============= --}}
+                        {{-- ============= SECAO 5  ESTRUTURA MODULAR (2a EDICAO) ============= --}}
                         <div class="academic-section d-none-important" data-section="modulos">
                             <div class="card settings-card mb-3">
                                 <div class="settings-card-header">
                                     <h5>
-                                        <span class="emoji">📚</span>
-                                        Estrutura Modular (2ª Edição)
+                                        <span class="emoji"></span>
+                                        Estrutura Modular (2a Edicao)
                                     </h5>
                                     <div class="settings-card-subtitle">
-                                        Use para configurar módulos de projetos como a 2ª edição do DaxCode.
+                                        Use para configurar modulos de projetos como a 2a edicao do DaxCode.
                                     </div>
                                 </div>
 
@@ -802,28 +802,28 @@
                                 <div class="settings-card-body">
                                     <div class="row mb-3">
                                         <div class="col-md-4">
-                                            <label class="form-label">Quantidade de Módulos</label>
+                                            <label class="form-label">Quantidade de Modulos</label>
                                             <input type="number" class="form-control"
                                                    name="academic_settings[quantidade_modulos]"
                                                    value="{{ $settings->academic_settings['quantidade_modulos'] ?? '' }}">
                                         </div>
                                         <div class="col-md-8">
-                                            <label class="form-label">Observações da Estrutura Modular</label>
+                                            <label class="form-label">Observacoes da Estrutura Modular</label>
                                             <input type="text" class="form-control"
                                                    name="academic_settings[obs_modulos]"
                                                    value="{{ $settings->academic_settings['obs_modulos'] ?? '' }}">
                                         </div>
                                     </div>
 
-                                    <div class="settings-group-label">Módulos</div>
+                                    <div class="settings-group-label">Modulos</div>
 
                                     <div class="table-responsive">
                                         <table class="table align-middle">
                                             <thead>
                                             <tr>
-                                                <th>Módulo</th>
-                                                <th>Carga Horária (h)</th>
-                                                <th>Início</th>
+                                                <th>Modulo</th>
+                                                <th>Carga Horaria (h)</th>
+                                                <th>Inicio</th>
                                                 <th>Fim</th>
                                             </tr>
                                             </thead>
@@ -862,16 +862,16 @@
                             </div>
                         </div>
 
-                        {{-- ============= SEÇÃO 6 – CARGA HORÁRIA POR CURSO ============= --}}
+                        {{-- ============= SECAO 6  CARGA HORARIA POR CURSO ============= --}}
                         <div class="academic-section d-none-important" data-section="carga-curso">
                             <div class="card settings-card mb-3">
                                 <div class="settings-card-header">
                                     <h5>
-                                        <span class="emoji">🎓</span>
-                                        Carga Horária por Curso
+                                        <span class="emoji"></span>
+                                        Carga Horaria por Curso
                                     </h5>
                                     <div class="settings-card-subtitle">
-                                        Cursos principais (Creche, 1º ano, 2º ano, Projeto DaxCode, etc.).
+                                        Cursos principais (Creche, 1o ano, 2o ano, Projeto DaxCode, etc.).
                                     </div>
                                 </div>
 
@@ -886,9 +886,9 @@
                                             <thead>
                                             <tr>
                                                 <th>Curso</th>
-                                                <th>Carga Horária Total (h)</th>
+                                                <th>Carga Horaria Total (h)</th>
                                                 <th>Aulas Semanais</th>
-                                                <th>Turno Padrão</th>
+                                                <th>Turno Padrao</th>
                                                 <th>Modelo</th>
                                             </tr>
                                             </thead>
@@ -937,7 +937,7 @@
                                                             <option value="bimestre"  {{ $modeloCurso=='bimestre' ? 'selected':'' }}>Bimestral</option>
                                                             <option value="trimestre" {{ $modeloCurso=='trimestre' ? 'selected':'' }}>Trimestral</option>
                                                             <option value="anual"     {{ $modeloCurso=='anual' ? 'selected':'' }}>Anual</option>
-                                                            <option value="modulos"   {{ $modeloCurso=='modulos' ? 'selected':'' }}>Por módulos</option>
+                                                            <option value="modulos"   {{ $modeloCurso=='modulos' ? 'selected':'' }}>Por modulos</option>
                                                         </select>
                                                     </td>
                                                 </tr>
@@ -949,16 +949,16 @@
                             </div>
                         </div>
 
-                        {{-- ============= SEÇÃO 7 – FECHAMENTO DE NOTAS ============= --}}
+                        {{-- ============= SECAO 7  FECHAMENTO DE NOTAS ============= --}}
                         <div class="academic-section d-none-important" data-section="fechamento">
                             <div class="card settings-card mb-3">
                                 <div class="settings-card-header">
                                     <h5>
-                                        <span class="emoji">✅</span>
-                                        Parâmetros de Fechamento de Notas
+                                        <span class="emoji"></span>
+                                        Parametros de Fechamento de Notas
                                     </h5>
                                     <div class="settings-card-subtitle">
-                                        Regras gerais para encerramento de lançamentos no boletim.
+                                        Regras gerais para encerramento de lancamentos no boletim.
                                     </div>
                                 </div>
 
@@ -969,7 +969,7 @@
                                 <div class="settings-card-body">
                                     <div class="row mb-3">
                                         <div class="col-md-3">
-                                            <label class="form-label">Prazo para edição (dias)</label>
+                                            <label class="form-label">Prazo para edicao (dias)</label>
                                             <input type="number" class="form-control"
                                                    name="academic_settings[fechamento][prazo_edicao]"
                                                    value="{{ $fech['prazo_edicao'] ?? '' }}">
@@ -1000,7 +1000,7 @@
                                                 <input class="form-check-input" type="checkbox"
                                                        name="academic_settings[fechamento][bloquear_lancamento]"
                                                     {{ ($fech['bloquear_lancamento'] ?? false) ? 'checked' : '' }}>
-                                                <label class="form-check-label">Bloquear lançamento após prazo</label>
+                                                <label class="form-check-label">Bloquear lancamento apos prazo</label>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
@@ -1008,7 +1008,7 @@
                                                 <input class="form-check-input" type="checkbox"
                                                        name="academic_settings[fechamento][arredondar_media]"
                                                     {{ ($fech['arredondar_media'] ?? false) ? 'checked' : '' }}>
-                                                <label class="form-check-label">Arredondar média final</label>
+                                                <label class="form-check-label">Arredondar media final</label>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
@@ -1026,16 +1026,16 @@
                             </div>
                         </div>
 
-                        {{-- ============= SEÇÃO 8 – PROMOÇÃO & REGRAS GLOBAIS ============= --}}
+                        {{-- ============= SECAO 8  PROMOCAO & REGRAS GLOBAIS ============= --}}
                         <div class="academic-section d-none-important" data-section="promocao">
                             <div class="card settings-card mb-3">
                                 <div class="settings-card-header">
                                     <h5>
-                                        <span class="emoji">📈</span>
-                                        Regras de Promoção Automática & Configurações Globais
+                                        <span class="emoji"></span>
+                                        Regras de Promocao Automatica & Configuracoes Globais
                                     </h5>
                                     <div class="settings-card-subtitle">
-                                        Critérios de promoção, recuperação e parâmetros globais de horários.
+                                        Criterios de promocao, recuperacao e parametros globais de horarios.
                                     </div>
                                 </div>
 
@@ -1045,28 +1045,28 @@
                                 @endphp
 
                                 <div class="settings-card-body">
-                                    {{-- REGRAS DE PROMOÇÃO --}}
-                                    <div class="settings-group-label">Regras de Promoção Automática</div>
+                                    {{-- REGRAS DE PROMOCAO --}}
+                                    <div class="settings-group-label">Regras de Promocao Automatica</div>
 
                                     <div class="row mb-3">
                                         <div class="col-md-4">
-                                            <label class="form-label">Critério principal</label>
+                                            <label class="form-label">Criterio principal</label>
                                             @php $crit = $prom['criterio_principal'] ?? 'media_frequencia'; @endphp
                                             <select class="form-select"
                                                     name="academic_settings[promocao][criterio_principal]">
-                                                <option value="media" {{ $crit=='media' ? 'selected':'' }}>Somente média</option>
-                                                <option value="frequencia" {{ $crit=='frequencia' ? 'selected':'' }}>Somente frequência</option>
-                                                <option value="media_frequencia" {{ $crit=='media_frequencia' ? 'selected':'' }}>Média + Frequência</option>
+                                                <option value="media" {{ $crit=='media' ? 'selected':'' }}>Somente media</option>
+                                                <option value="frequencia" {{ $crit=='frequencia' ? 'selected':'' }}>Somente frequencia</option>
+                                                <option value="media_frequencia" {{ $crit=='media_frequencia' ? 'selected':'' }}>Media + Frequencia</option>
                                             </select>
                                         </div>
                                         <div class="col-md-4">
-                                            <label class="form-label">Nota mínima para aprovação</label>
+                                            <label class="form-label">Nota minima para aprovacao</label>
                                             <input type="number" step="0.1" class="form-control"
                                                    name="academic_settings[promocao][nota_minima_aprovacao]"
                                                    value="{{ $prom['nota_minima_aprovacao'] ?? '' }}">
                                         </div>
                                         <div class="col-md-4">
-                                            <label class="form-label">Frequência mínima (%)</label>
+                                            <label class="form-label">Frequencia minima (%)</label>
                                             <input type="number" class="form-control"
                                                    name="academic_settings[promocao][frequencia_minima]"
                                                    value="{{ $prom['frequencia_minima'] ?? '' }}">
@@ -1075,7 +1075,7 @@
 
                                     <div class="row mb-3">
                                         <div class="col-md-4">
-                                            <label class="form-label">Nota mínima na recuperação</label>
+                                            <label class="form-label">Nota minima na recuperacao</label>
                                             <input type="number" step="0.1" class="form-control"
                                                    name="academic_settings[promocao][nota_minima_recuperacao]"
                                                    value="{{ $prom['nota_minima_recuperacao'] ?? '' }}">
@@ -1093,25 +1093,25 @@
                                                 <input class="form-check-input" type="checkbox"
                                                        name="academic_settings[promocao][reprovar_por_frequencia]"
                                                     {{ ($prom['reprovar_por_frequencia'] ?? false) ? 'checked' : '' }}>
-                                                <label class="form-check-label">Reprovar por frequência</label>
+                                                <label class="form-check-label">Reprovar por frequencia</label>
                                             </div>
                                         </div>
                                     </div>
 
                                     <hr>
 
-                                    {{-- CONFIGURAÇÕES GLOBAIS DE HORÁRIOS / MÓDULOS --}}
-                                    <div class="settings-group-label">Configurações Globais de Horários e Módulos</div>
+                                    {{-- CONFIGURACOES GLOBAIS DE HORARIOS / MODULOS --}}
+                                    <div class="settings-group-label">Configuracoes Globais de Horarios e Modulos</div>
 
                                     <div class="row mb-3">
                                         <div class="col-md-3">
-                                            <label class="form-label">Duração padrão da aula (min)</label>
+                                            <label class="form-label">Duracao padrao da aula (min)</label>
                                             <input type="number" class="form-control"
                                                    name="academic_settings[globais][duracao_padrao]"
                                                    value="{{ $globais['duracao_padrao'] ?? '' }}">
                                         </div>
                                         <div class="col-md-3">
-                                            <label class="form-label">Intervalo padrão (min)</label>
+                                            <label class="form-label">Intervalo padrao (min)</label>
                                             <input type="number" class="form-control"
                                                    name="academic_settings[globais][intervalo_padrao]"
                                                    value="{{ $globais['intervalo_padrao'] ?? '' }}">
@@ -1132,7 +1132,7 @@
 
                                     <div class="row mb-3">
                                         <div class="col-md-3">
-                                            <label class="form-label">Aulas em horário reduzido</label>
+                                            <label class="form-label">Aulas em horario reduzido</label>
                                             <input type="number" class="form-control"
                                                    name="academic_settings[globais][aulas_horario_reduzido]"
                                                    value="{{ $globais['aulas_horario_reduzido'] ?? '' }}">
@@ -1142,11 +1142,11 @@
                                                 <input class="form-check-input" type="checkbox"
                                                        name="academic_settings[globais][ativar_sabados_letivos]"
                                                     {{ ($globais['ativar_sabados_letivos'] ?? false) ? 'checked' : '' }}>
-                                                <label class="form-check-label">Ativar sábados letivos</label>
+                                                <label class="form-check-label">Ativar sabados letivos</label>
                                             </div>
                                         </div>
                                         <div class="col-md-5">
-                                            <label class="form-label">Descrição / Regras para sábados letivos</label>
+                                            <label class="form-label">Descricao / Regras para sabados letivos</label>
                                             <input type="text" class="form-control"
                                                    name="academic_settings[globais][descricao_sabados_letivos]"
                                                    value="{{ $globais['descricao_sabados_letivos'] ?? '' }}">
@@ -1155,16 +1155,16 @@
 
                                     <hr>
 
-                                    {{-- REMATRÍCULA --}}
-                                    <div class="settings-group-label">Rematrícula</div>
+                                    {{-- REMATRICULA --}}
+                                    <div class="settings-group-label">Rematricula</div>
                                     @php $rem = $settings->academic_settings['rematricula_tipo'] ?? 'manual'; @endphp
 
                                     <div class="row mb-3">
                                         <div class="col-md-4">
-                                            <label class="form-label">Tipo de Rematrícula</label>
+                                            <label class="form-label">Tipo de Rematricula</label>
                                             <select class="form-select" name="academic_settings[rematricula_tipo]">
                                                 <option value="manual" {{ $rem=='manual' ? 'selected':'' }}>Manual</option>
-                                                <option value="automatica" {{ $rem=='automatica' ? 'selected':'' }}>Automática</option>
+                                                <option value="automatica" {{ $rem=='automatica' ? 'selected':'' }}>Automatica</option>
                                                 <option value="por_aprovacao" {{ $rem=='por_aprovacao' ? 'selected':'' }}>Somente quando aprovado</option>
                                             </select>
                                         </div>
@@ -1174,20 +1174,20 @@
                             </div>
                         </div>
 
-                    </div> {{-- FIM TAB ACADÊMICO --}}
+                    </div> {{-- FIM TAB ACADEMICO --}}
 
                     {{-- ===================================================== --}}
                     {{-- OUTRAS ABAS (placeholders por enquanto)              --}}
                     {{-- ===================================================== --}}
                     @foreach([
-                        'documentos'   => '📄 Documentos & PDFs',
-                        'usuarios'     => '👤 Usuários & Acesso',
-                        'notificacoes' => '🔔 Notificações',
-                        'financeiro'   => '💰 Financeiro',
-                        'comunicacao'  => '📢 Comunicação',
-                        'logs'         => '📝 Logs & Auditoria',
-                        'backup'       => '💾 Backup',
-                        'avancado'     => '⚡ Avançado',
+                        'documentos'   => ' Documentos & PDFs',
+                        'usuarios'     => ' Usuarios & Acesso',
+                        'notificacoes' => ' Notificacoes',
+                        'financeiro'   => ' Financeiro',
+                        'comunicacao'  => ' Comunicacao',
+                        'logs'         => ' Logs & Auditoria',
+                        'backup'       => ' Backup',
+                        'avancado'     => ' Avancado',
                     ] as $id => $titulo)
                         <div id="tab-{{ $id }}" class="tab-content-settings d-none-important">
                             <div class="card settings-card mb-3">
@@ -1197,12 +1197,12 @@
                                         <span>{{ implode(' ', array_slice(explode(' ', $titulo), 1)) }}</span>
                                     </h5>
                                     <div class="settings-card-subtitle">
-                                        Estas configurações serão detalhadas e preenchidas com campos reais numa próxima etapa.
+                                        Estas configuracoes serao detalhadas e preenchidas com campos reais numa proxima etapa.
                                     </div>
                                 </div>
                                 <div class="settings-card-body">
                                     <p class="text-muted mb-0">
-                                        Em breve você poderá definir regras específicas para
+                                        Em breve voce podera definir regras especificas para
                                         <strong>{{ $titulo }}</strong> diretamente por aqui.
                                     </p>
                                 </div>
@@ -1210,10 +1210,10 @@
                         </div>
                     @endforeach
 
-                    {{-- BOTÃO SALVAR GERAL --}}
+                    {{-- BOTAO SALVAR GERAL --}}
                     <div class="settings-footer">
                         <button class="btn btn-primary btn-save-settings" type="submit">
-                            💾 <span>Salvar alterações</span>
+                             <span>Salvar alteracoes</span>
                         </button>
                     </div>
 
@@ -1226,7 +1226,7 @@
     {{-- SCRIPTS                                                   --}}
     {{-- ========================================================= --}}
     <script>
-        // Tabs principais (Gerais, Acadêmicas, etc.)
+        // Tabs principais (Gerais, Academicas, etc.)
         document.querySelectorAll('.tab-link').forEach(btn => {
             btn.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -1246,7 +1246,7 @@
             });
         });
 
-        // Sub-abas da aba "Acadêmicas"
+        // Sub-abas da aba "Academicas"
         const subnavButtons = document.querySelectorAll('.academic-subnav-btn');
         const sections = document.querySelectorAll('.academic-section');
 
@@ -1254,11 +1254,11 @@
             btn.addEventListener('click', () => {
                 const section = btn.dataset.section;
 
-                // ativa botão
+                // ativa botao
                 subnavButtons.forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
 
-                // mostra somente a seção correspondente
+                // mostra somente a secao correspondente
                 sections.forEach(sec => {
                     if (sec.dataset.section === section) {
                         sec.classList.remove('d-none-important');

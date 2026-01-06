@@ -5,10 +5,10 @@
     {{-- ================= HEADER ================= --}}
     <div class="mb-6">
         <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light">
-            📘 Boletins
+             Boletins
         </h1>
         <p class="text-sm text-slate-500">
-            Consulta e visualização de boletins escolares.
+            Consulta e visualizacao de boletins escolares.
         </p>
     </div>
 
@@ -21,12 +21,12 @@
                 hover:shadow-md transition">
 
             <h2 class="text-lg font-black text-dax-dark dark:text-dax-light mb-2">
-                📘 Boletim por Turma
+                 Boletim por Turma
             </h2>
 
             <p class="text-sm text-slate-500 mb-6">
                 Visualize o boletim consolidado dos alunos organizados por turma,
-                com médias, avaliações e situação geral.
+                com medias, avaliacoes e situacao geral.
             </p>
 
             <a href="{{ route('admin.turmas.index') }}"
@@ -46,12 +46,12 @@
                 hover:shadow-md transition">
 
             <h2 class="text-lg font-black text-dax-dark dark:text-dax-light mb-2">
-                👤 Boletim por Aluno
+                 Boletim por Aluno
             </h2>
 
             <p class="text-sm text-slate-500 mb-6">
                 Acesse o boletim individual diretamente pelo cadastro do aluno,
-                com histórico completo de avaliações e resultados.
+                com historico completo de avaliacoes e resultados.
             </p>
 
             <a href="{{ route('admin.alunos.index') }}"

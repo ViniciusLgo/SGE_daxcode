@@ -23,7 +23,7 @@ class MatriculaStatusController extends Controller
         if (!$matricula) {
             return redirect()
                 ->back()
-                ->with('error', 'Este aluno não possui matrícula ativa.');
+                ->with('error', 'Este aluno nao possui matricula ativa.');
         }
 
         $matricula->desistir(
@@ -52,7 +52,7 @@ class MatriculaStatusController extends Controller
         if (!$matricula) {
             return redirect()
                 ->back()
-                ->with('error', 'Este aluno não possui matrícula para reativação.');
+                ->with('error', 'Este aluno nao possui matricula para reativacao.');
         }
 
         $matricula->reativar(

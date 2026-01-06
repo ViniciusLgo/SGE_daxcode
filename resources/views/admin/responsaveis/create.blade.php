@@ -7,10 +7,10 @@
         <div>
             <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light flex items-center gap-2">
                 <i class="bi bi-people text-dax-yellow"></i>
-                Completar Cadastro do Responsável
+                Completar Cadastro do Responsavel
             </h1>
             <p class="text-slate-500">
-                Usuário criado:
+                Usuario criado:
                 <strong>{{ $user->name }}</strong> ({{ $user->email }})
             </p>
         </div>

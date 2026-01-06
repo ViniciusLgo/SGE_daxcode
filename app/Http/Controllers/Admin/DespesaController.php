@@ -15,7 +15,7 @@ class DespesaController extends Controller
     {
         $query = Despesa::query()->with('categoria', 'centroCusto', 'user');
 
-        // FILTROS DINÂMICOS
+        // FILTROS DINAMICOS
         if ($request->filled('data_inicio')) {
             $query->whereDate('data', '>=', $request->data_inicio);
         }
@@ -60,7 +60,7 @@ class DespesaController extends Controller
         $despesas = $query
             ->orderBy('data', 'desc')
             ->paginate(20)
-            ->appends($request->query()); // mantém filtros na paginação
+            ->appends($request->query()); // mantem filtros na paginacao
 
         $categorias = CategoriaDespesa::orderBy('nome')->get();
         $centros = CentroCusto::orderBy('nome')->get();
@@ -114,7 +114,7 @@ class DespesaController extends Controller
             unset($data['arquivo']);
         }
 
-        // se não vier responsável, assume o logado
+        // se nao vier responsavel, assume o logado
         if (empty($data['responsavel_id'])) {
             $data['responsavel_id'] = auth()->id();
         }
@@ -126,7 +126,7 @@ class DespesaController extends Controller
 
         return redirect()
             ->route('admin.financeiro.despesas.index')
-            ->with('success', 'Despesa lançada com sucesso!');
+            ->with('success', 'Despesa lancada com sucesso!');
     }
 
     public function edit(Despesa $despesa)
@@ -183,7 +183,7 @@ class DespesaController extends Controller
 
         return redirect()
             ->route('admin.financeiro.despesas.index')
-            ->with('success', 'Despesa excluída com sucesso!');
+            ->with('success', 'Despesa excluida com sucesso!');
     }
 
     public function duplicar(Despesa $despesa)

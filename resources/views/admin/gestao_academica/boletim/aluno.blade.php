@@ -21,13 +21,13 @@
     </a>
   </div>
 
-  {{-- ================= CONTEÚDO ================= --}}
+  {{-- ================= CONTEUDO ================= --}}
   @forelse($boletim as $item)
 
     <div class="rounded-2xl border border-slate-200 dark:border-slate-800
       bg-white dark:bg-dax-dark/60 p-6 mb-6">
 
-      {{-- DISCIPLINA + SITUAÇÃO --}}
+      {{-- DISCIPLINA + SITUACAO --}}
       <div class="flex items-center justify-between mb-4">
         <h2 class="text-lg font-black text-dax-dark dark:text-dax-light">
           {{ $item['disciplina']->nome }}
@@ -47,13 +47,13 @@
     </span>
       </div>
 
-      {{-- TABELA DE AVALIAÇÕES --}}
+      {{-- TABELA DE AVALIACOES --}}
       <div class="overflow-x-auto">
         <table class="min-w-full text-sm border
            border-slate-200 dark:border-slate-800">
           <thead class="bg-slate-50 dark:bg-slate-900/40">
           <tr class="text-slate-600 dark:text-slate-300">
-            <th class="px-4 py-2 text-left">Avaliação</th>
+            <th class="px-4 py-2 text-left">Avaliacao</th>
             <th class="px-4 py-2 text-center">Tipo</th>
             <th class="px-4 py-2 text-center">Nota</th>
             <th class="px-4 py-2 text-center">Entrega</th>
@@ -92,7 +92,7 @@
                 @if($resultado->entregue)
                   <span class="text-emerald-600 font-semibold">Entregue</span>
                 @else
-                  <span class="text-red-500 font-semibold">Não entregue</span>
+                  <span class="text-red-500 font-semibold">Nao entregue</span>
                 @endif
               </td>
 
@@ -102,10 +102,10 @@
         </table>
       </div>
 
-      {{-- MÉDIA --}}
+      {{-- MEDIA --}}
       <div class="flex justify-end mt-4">
         <div class="text-right">
-          <div class="text-xs text-slate-500">Média da disciplina</div>
+          <div class="text-xs text-slate-500">Media da disciplina</div>
           <div class="text-lg font-black
         {{ $item['media'] < 6 ? 'text-red-500' : 'text-emerald-600' }}">
             {{ number_format($item['media'], 2, ',', '.') }}
@@ -118,7 +118,7 @@
   @empty
     <div class="rounded-2xl border border-slate-200 dark:border-slate-800
       bg-white dark:bg-dax-dark/60 p-6 text-center text-slate-500">
-      Nenhuma avaliação registrada para este aluno.
+      Nenhuma avaliacao registrada para este aluno.
     </div>
   @endforelse
 

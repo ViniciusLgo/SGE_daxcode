@@ -35,7 +35,7 @@ class DisciplinaTurmaController extends Controller
     }
 
     /**
-     * Adicionar uma disciplina à turma
+     * Adicionar uma disciplina a turma
      */
     public function store(Request $request, $turmaId)
     {
@@ -45,16 +45,16 @@ class DisciplinaTurmaController extends Controller
             'observacao' => 'nullable|string|max:255',
         ]);
 
-        // Verificar se já existe vínculo
+        // Verificar se ja existe vinculo
         $jaExiste = DisciplinaTurma::where('turma_id', $turmaId)
             ->where('disciplina_id', $request->disciplina_id)
             ->exists();
 
         if ($jaExiste) {
-            return back()->with('error', 'Esta disciplina já está vinculada a esta turma.');
+            return back()->with('error', 'Esta disciplina ja esta vinculada a esta turma.');
         }
 
-        // cria o vínculo na tabela disciplina_turmas
+        // cria o vinculo na tabela disciplina_turmas
         $vinculo = DisciplinaTurma::create([
             'turma_id' => $turmaId,
             'disciplina_id' => $request->disciplina_id,
@@ -75,7 +75,7 @@ class DisciplinaTurmaController extends Controller
         // remover professores vinculados
         DisciplinaTurmaProfessor::where('disciplina_turma_id', $vinculo->id)->delete();
 
-        // remover vínculo principal
+        // remover vinculo principal
         $vinculo->delete();
 
         return back()->with('success', 'Disciplina removida da turma.');
@@ -99,7 +99,7 @@ class DisciplinaTurmaController extends Controller
     }
 
     /**
-     * Remover professor do vínculo disciplina ↔ turma
+     * Remover professor do vinculo disciplina  turma
      */
     public function removerProfessor($turmaId, $vinculoId, $professorId)
     {
@@ -107,6 +107,6 @@ class DisciplinaTurmaController extends Controller
             ->where('professor_id', $professorId)
             ->delete();
 
-        return back()->with('success', 'Professor removido do vínculo.');
+        return back()->with('success', 'Professor removido do vinculo.');
     }
 }

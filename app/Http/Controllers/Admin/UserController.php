@@ -12,11 +12,12 @@ use App\Models\Turma;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use App\Services\CodeGenerator;
 
 class UserController extends Controller
 {
     /**
-     * LISTAGEM DE USUÁRIOS
+     * LISTAGEM DE USUARIOS
      */
     public function index()
     {
@@ -25,7 +26,7 @@ class UserController extends Controller
     }
 
     /**
-     * FORMULÁRIO DE CRIAÇÃO
+     * FORMULARIO DE CRIACAO
      */
     public function create()
     {
@@ -33,8 +34,8 @@ class UserController extends Controller
     }
 
     /**
-     * STORE — CRIA USUÁRIO E PERFIL ASSOCIADO
-     * Regra: User é a entidade primária.
+     * STORE  CRIA USUARIO E PERFIL ASSOCIADO
+     * Regra: User e a entidade primaria.
      */
     public function store(Request $request)
     {
@@ -70,7 +71,7 @@ class UserController extends Controller
 
 
     /**
-     * FORMULÁRIO DE EDIÇÃO
+     * FORMULARIO DE EDICAO
      */
     public function edit($id)
     {
@@ -79,7 +80,7 @@ class UserController extends Controller
     }
 
     /**
-     * UPDATE — ATUALIZA USUÁRIO E GARANTE PERFIL
+     * UPDATE  ATUALIZA USUARIO E GARANTE PERFIL
      */
     public function update(Request $request, $id)
     {
@@ -110,15 +111,12 @@ class UserController extends Controller
             };
         }
 
-        // Garante consistência do perfil
+        // Garante consistencia do perfil
         if ($user->tipo === 'aluno' && !$user->aluno) {
             DB::transaction(function () use ($user) {
                 $turmaPadrao = Turma::where('nome', 'like', 'Turma Padr%')->firstOrFail();
 
-                $ultimoAluno = Aluno::lockForUpdate()->orderByDesc('id')->first();
-                $proximoNumeroAluno = $ultimoAluno ? $ultimoAluno->id + 1 : 1;
-                $codigoAluno = 'ALU-' . now()->format('Y') . '-' .
-                    str_pad($proximoNumeroAluno, 5, '0', STR_PAD_LEFT);
+                $codigoAluno = CodeGenerator::next('aluno');
 
                 $aluno = Aluno::create([
                     'user_id'   => $user->id,
@@ -126,10 +124,7 @@ class UserController extends Controller
                     'matricula' => $codigoAluno,
                 ]);
 
-                $ultimaMatricula = Matricula::lockForUpdate()->orderByDesc('id')->first();
-                $proximoNumeroMatricula = $ultimaMatricula ? $ultimaMatricula->id + 1 : 1;
-                $codigoMatricula = 'MAT-' . now()->format('Y') . '-' .
-                    str_pad($proximoNumeroMatricula, 5, '0', STR_PAD_LEFT);
+                $codigoMatricula = CodeGenerator::next('matricula');
 
                 $aluno->matriculaModel()->create([
                     'codigo'            => $codigoMatricula,
@@ -153,11 +148,11 @@ class UserController extends Controller
 
         return redirect()
             ->route('admin.usuarios.index')
-            ->with('success', 'Usuário atualizado com sucesso!');
+            ->with('success', 'Usuario atualizado com sucesso!');
     }
 
     /**
-     * DESTROY — REMOVE USUÁRIO E PERFIL
+     * DESTROY  REMOVE USUARIO E PERFIL
      */
     public function destroy($id)
     {
@@ -174,6 +169,6 @@ class UserController extends Controller
 
         return redirect()
             ->route('admin.usuarios.index')
-            ->with('success', 'Usuário e perfil excluídos com sucesso!');
+            ->with('success', 'Usuario e perfil excluidos com sucesso!');
     }
 }

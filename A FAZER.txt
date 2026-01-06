@@ -227,7 +227,6 @@ Nada está considerado como feito. O objetivo é **auditoria total do sistema**,
 
 * [ ] Comparar:
 
-  * `DashboardFinanceiroController`
   * `FinanceiroDashboardController`
 * [ ] Decidir:
 

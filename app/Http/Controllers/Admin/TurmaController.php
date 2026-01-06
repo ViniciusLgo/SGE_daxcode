@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Turma;
-use App\Models\Aluno;     // <--- IMPORTAÇÃO CORRETA AQUI
+use App\Models\Aluno;     // <--- IMPORTACAO CORRETA AQUI
 use Illuminate\Http\Request;
 
 class TurmaController extends Controller
@@ -61,7 +61,7 @@ class TurmaController extends Controller
             'disciplinaTurmas.professores.user'
         ])->findOrFail($id);
 
-        // Alunos já vinculados à turma (tabela principal)
+        // Alunos ja vinculados a turma (tabela principal)
         $alunos = Aluno::ativos()
             ->with('user')
             ->whereHas('matriculaModel', function ($q) use ($id) {
@@ -70,9 +70,9 @@ class TurmaController extends Controller
             ->paginate(10);
 
 
-        // Alunos disponíveis para atribuir no modal:
-        // - ou não têm turma
-        // - ou estão em outra turma (mas mostramos qual)
+        // Alunos disponiveis para atribuir no modal:
+        // - ou nao tem turma
+        // - ou estao em outra turma (mas mostramos qual)
         $alunosDisponiveis = Aluno::ativos()
             ->with(['user', 'turma'])
             ->where(function ($q) use ($id) {
@@ -153,7 +153,7 @@ class TurmaController extends Controller
             ->with('success', 'Disciplina vinculada com sucesso!');
     }
 
-    // --- Atribuir aluno à turma ---
+    // --- Atribuir aluno a turma ---
     public function atribuirAluno(Request $request, $turmaId)
     {
         $request->validate([
@@ -175,7 +175,7 @@ class TurmaController extends Controller
             $aluno->save();
         }
 
-        return back()->with('success', 'Aluno atribuído à turma.');
+        return back()->with('success', 'Aluno atribuido a turma.');
     }
 
     // --- Remover disciplina ---
@@ -186,6 +186,6 @@ class TurmaController extends Controller
         $vinculo->delete();
 
         return redirect()->route('admin.turmas.show', $turmaId)
-            ->with('success', 'Vínculo removido com sucesso!');
+            ->with('success', 'Vinculo removido com sucesso!');
     }
 }

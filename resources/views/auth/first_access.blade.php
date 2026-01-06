@@ -4,7 +4,7 @@
     <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 75vh;">
         <div class="card shadow-sm border-0" style="max-width: 500px; width: 100%;">
             <div class="card-header bg-dark text-white text-center fw-semibold">
-                🔒 Primeiro Acesso - Alterar Senha
+                 Primeiro Acesso - Alterar Senha
             </div>
             <div class="card-body p-4">
 

@@ -14,14 +14,14 @@ class FinanceiroDashboardController extends Controller
      *  DASHBOARD FINANCEIRO
      *  - Aplica filtros
      *  - Calcula totais
-     *  - Prepara dados para os gráficos
+     *  - Prepara dados para os graficos
      *  - Retorna a view COMPLETA
      * ================================================================
      */
     public function index(Request $request)
     {
         // ===========================
-        // FILTROS DO USUÁRIO
+        // FILTROS DO USUARIO
         // ===========================
         $ano    = $request->ano ?? date('Y');
         $mes    = $request->mes ?? null;
@@ -30,7 +30,7 @@ class FinanceiroDashboardController extends Controller
 
         // ===========================
         // QUERY BASE
-        // (será usada p/ múltiplos relatórios)
+        // (sera usada p/ multiplos relatorios)
         // ===========================
         $baseQuery = Despesa::query();
 
@@ -43,7 +43,7 @@ class FinanceiroDashboardController extends Controller
         // TOTAIS RESUMIDOS
         // =======================================================
 
-        // TOTAL do mês ATUAL (NÃO depende de filtro de mês)
+        // TOTAL do mes ATUAL (NAO depende de filtro de mes)
         $totalMes = Despesa::whereYear('data', $ano)
             ->whereMonth('data', date('m'))
             ->sum('valor');
@@ -51,7 +51,7 @@ class FinanceiroDashboardController extends Controller
         // TOTAL do ano (com filtro)
         $totalAno = Despesa::whereYear('data', $ano)->sum('valor');
 
-        // Total de lançamentos filtrados
+        // Total de lancamentos filtrados
         $totalLancamentos = (clone $baseQuery)->count();
 
         // Categoria mais cara dentro do filtro
@@ -72,7 +72,7 @@ class FinanceiroDashboardController extends Controller
             ->get();
 
         // =======================================================
-        // GRÁFICO: Gastos por mês
+        // GRAFICO: Gastos por mes
         // =======================================================
         $gastosPorMes = Despesa::selectRaw('MONTH(data) as mes, SUM(valor) as total')
             ->whereYear('data', $ano)
@@ -81,7 +81,7 @@ class FinanceiroDashboardController extends Controller
             ->get();
 
         // =======================================================
-        // GRÁFICO: Por categoria
+        // GRAFICO: Por categoria
         // =======================================================
         $porCategoria = (clone $baseQuery)
             ->select('categoria_id', DB::raw('SUM(valor) as total'))
@@ -91,7 +91,7 @@ class FinanceiroDashboardController extends Controller
             ->get();
 
         // =======================================================
-        // GRÁFICO: Por forma de pagamento
+        // GRAFICO: Por forma de pagamento
         // =======================================================
         $porFormaPagamento = (clone $baseQuery)
             ->select('forma_pagamento', DB::raw('SUM(valor) as total'))
@@ -100,7 +100,7 @@ class FinanceiroDashboardController extends Controller
             ->get();
 
         // =======================================================
-        // GRÁFICO: Por centro de custo
+        // GRAFICO: Por centro de custo
         // =======================================================
         $porCentro = (clone $baseQuery)
             ->select('centro_custo_id', DB::raw('SUM(valor) as total'))
@@ -110,7 +110,7 @@ class FinanceiroDashboardController extends Controller
             ->get();
 
         // =======================================================
-        // RETURN — Envia TUDO para a VIEW
+        // RETURN  Envia TUDO para a VIEW
         // =======================================================
         return view('admin.financeiro.dashboard', compact(
             'ano', 'mes', 'inicio', 'fim',
@@ -123,7 +123,7 @@ class FinanceiroDashboardController extends Controller
 
     /**
      * ================================================================
-     *  CLONAR LANÇAMENTOS DO MÊS ANTERIOR
+     *  CLONAR LANCAMENTOS DO MES ANTERIOR
      * ================================================================
      */
     public function clonarMesAnterior()
@@ -139,21 +139,21 @@ class FinanceiroDashboardController extends Controller
             ->get();
 
         if ($despesas->isEmpty()) {
-            return back()->with('error', 'Não há despesas no mês anterior para clonar.');
+            return back()->with('error', 'Nao ha despesas no mes anterior para clonar.');
         }
 
         foreach ($despesas as $d) {
             $nova = $d->replicate();
-            $nova->data = now(); // Define como mês atual
+            $nova->data = now(); // Define como mes atual
             $nova->save();
         }
 
-        return back()->with('success', 'Lançamentos do mês anterior clonados com sucesso!');
+        return back()->with('success', 'Lancamentos do mes anterior clonados com sucesso!');
     }
 
     /**
      * ================================================================
-     *  EXCLUSÃO MÚLTIPLA DE DESPESAS
+     *  EXCLUSAO MULTIPLA DE DESPESAS
      * ================================================================
      */
     public function excluirMultiplas(Request $request)
@@ -166,6 +166,6 @@ class FinanceiroDashboardController extends Controller
 
         Despesa::whereIn('id', $ids)->delete();
 
-        return back()->with('success', 'Despesas excluídas com sucesso!');
+        return back()->with('success', 'Despesas excluidas com sucesso!');
     }
 }

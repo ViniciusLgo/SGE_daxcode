@@ -75,7 +75,7 @@ class SecretariaAtendimentoController extends Controller
 
     public function show(SecretariaAtendimento $atendimento)
     {
-        // Garante que relações usadas na view estejam carregadas
+        // Garante que relacoes usadas na view estejam carregadas
         $atendimento->load([
             'aluno.user',
             'responsavel.user',
@@ -110,7 +110,7 @@ class SecretariaAtendimentoController extends Controller
                 ->get()
                 ->map(fn ($r) => [
                     'id' => $r->id,
-                    'nome' => $r->user->name ?? 'Responsável'
+                    'nome' => $r->user->name ?? 'Responsavel'
                 ])
         );
     }

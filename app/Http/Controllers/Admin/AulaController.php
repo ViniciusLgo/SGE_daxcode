@@ -23,7 +23,7 @@ class AulaController extends Controller
             'professor.user'
         ]);
 
-        // Ordem cronológica
+        // Ordem cronologica
         $ordem = $request->get('ordem', 'asc');
 
         $query->orderBy('data', $ordem)
@@ -50,7 +50,7 @@ class AulaController extends Controller
     }
 
     /**
-     * FORMULÁRIO DE CADASTRO
+     * FORMULARIO DE CADASTRO
      */
     public function create()
     {

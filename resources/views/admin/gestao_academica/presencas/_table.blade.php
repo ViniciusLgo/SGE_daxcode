@@ -4,11 +4,11 @@
 | COMPONENTE DE TABELA
 |
 | RESPONSABILIDADE:
-| - Renderizar listagem de aulas com status de presença
-| - Usado em index, relatórios e dashboards
+| - Renderizar listagem de aulas com status de presenca
+| - Usado em index, relatorios e dashboards
 |
 | REGRA IMPORTANTE:
-| - CONTAGEM DE ALUNOS CONSIDERA APENAS MATRÍCULAS ATIVAS
+| - CONTAGEM DE ALUNOS CONSIDERA APENAS MATRICULAS ATIVAS
 ============================================================================ --}}
 
 <table class="min-w-full text-sm">
@@ -20,7 +20,7 @@
         <th class="px-4 py-3 text-left">Disciplina</th>
         <th class="px-4 py-3 text-center">h/a</th>
         <th class="px-4 py-3 text-center">Status</th>
-        <th class="px-4 py-3 text-right">Ações</th>
+        <th class="px-4 py-3 text-right">Acoes</th>
     </tr>
     </thead>
 
@@ -36,7 +36,7 @@
             <td class="px-4 py-3 font-semibold">
                 {{ $aula->data->format('d/m/Y') }}
                 <div class="text-xs text-slate-500">
-                    {{ $aula->hora_inicio }} → {{ $aula->hora_fim }}
+                    {{ $aula->hora_inicio }}  {{ $aula->hora_fim }}
                 </div>
             </td>
 
@@ -54,13 +54,13 @@
                 @elseif($status === 'aberta')
                     <span class="px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-700">Aberta</span>
                 @else
-                    <span class="px-3 py-1 rounded-full text-xs font-semibold bg-slate-200 text-slate-700">Sem presença</span>
+                    <span class="px-3 py-1 rounded-full text-xs font-semibold bg-slate-200 text-slate-700">Sem presenca</span>
                 @endif
             </td>
 
             <td class="px-4 py-3 text-right space-x-3 font-semibold">
                 <a href="{{ route('admin.aulas.show', $aula) }}" class="text-sky-600 hover:underline">Ver aula</a>
-                <a href="{{ route('admin.aulas.presenca.edit', $aula) }}" class="text-amber-600 hover:underline">Presença</a>
+                <a href="{{ route('admin.aulas.presenca.edit', $aula) }}" class="text-amber-600 hover:underline">Presenca</a>
 
                 @if($p)
                     <a href="{{ route('admin.presencas.show', $p) }}" class="text-slate-600 hover:underline">Ver</a>
@@ -71,7 +71,7 @@
     @empty
         <tr>
             <td colspan="7" class="px-4 py-8 text-center text-slate-500">
-                Nenhuma aula encontrada no período.
+                Nenhuma aula encontrada no periodo.
             </td>
         </tr>
     @endforelse

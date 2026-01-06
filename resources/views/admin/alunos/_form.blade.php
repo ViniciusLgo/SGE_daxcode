@@ -46,7 +46,7 @@
                           text-slate-700 dark:text-slate-300">
         </div>
 
-        {{-- User ID real que será usado no store --}}
+        {{-- User ID real que sera usado no store --}}
         <input type="hidden" name="user_id" value="{{ $user->id }}">
 
     @elseif(isset($aluno))

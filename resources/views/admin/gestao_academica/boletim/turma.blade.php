@@ -26,7 +26,7 @@
 
     @if($boletins->isEmpty())
       <div class="text-center text-slate-500">
-        Nenhum resultado lançado para esta turma ainda.
+        Nenhum resultado lancado para esta turma ainda.
       </div>
     @else
 
@@ -42,9 +42,9 @@
               <th class="px-4 py-2 text-center">{{ $disciplina->nome }}</th>
             @endforeach
 
-            <th class="px-4 py-2 text-center">Média</th>
-            <th class="px-4 py-2 text-center">Situação</th>
-            <th class="px-4 py-2 text-center">Ações</th>
+            <th class="px-4 py-2 text-center">Media</th>
+            <th class="px-4 py-2 text-center">Situacao</th>
+            <th class="px-4 py-2 text-center">Acoes</th>
           </tr>
           </thead>
 

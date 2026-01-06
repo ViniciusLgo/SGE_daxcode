@@ -1,27 +1,27 @@
 {{-- ============================================================================
 | resources/views/admin/gestao_academica/presencas/show.blade.php
 |
-| VIEW: Visualização / Histórico da Presença
+| VIEW: Visualizacao / Historico da Presenca
 |
 | FINALIDADE:
-| - Exibir a presença CONSOLIDADA de uma aula
-| - Servir como registro histórico oficial
+| - Exibir a presenca CONSOLIDADA de uma aula
+| - Servir como registro historico oficial
 |
-| REGRAS DE NEGÓCIO APLICADAS NESTA VIEW:
+| REGRAS DE NEGOCIO APLICADAS NESTA VIEW:
 | 1) ALUNOS INATIVOS (desistentes, transferidos, etc.)
-|    - NÃO DEVEM SER EXIBIDOS
-|    - São completamente ocultados (hidden lógico)
+|    - NAO DEVEM SER EXIBIDOS
+|    - Sao completamente ocultados (hidden logico)
 |
 | 2) JUSTIFICATIVAS
 |    - Podem aparecer mesmo que hoje estejam inativas
-|    - Isso preserva o histórico fiel do que foi registrado
+|    - Isso preserva o historico fiel do que foi registrado
 |
-| 3) BLOCO DE PRESENÇA
-|    - Mostra ✔ ou ✖ conforme o valor salvo
+| 3) BLOCO DE PRESENCA
+|    - Mostra  ou  conforme o valor salvo
 |
 | 4) VIEW SOMENTE LEITURA
-|    - Nenhum campo editável
-|    - A edição ocorre exclusivamente via edit.blade.php
+|    - Nenhum campo editavel
+|    - A edicao ocorre exclusivamente via edit.blade.php
 ============================================================================ --}}
 
 @extends('layouts.app')
@@ -35,10 +35,10 @@
         <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
             <div>
                 <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light">
-                    📋 Presença da Aula
+                     Presenca da Aula
                 </h1>
                 <p class="text-sm text-slate-500">
-                    Visualização consolidada da lista de presença
+                    Visualizacao consolidada da lista de presenca
                 </p>
             </div>
 
@@ -48,7 +48,7 @@
                       px-4 py-2 rounded-xl
                       bg-amber-500 text-white font-semibold
                       hover:bg-amber-600 transition">
-                    ✏️ Editar
+                     Editar
                 </a>
 
                 <a href="{{ route('admin.presencas.index') }}"
@@ -70,7 +70,7 @@
                 p-6">
 
             <h2 class="font-semibold text-lg mb-4">
-                📘 Dados da Aula
+                 Dados da Aula
             </h2>
 
             <dl class="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-5 text-sm">
@@ -104,7 +104,7 @@
                 </div>
 
                 <div>
-                    <dt class="text-slate-500">Carga horária</dt>
+                    <dt class="text-slate-500">Carga horaria</dt>
                     <dd class="font-bold">
                         {{ $presenca->quantidade_blocos }} h/a
                     </dd>
@@ -128,7 +128,7 @@
         {{-- ============================================================
             LISTA DE ALUNOS (APENAS ATIVOS)
             REGRA:
-            - Aluno com matrícula != ativo é OCULTADO (não renderiza)
+            - Aluno com matricula != ativo e OCULTADO (nao renderiza)
         ============================================================ --}}
         <div class="rounded-2xl border
                 bg-white dark:bg-dax-dark/60
@@ -136,7 +136,7 @@
                 overflow-hidden">
 
             <h2 class="font-semibold text-lg px-6 pt-6">
-                👥 Alunos
+                 Alunos
             </h2>
 
             <table class="min-w-full text-sm mt-4">
@@ -151,7 +151,7 @@
                     @endfor
 
                     <th class="px-4 py-3 text-left">Justificativa</th>
-                    <th class="px-4 py-3 text-left">Observação</th>
+                    <th class="px-4 py-3 text-left">Observacao</th>
                 </tr>
                 </thead>
 
@@ -160,7 +160,7 @@
                 @php
                     /**
                      * Filtra APENAS alunos ativos.
-                     * Tudo que não for status === 'ativo' é ocultado.
+                     * Tudo que nao for status === 'ativo' e ocultado.
                      */
                     $alunosAtivos = $presenca->alunos->filter(function ($item) {
                         return ($item->aluno->matriculaModel?->status ?? null) === 'ativo';
@@ -171,7 +171,7 @@
                     <tr>
                         <td colspan="{{ 3 + (int)$presenca->quantidade_blocos }}"
                             class="px-4 py-8 text-center text-slate-500">
-                            Nenhum aluno ativo encontrado nesta presença.
+                            Nenhum aluno ativo encontrado nesta presenca.
                         </td>
                     </tr>
                 @endif
@@ -187,31 +187,31 @@
                         </td>
 
                         {{-- ====================================================
-                            BLOCOS (✔ / ✖)
+                            BLOCOS ( / )
                         ==================================================== --}}
                         @for($i = 1; $i <= $presenca->quantidade_blocos; $i++)
                             @php $campo = 'bloco_'.$i; @endphp
                             <td class="px-4 py-3 text-center">
                                 @if($item->$campo)
-                                    <span class="text-green-600 font-bold">✔</span>
+                                    <span class="text-green-600 font-bold"></span>
                                 @else
-                                    <span class="text-red-500 font-bold">✖</span>
+                                    <span class="text-red-500 font-bold"></span>
                                 @endif
                             </td>
                         @endfor
 
                         {{-- ====================================================
-                            JUSTIFICATIVA (histórico)
+                            JUSTIFICATIVA (historico)
                         ==================================================== --}}
                         <td class="px-4 py-3">
-                            {{ $item->justificativa?->nome ?? '—' }}
+                            {{ $item->justificativa?->nome ?? '' }}
                         </td>
 
                         {{-- ====================================================
-                            OBSERVAÇÃO
+                            OBSERVACAO
                         ==================================================== --}}
                         <td class="px-4 py-3 text-slate-500">
-                            {{ $item->observacao ?? '—' }}
+                            {{ $item->observacao ?? '' }}
                         </td>
 
                     </tr>

@@ -8,9 +8,9 @@
                   border-slate-200 dark:border-slate-800">
 </div>
 
-{{-- Carga Horária --}}
+{{-- Carga Horaria --}}
 <div class="mb-4">
-    <label class="block text-sm font-medium mb-1">Carga Horária (h)</label>
+    <label class="block text-sm font-medium mb-1">Carga Horaria (h)</label>
     <input type="number" name="carga_horaria" min="1" max="500" required
            value="{{ old('carga_horaria', $disciplina->carga_horaria ?? '') }}"
            class="w-full rounded-xl border px-4 py-2.5
@@ -18,9 +18,9 @@
                   border-slate-200 dark:border-slate-800">
 </div>
 
-{{-- Descrição --}}
+{{-- Descricao --}}
 <div class="mb-4">
-    <label class="block text-sm font-medium mb-1">Descrição</label>
+    <label class="block text-sm font-medium mb-1">Descricao</label>
     <textarea name="descricao" rows="3"
               class="w-full rounded-xl border px-4 py-2.5
                      bg-white dark:bg-dax-dark/60
@@ -42,11 +42,11 @@
         @endforeach
     </select>
     <p class="text-xs text-slate-500 mt-1">
-        Segure Ctrl (ou Cmd) para selecionar vários.
+        Segure Ctrl (ou Cmd) para selecionar varios.
     </p>
 </div>
 
-{{-- Botões --}}
+{{-- Botoes --}}
 <div class="flex justify-between items-center">
     <a href="{{ route('admin.disciplinas.index') }}"
        class="px-4 py-2 rounded-xl border

@@ -1,7 +1,7 @@
 @csrf
 
 {{-- ========================================================= --}}
-{{-- FORMULÁRIO DE CADASTRO / EDIÇÃO DE TURMA                  --}}
+{{-- FORMULARIO DE CADASTRO / EDICAO DE TURMA                  --}}
 {{-- Reaproveitado em create e edit                            --}}
 {{-- ========================================================= --}}
 
@@ -14,7 +14,7 @@
             type="text"
             name="nome"
             value="{{ old('nome', $turma->nome ?? '') }}"
-            placeholder="Ex: T1 2025 Manhã"
+            placeholder="Ex: T1 2025 Manha"
             required
             class="w-full rounded-xl border px-4 py-2.5
                    bg-white dark:bg-dax-dark/60
@@ -66,13 +66,13 @@
         @enderror
     </div>
 
-    {{-- DESCRIÇÃO --}}
+    {{-- DESCRICAO --}}
     <div class="md:col-span-6">
-        <label class="block text-sm font-medium mb-1">Descrição da Turma</label>
+        <label class="block text-sm font-medium mb-1">Descricao da Turma</label>
         <textarea
             name="descricao"
             rows="3"
-            placeholder="Informações adicionais sobre a turma (opcional)"
+            placeholder="Informacoes adicionais sobre a turma (opcional)"
             class="w-full rounded-xl border px-4 py-2.5
                    bg-white dark:bg-dax-dark/60
                    border-slate-200 dark:border-slate-800
@@ -85,7 +85,7 @@
 
 </div>
 
-{{-- BOTÕES --}}
+{{-- BOTOES --}}
 <div class="flex justify-end gap-2 mt-6">
     <a href="{{ route('admin.turmas.index') }}"
        class="px-4 py-2 rounded-xl border

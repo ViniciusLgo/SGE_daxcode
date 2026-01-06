@@ -7,12 +7,12 @@
         <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
             <div>
                 <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light">
-                    ✏️ Editar Aula
+                     Editar Aula
                 </h1>
                 <p class="text-sm text-slate-500">
-                    Atualize as informações da aula registrada ou exclua o registro, se necessário.
+                    Atualize as informacoes da aula registrada ou exclua o registro, se necessario.
                     <span class="block text-xs mt-1">
-                    ⏱️ Cálculo baseado em <strong>hora-aula (50 minutos)</strong>
+                     Calculo baseado em <strong>hora-aula (50 minutos)</strong>
                 </span>
                 </p>
             </div>
@@ -25,7 +25,7 @@
             </a>
         </div>
 
-        {{-- ================= FORMULÁRIO ================= --}}
+        {{-- ================= FORMULARIO ================= --}}
         <form method="POST"
               action="{{ route('admin.aulas.update', $aula) }}"
               class="rounded-2xl border
@@ -39,7 +39,7 @@
             {{-- ================= DADOS DA AULA ================= --}}
             <div>
                 <h2 class="font-semibold text-lg mb-4">
-                    📌 Dados da Aula
+                     Dados da Aula
                 </h2>
 
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -78,7 +78,7 @@
                         </select>
                     </div>
 
-                    {{-- Hora início --}}
+                    {{-- Hora inicio --}}
                     <div>
                         <label class="block text-sm font-semibold mb-1">Hora inicial</label>
                         <input type="text"
@@ -125,16 +125,16 @@
                 bg-slate-50 dark:bg-slate-900/40
                 border border-slate-200 dark:border-slate-800
                 p-4 text-sm">
-                <strong>Resumo automático:</strong><br>
-                ⏱️ Duração total: <span x-text="duracao"></span> minutos<br>
-                🕒 Horário final previsto:
+                <strong>Resumo automatico:</strong><br>
+                 Duracao total: <span x-text="duracao"></span> minutos<br>
+                 Horario final previsto:
                 <span class="font-bold" x-text="horaFim"></span>
             </div>
 
-            {{-- ================= CONTEÚDO ================= --}}
+            {{-- ================= CONTEUDO ================= --}}
             <div>
                 <label class="block text-sm font-semibold mb-1">
-                    📚 Conteúdo Trabalhado
+                     Conteudo Trabalhado
                 </label>
                 <textarea name="conteudo"
                           rows="3"
@@ -145,10 +145,10 @@
                          text-dax-dark dark:text-dax-light">{{ old('conteudo', $aula->conteudo) }}</textarea>
             </div>
 
-            {{-- ================= OBSERVAÇÕES ================= --}}
+            {{-- ================= OBSERVACOES ================= --}}
             <div>
                 <label class="block text-sm font-semibold mb-1">
-                    📝 Atividades / Observações
+                     Atividades / Observacoes
                 </label>
                 <textarea name="observacoes"
                           rows="3"
@@ -159,7 +159,7 @@
                          text-dax-dark dark:text-dax-light">{{ old('observacoes', $aula->observacoes) }}</textarea>
             </div>
 
-            {{-- ================= AÇÕES ================= --}}
+            {{-- ================= ACOES ================= --}}
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pt-4 border-t border-slate-200 dark:border-slate-800">
 
                 <div class="flex gap-2">
@@ -167,7 +167,7 @@
                             class="px-6 py-2.5 rounded-xl
                            bg-dax-green text-white font-semibold
                            hover:bg-dax-greenSoft transition">
-                        💾 Salvar Alterações
+                         Salvar Alteracoes
                     </button>
 
                     <a href="{{ route('admin.aulas.show', $aula) }}"
@@ -178,10 +178,10 @@
                     </a>
                 </div>
 
-                {{-- EXCLUSÃO --}}
+                {{-- EXCLUSAO --}}
                 <form method="POST"
                       action="{{ route('admin.aulas.destroy', $aula) }}"
-                      onsubmit="return confirm('Tem certeza que deseja excluir este registro de aula? Esta ação não poderá ser desfeita.')">
+                      onsubmit="return confirm('Tem certeza que deseja excluir este registro de aula? Esta acao nao podera ser desfeita.')">
                     @csrf
                     @method('DELETE')
 
@@ -190,7 +190,7 @@
                            border border-red-300
                            text-red-600 font-semibold
                            hover:bg-red-50 dark:hover:bg-red-900/30 transition">
-                        🗑 Excluir Aula
+                         Excluir Aula
                     </button>
                 </form>
 

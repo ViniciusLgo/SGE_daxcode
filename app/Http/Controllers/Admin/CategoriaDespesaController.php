@@ -16,7 +16,7 @@ class CategoriaDespesaController extends Controller
             ->orderBy('nome')
             ->get();
 
-        // Dados para gráfico
+        // Dados para grafico
         $graficoCategorias = $categorias->map(fn ($c) => [
             'nome'  => $c->nome,
             'total' => $c->total_gasto ?? 0,
@@ -76,7 +76,7 @@ class CategoriaDespesaController extends Controller
 
         return redirect()
             ->route('admin.financeiro.categorias.index')
-            ->with('success', 'Categoria excluída com sucesso!');
+            ->with('success', 'Categoria excluida com sucesso!');
     }
 
     public function show(CategoriaDespesa $categoria)

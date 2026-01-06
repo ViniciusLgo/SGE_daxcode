@@ -6,7 +6,7 @@
     <div class="flex items-center justify-between mb-6">
         <div>
             <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light">
-                📂 Categoria de Despesa
+                 Categoria de Despesa
             </h1>
             <p class="text-sm text-slate-500">
                 {{ $categoria->nome }}
@@ -18,18 +18,18 @@
                class="px-4 py-2 rounded-xl border
                       border-slate-300 dark:border-slate-700
                       font-semibold hover:bg-slate-100 dark:hover:bg-slate-800">
-                ✏️ Editar
+                 Editar
             </a>
 
             <a href="{{ route('admin.financeiro.despesas.create', ['categoria_id' => $categoria->id]) }}"
                class="px-4 py-2 rounded-xl bg-dax-green text-white font-semibold">
-                ➕ Nova Despesa
+                 Nova Despesa
             </a>
 
             <a href="{{ route('admin.financeiro.categorias.index') }}"
                class="px-4 py-2 rounded-xl border
                       border-slate-300 dark:border-slate-700">
-                ← Voltar
+                 Voltar
             </a>
         </div>
     </div>
@@ -39,7 +39,7 @@
                 bg-white dark:bg-dax-dark/60 p-6 mb-6">
 
         <h2 class="text-lg font-semibold mb-4 text-dax-dark dark:text-dax-light">
-            📌 Dados da Categoria
+             Dados da Categoria
         </h2>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
@@ -56,9 +56,9 @@
             </div>
 
             <div class="md:col-span-2">
-                <span class="text-slate-500">Descrição</span>
+                <span class="text-slate-500">Descricao</span>
                 <p class="mt-1">
-                    {{ $categoria->descricao ?? '—' }}
+                    {{ $categoria->descricao ?? '' }}
                 </p>
             </div>
         </div>
@@ -75,19 +75,19 @@
             </h3>
         </div>
 
-        {{-- Média --}}
+        {{-- Media --}}
         <div class="rounded-2xl border bg-white dark:bg-dax-dark/60 p-5">
-            <p class="text-sm text-slate-500">Média por despesa</p>
+            <p class="text-sm text-slate-500">Media por despesa</p>
             <h3 class="text-2xl font-black text-dax-dark dark:text-dax-light">
                 R$ {{ number_format($categoria->despesas->avg('valor') ?? 0, 2, ',', '.') }}
             </h3>
         </div>
 
-        {{-- Última despesa --}}
+        {{-- Ultima despesa --}}
         <div class="rounded-2xl border bg-white dark:bg-dax-dark/60 p-5">
-            <p class="text-sm text-slate-500">Última despesa</p>
+            <p class="text-sm text-slate-500">Ultima despesa</p>
             <h3 class="text-lg font-semibold text-dax-dark dark:text-dax-light">
-                {{ optional($categoria->despesas->sortByDesc('data')->first())->data?->format('d/m/Y') ?? '—' }}
+                {{ optional($categoria->despesas->sortByDesc('data')->first())->data?->format('d/m/Y') ?? '' }}
             </h3>
         </div>
 
@@ -99,7 +99,7 @@
 
         <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800">
             <h2 class="text-lg font-semibold text-dax-dark dark:text-dax-light">
-                💸 Despesas Vinculadas
+                 Despesas Vinculadas
             </h2>
         </div>
 
@@ -113,11 +113,11 @@
                     <thead class="bg-slate-50 dark:bg-slate-900/40 text-sm">
                     <tr>
                         <th class="px-4 py-3 text-left">Data</th>
-                        <th class="px-4 py-3 text-left">Descrição</th>
+                        <th class="px-4 py-3 text-left">Descricao</th>
                         <th class="px-4 py-3 text-left">Centro</th>
                         <th class="px-4 py-3 text-center">Status</th>
                         <th class="px-4 py-3 text-right">Valor</th>
-                        <th class="px-4 py-3 text-right">Ações</th>
+                        <th class="px-4 py-3 text-right">Acoes</th>
                     </tr>
                     </thead>
 
@@ -130,11 +130,11 @@
                             </td>
 
                             <td class="px-4 py-3">
-                                {{ $despesa->descricao ?? '—' }}
+                                {{ $despesa->descricao ?? '' }}
                             </td>
 
                             <td class="px-4 py-3">
-                                {{ $despesa->centroCusto->nome ?? '—' }}
+                                {{ $despesa->centroCusto->nome ?? '' }}
                             </td>
 
                             <td class="px-4 py-3 text-center">

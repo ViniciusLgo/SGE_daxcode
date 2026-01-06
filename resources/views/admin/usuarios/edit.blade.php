@@ -2,14 +2,14 @@
 
 @section('content')
 
-    {{-- Cabeçalho --}}
+    {{-- Cabecalho --}}
     <div class="mb-6">
         <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light flex items-center gap-2">
             <i class="bi bi-pencil text-dax-green"></i>
-            Editar Usuário
+            Editar Usuario
         </h1>
         <p class="text-slate-500 dark:text-slate-400">
-            Atualize as informações do usuário selecionado.
+            Atualize as informacoes do usuario selecionado.
         </p>
     </div>
 
@@ -40,7 +40,7 @@
 
                 @include('admin.usuarios._form')
 
-                {{-- Ações --}}
+                {{-- Acoes --}}
                 <div class="mt-8 flex items-center gap-4">
                     <button type="submit"
                             class="inline-flex items-center gap-2
@@ -48,7 +48,7 @@
                                bg-dax-green text-white font-bold
                                hover:bg-dax-greenSoft transition">
                         <i class="bi bi-save"></i>
-                        Salvar Alterações
+                        Salvar Alteracoes
                     </button>
 
                     <a href="{{ route('admin.usuarios.index') }}"

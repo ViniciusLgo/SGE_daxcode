@@ -7,12 +7,12 @@
         <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
             <div>
                 <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light">
-                    📘 Detalhes da Aula
+                     Detalhes da Aula
                 </h1>
                 <p class="text-sm text-slate-500">
-                    Registro completo da atividade acadêmica realizada
+                    Registro completo da atividade academica realizada
                     <span class="block text-xs mt-1">
-                    ⏱️ Cálculo baseado em <strong>hora-aula (50 minutos)</strong>
+                     Calculo baseado em <strong>hora-aula (50 minutos)</strong>
                 </span>
                 </p>
             </div>
@@ -23,7 +23,7 @@
                       px-4 py-2 rounded-xl
                       bg-amber-500 text-white font-semibold
                       hover:bg-amber-600 transition">
-                    ✏️ Editar
+                     Editar
                 </a>
 
                 <a href="{{ route('admin.aulas.index') }}"
@@ -45,7 +45,7 @@
             {{-- ================= DADOS GERAIS ================= --}}
             <div>
                 <h2 class="font-semibold text-lg mb-4">
-                    📌 Dados Gerais
+                     Dados Gerais
                 </h2>
 
                 <dl class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5 text-sm">
@@ -58,9 +58,9 @@
                     </div>
 
                     <div>
-                        <dt class="text-slate-500">Horário</dt>
+                        <dt class="text-slate-500">Horario</dt>
                         <dd class="font-semibold">
-                            {{ $aula->hora_inicio }} → {{ $aula->hora_fim }}
+                            {{ $aula->hora_inicio }}  {{ $aula->hora_fim }}
                         </dd>
                     </div>
 
@@ -97,13 +97,13 @@
                         </dd>
                     </div>
 
-                    {{-- CARGA HORÁRIA DIDÁTICA --}}
+                    {{-- CARGA HORARIA DIDATICA --}}
                     <div>
-                        <dt class="text-slate-500">Carga horária</dt>
+                        <dt class="text-slate-500">Carga horaria</dt>
                         <dd class="font-bold">
                             {{ $aula->quantidade_blocos }} h/a
                             <span class="block text-xs font-normal text-slate-500">
-                            ({{ $aula->quantidade_blocos }} × 50 minutos)
+                            ({{ $aula->quantidade_blocos }}  50 minutos)
                         </span>
                         </dd>
                     </div>
@@ -111,42 +111,42 @@
                 </dl>
             </div>
 
-            {{-- ================= CONTEÚDO TRABALHADO ================= --}}
+            {{-- ================= CONTEUDO TRABALHADO ================= --}}
             <div>
                 <h2 class="font-semibold text-lg mb-2">
-                    📚 Conteúdo Trabalhado
+                     Conteudo Trabalhado
                 </h2>
 
                 <div class="rounded-xl
                         bg-slate-50 dark:bg-slate-900/40
                         border border-slate-200 dark:border-slate-800
                         p-4 text-sm text-slate-600 dark:text-slate-300">
-                    {{ $aula->conteudo ?: '—' }}
+                    {{ $aula->conteudo ?: '' }}
                 </div>
             </div>
 
-            {{-- ================= OBSERVAÇÕES ================= --}}
+            {{-- ================= OBSERVACOES ================= --}}
             <div>
                 <h2 class="font-semibold text-lg mb-2">
-                    📝 Atividades / Observações
+                     Atividades / Observacoes
                 </h2>
 
                 <div class="rounded-xl
                         bg-slate-50 dark:bg-slate-900/40
                         border border-slate-200 dark:border-slate-800
                         p-4 text-sm text-slate-600 dark:text-slate-300">
-                    {{ $aula->observacoes ?: '—' }}
+                    {{ $aula->observacoes ?: '' }}
                 </div>
             </div>
 
-            {{-- ================= PRESENÇA ================= --}}
+            {{-- ================= PRESENCA ================= --}}
             <div class="rounded-2xl border
             bg-white dark:bg-dax-dark/60
             border-slate-200 dark:border-slate-800
             p-6 space-y-4">
 
                 <h2 class="font-semibold text-lg">
-                    📋 Presença
+                     Presenca
                 </h2>
 
                 @php
@@ -170,7 +170,7 @@
                       px-4 py-2 rounded-xl
                       bg-sky-600 text-white font-semibold
                       hover:bg-sky-700 transition">
-                            ✍️ Editar Presença
+                             Editar Presenca
                         </a>
                     </div>
                 @else
@@ -179,7 +179,7 @@
                   px-4 py-2 rounded-xl
                   bg-dax-green text-white font-semibold
                   hover:bg-dax-greenSoft transition">
-                        ➕ Registrar Presença
+                         Registrar Presenca
                     </a>
                 @endif
             </div>

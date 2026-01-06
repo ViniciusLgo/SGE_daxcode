@@ -1,12 +1,12 @@
 {{-- ========================================================= --}}
-{{-- SCRIPTS – CONFIGURAÇÕES DO SISTEMA (SGE DaxCode)          --}}
+{{-- SCRIPTS  CONFIGURACOES DO SISTEMA (SGE DaxCode)          --}}
 {{-- ========================================================= --}}
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
 
         /* =====================================================
-           TOGGLE DO SUBMENU ACADÊMICO (SIDEBAR)
+           TOGGLE DO SUBMENU ACADEMICO (SIDEBAR)
         ===================================================== */
         document.querySelectorAll('[data-toggle="submenu"]').forEach(button => {
 
@@ -24,7 +24,7 @@
                 const isOpen = group.classList.toggle('open');
                 button.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
 
-                // Persistência
+                // Persistencia
                 localStorage.setItem('settings-academico-open', isOpen);
             });
         });

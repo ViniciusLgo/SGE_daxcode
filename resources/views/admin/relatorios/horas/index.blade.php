@@ -6,7 +6,7 @@
         {{-- HEADER --}}
         <div class="flex items-center justify-between mb-6">
             <div>
-                <h1 class="text-2xl font-bold">Relatório Mensal de Horas</h1>
+                <h1 class="text-2xl font-bold">Relatorio Mensal de Horas</h1>
                 <p class="text-gray-500">Horas registradas por professor</p>
             </div>
         </div>
@@ -53,7 +53,7 @@
                     @endphp
                     <tr class="border-t">
                         <td class="px-4 py-2">
-                            {{ $linha->professor->nome ?? '—' }}
+                            {{ $linha->professor->nome ?? '' }}
                         </td>
                         <td class="px-4 py-2 text-center">
                             {{ $linha->total_registros }}

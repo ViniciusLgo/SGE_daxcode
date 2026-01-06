@@ -6,7 +6,7 @@
     <div class="flex items-center justify-between mb-6">
         <div>
             <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light">
-                💰 Nova Despesa
+                 Nova Despesa
             </h1>
             <p class="text-sm text-slate-500">
                 Registro de despesas do projeto social.
@@ -18,7 +18,7 @@
               border-slate-300 dark:border-slate-700
               text-dax-dark dark:text-dax-light
               hover:bg-slate-100 dark:hover:bg-slate-800">
-            ← Voltar
+             Voltar
         </a>
     </div>
 
@@ -68,7 +68,7 @@
                    border border-slate-300 dark:border-slate-700">
                         <option value=""
                                 class="bg-white dark:bg-slate-900 text-dax-dark dark:text-dax-light">
-                            Selecione…
+                            Selecione...
                         </option>
                         @foreach($categorias as $cat)
                             <option value="{{ $cat->id }}"
@@ -113,12 +113,12 @@
                   border border-slate-300 dark:border-slate-700">
                 </div>
 
-                {{-- DESCRIÇÃO --}}
+                {{-- DESCRICAO --}}
                 <div class="md:col-span-2">
-                    <label class="block text-sm font-semibold mb-1">Descrição</label>
+                    <label class="block text-sm font-semibold mb-1">Descricao</label>
                     <input type="text" name="descricao"
                            value="{{ old('descricao') }}"
-                           placeholder="Ex: material escolar, transporte, lanche…"
+                           placeholder="Ex: material escolar, transporte, lanche..."
                            class="w-full rounded-xl px-4 py-2.5
                   bg-white dark:bg-slate-900
                   text-dax-dark dark:text-dax-light
@@ -146,7 +146,7 @@
                    text-dax-dark dark:text-dax-light
                    border border-slate-300 dark:border-slate-700">
                         <option value="" class="bg-white dark:bg-slate-900 text-dax-dark dark:text-dax-light">
-                            Selecione…
+                            Selecione...
                         </option>
                         @foreach(['pix','dinheiro','transferencia','cartao','outros'] as $fp)
                             <option value="{{ $fp }}"
@@ -178,7 +178,7 @@
 
                 {{-- NF --}}
                 <div>
-                    <label class="block text-sm font-semibold mb-1">Nº Nota Fiscal</label>
+                    <label class="block text-sm font-semibold mb-1">No Nota Fiscal</label>
                     <input type="text" name="numero_nf"
                            value="{{ old('numero_nf') }}"
                            class="w-full rounded-xl px-4 py-2.5
@@ -198,16 +198,16 @@
                   border border-slate-300 dark:border-slate-700">
                 </div>
 
-                {{-- RESPONSÁVEL --}}
+                {{-- RESPONSAVEL --}}
                 <div>
-                    <label class="block text-sm font-semibold mb-1">Responsável</label>
+                    <label class="block text-sm font-semibold mb-1">Responsavel</label>
                     <select name="responsavel_id"
                             class="w-full rounded-xl px-4 py-2.5
                    bg-white dark:bg-slate-900
                    text-dax-dark dark:text-dax-light
                    border border-slate-300 dark:border-slate-700">
                         <option value="" class="bg-white dark:bg-slate-900 text-dax-dark dark:text-dax-light">
-                            Selecione…
+                            Selecione...
                         </option>
                         @foreach($usuarios as $u)
                             <option value="{{ $u->id }}"
@@ -229,7 +229,7 @@
 
             </div>
 
-            {{-- AÇÕES --}}
+            {{-- ACOES --}}
             <div class="flex justify-end mt-6">
                 <button type="submit"
                         class="px-6 py-2 rounded-xl bg-dax-green text-white font-semibold">

@@ -1,6 +1,6 @@
 <x-guest-layout>
 
-    {{-- Cabeçalho --}}
+    {{-- Cabecalho --}}
     <div class="text-center mb-10">
         <h1 class="text-3xl font-bold text-dax-dark">
             Primeiro Acesso
@@ -98,7 +98,7 @@
             </div>
         </div>
 
-        {{-- Botão --}}
+        {{-- Botao --}}
         <button type="submit"
                 class="w-full py-3
                        bg-dax-green hover:bg-dax-greenSoft
@@ -111,7 +111,7 @@
 
         {{-- Login --}}
         <p class="text-center text-sm text-slate-600 mt-6">
-            Já possui conta?
+            Ja possui conta?
             <a href="{{ route('login') }}"
                class="text-dax-green font-semibold hover:underline">
                 Entrar no sistema

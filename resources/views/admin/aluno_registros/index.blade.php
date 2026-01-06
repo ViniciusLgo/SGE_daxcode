@@ -6,16 +6,16 @@
     <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
             <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light">
-                📄 Registros de Alunos
+                 Registros de Alunos
             </h1>
             <p class="text-sm text-slate-500">
-                Gerencie atestados, declarações e ocorrências dos alunos.
+                Gerencie atestados, declaracoes e ocorrencias dos alunos.
             </p>
         </div>
 
         <a href="{{ route('admin.aluno_registros.create') }}"
            class="px-4 py-2 rounded-xl bg-dax-green text-white font-semibold hover:bg-dax-greenSoft transition">
-            ➕ Novo Registro
+             Novo Registro
         </a>
     </div>
 
@@ -27,7 +27,7 @@
 
         <input type="text" name="tipo"
                value="{{ request('tipo') }}"
-               placeholder="Tipo (Atestado, Declaração...)"
+               placeholder="Tipo (Atestado, Declaracao...)"
                class="rounded-xl border border-slate-300 dark:border-slate-700
                       px-4 py-2.5 text-sm
                       bg-white dark:bg-dax-dark/60
@@ -73,7 +73,7 @@
                            border-slate-300 dark:border-slate-700
                            font-semibold text-sm
                            hover:bg-slate-100 dark:hover:bg-dax-dark/80">
-                🔍 Filtrar
+                 Filtrar
             </button>
         </div>
     </form>
@@ -90,7 +90,7 @@
                 <th class="px-6 py-3">Data</th>
                 <th class="px-6 py-3">Status</th>
                 <th class="px-6 py-3">Turma</th>
-                <th class="px-6 py-3 text-right">Ações</th>
+                <th class="px-6 py-3 text-right">Acoes</th>
             </tr>
             </thead>
 
@@ -99,17 +99,17 @@
                 <tr class="hover:bg-slate-50 dark:hover:bg-dax-dark/80 transition">
 
                     <td class="px-6 py-3 font-medium">
-                        {{ $r->aluno->user->name ?? 'Não informado' }}
+                        {{ $r->aluno->user->name ?? 'Nao informado' }}
                     </td>
 
                     <td class="px-6 py-3">{{ $r->tipo }}</td>
 
-                    <td class="px-6 py-3">{{ $r->categoria ?? '—' }}</td>
+                    <td class="px-6 py-3">{{ $r->categoria ?? '' }}</td>
 
                     <td class="px-6 py-3">
                         {{ $r->data_evento
                             ? \Carbon\Carbon::parse($r->data_evento)->format('d/m/Y')
-                            : '—'
+                            : ''
                         }}
                     </td>
 
@@ -163,7 +163,7 @@
             </tbody>
         </table>
 
-        {{-- ================= PAGINAÇÃO ================= --}}
+        {{-- ================= PAGINACAO ================= --}}
         <div class="px-6 py-4 border-t border-slate-200 dark:border-slate-800">
             {{ $registros->withQueryString()->links() }}
         </div>

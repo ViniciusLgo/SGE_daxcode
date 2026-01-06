@@ -9,7 +9,7 @@
                 Painel do Professor
             </h1>
             <p class="text-sm text-slate-500">
-                Bem-vindo, {{ auth()->user()->name }} 👨‍🏫
+                Bem-vindo, {{ auth()->user()->name }} 
             </p>
         </div>
     </div>
@@ -23,7 +23,7 @@
                     p-6 flex flex-col justify-between">
 
             <div class="flex items-start justify-between">
-                <span class="text-3xl">📚</span>
+                <span class="text-3xl"></span>
             </div>
 
             <div class="mt-4">
@@ -38,7 +38,7 @@
                 </div>
 
                 <p class="text-sm text-slate-500 mt-1">
-                    Disciplinas atribuídas
+                    Disciplinas atribuidas
                 </p>
             </div>
         </div>
@@ -49,7 +49,7 @@
                     p-6 flex flex-col justify-between">
 
             <div class="flex items-start justify-between">
-                <span class="text-3xl">🏫</span>
+                <span class="text-3xl"></span>
             </div>
 
             <div class="mt-4">

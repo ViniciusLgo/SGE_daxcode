@@ -11,7 +11,7 @@
                     Disciplinas
                 </h1>
                 <p class="text-slate-500">
-                    Gerencie as disciplinas e seus vínculos com professores e turmas.
+                    Gerencie as disciplinas e seus vinculos com professores e turmas.
                 </p>
             </div>
 
@@ -44,9 +44,9 @@
                 <thead class="bg-slate-50 dark:bg-dax-dark">
                 <tr class="text-left text-slate-600 dark:text-slate-400">
                     <th class="px-4 py-3">Nome</th>
-                    <th class="px-4 py-3">Carga Horária</th>
+                    <th class="px-4 py-3">Carga Horaria</th>
                     <th class="px-4 py-3">Professores</th>
-                    <th class="px-4 py-3 text-right">Ações</th>
+                    <th class="px-4 py-3 text-right">Acoes</th>
                 </tr>
                 </thead>
 
@@ -55,7 +55,7 @@
                     <tr class="hover:bg-slate-50 dark:hover:bg-dax-dark/80">
                         <td class="px-4 py-3">{{ $disciplina->nome }}</td>
                         <td class="px-4 py-3">
-                            {{ $disciplina->carga_horaria ? $disciplina->carga_horaria.'h' : '—' }}
+                            {{ $disciplina->carga_horaria ? $disciplina->carga_horaria.'h' : '' }}
                         </td>
                         <td class="px-4 py-3 space-x-1">
                             @forelse ($disciplina->professores as $prof)

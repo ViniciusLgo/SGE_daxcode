@@ -29,7 +29,7 @@ class ResponsavelController extends Controller
     }
 
     /**
-     * CREATE — recebe user_id
+     * CREATE  recebe user_id
      */
     public function create(Request $request)
     {
@@ -66,7 +66,7 @@ class ResponsavelController extends Controller
 
         return redirect()
             ->route('admin.responsaveis.index')
-            ->with('success', 'Responsável cadastrado com sucesso!');
+            ->with('success', 'Responsavel cadastrado com sucesso!');
     }
 
     public function edit($id)
@@ -103,7 +103,7 @@ class ResponsavelController extends Controller
         $responsavel->alunos()->sync($request->alunos ?? []);
 
         return redirect()->route('admin.responsaveis.index')
-            ->with('success', 'Responsável atualizado com sucesso!');
+            ->with('success', 'Responsavel atualizado com sucesso!');
     }
 
     public function destroy($id)
@@ -115,7 +115,7 @@ class ResponsavelController extends Controller
         $responsavel->delete();
 
         return redirect()->route('admin.responsaveis.index')
-            ->with('success', 'Responsável removido com sucesso!');
+            ->with('success', 'Responsavel removido com sucesso!');
     }
 
     public function show($id)

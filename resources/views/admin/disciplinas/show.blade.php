@@ -10,7 +10,7 @@
                     {{ $disciplina->nome }}
                 </h1>
                 <p class="text-slate-500">
-                    Informações da disciplina e professores responsáveis.
+                    Informacoes da disciplina e professores responsaveis.
                 </p>
             </div>
 
@@ -38,9 +38,9 @@
                     <dt class="text-slate-500">Nome</dt>
                     <dd>{{ $disciplina->nome }}</dd>
 
-                    <dt class="text-slate-500">Carga Horária</dt>
+                    <dt class="text-slate-500">Carga Horaria</dt>
                     <dd>
-                        {{ $disciplina->carga_horaria ? $disciplina->carga_horaria.' horas' : '—' }}
+                        {{ $disciplina->carga_horaria ? $disciplina->carga_horaria.' horas' : '' }}
                     </dd>
 
                     <dt class="text-slate-500">Criada em</dt>
@@ -51,9 +51,9 @@
                 </dl>
 
                 <div class="mt-4">
-                    <h3 class="font-medium">Descrição</h3>
+                    <h3 class="font-medium">Descricao</h3>
                     <p class="text-slate-500 mt-1">
-                        {{ $disciplina->descricao ?: 'Nenhuma descrição informada.' }}
+                        {{ $disciplina->descricao ?: 'Nenhuma descricao informada.' }}
                     </p>
                 </div>
             </div>
@@ -61,13 +61,13 @@
             {{-- Professores --}}
             <div class="rounded-2xl border bg-white dark:bg-dax-dark/60
                     border-slate-200 dark:border-slate-800 p-6">
-                <h2 class="font-semibold mb-4">Professores Responsáveis</h2>
+                <h2 class="font-semibold mb-4">Professores Responsaveis</h2>
 
                 @forelse($disciplina->professores as $professor)
                     <div class="mb-4 last:mb-0">
                         <p class="font-medium">{{ $professor->nome }}</p>
                         <p class="text-sm text-slate-500">
-                            {{ $professor->email }} —
+                            {{ $professor->email }} 
                             {{ $professor->telefone ?? 'sem telefone' }}
                         </p>
 

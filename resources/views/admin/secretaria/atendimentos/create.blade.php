@@ -30,7 +30,7 @@
                         type="text"
                         name="tipo"
                         required
-                        placeholder="Ex: Matrícula, Declaração, Atualização cadastral"
+                        placeholder="Ex: Matricula, Declaracao, Atualizacao cadastral"
                         class="w-full rounded-xl border border-slate-300 dark:border-slate-700
                                bg-white dark:bg-dax-dark text-dax-dark dark:text-dax-light
                                px-4 py-2.5 focus:ring-2 focus:ring-dax-green focus:outline-none">
@@ -47,7 +47,7 @@
                                bg-white dark:bg-dax-dark text-dax-dark dark:text-dax-light
                                px-4 py-2.5 focus:ring-2 focus:ring-dax-green focus:outline-none">
                         <option value="pendente">Pendente</option>
-                        <option value="concluido">Concluído</option>
+                        <option value="concluido">Concluido</option>
                         <option value="cancelado">Cancelado</option>
                     </select>
                 </div>
@@ -63,19 +63,19 @@
                         class="w-full rounded-xl border border-slate-300 dark:border-slate-700
                                bg-white dark:bg-dax-dark text-dax-dark dark:text-dax-light
                                px-4 py-2.5 focus:ring-2 focus:ring-dax-green focus:outline-none">
-                        <option value="">— Selecione um aluno —</option>
+                        <option value=""> Selecione um aluno </option>
                         @foreach($alunos as $aluno)
                             <option value="{{ $aluno->id }}">
-                                {{ $aluno->user->name ?? 'Aluno sem usuário' }}
+                                {{ $aluno->user->name ?? 'Aluno sem usuario' }}
                             </option>
                         @endforeach
                     </select>
                 </div>
 
-                {{-- Responsável --}}
+                {{-- Responsavel --}}
                 <div>
                     <label class="block text-sm font-semibold text-dax-dark dark:text-dax-light mb-1">
-                        Responsável
+                        Responsavel
                     </label>
                     <select
                         name="responsavel_id"
@@ -83,15 +83,15 @@
                         class="w-full rounded-xl border border-slate-300 dark:border-slate-700
                                bg-white dark:bg-dax-dark text-dax-dark dark:text-dax-light
                                px-4 py-2.5 focus:ring-2 focus:ring-dax-green focus:outline-none">
-                        <option value="">— Selecionado automaticamente —</option>
+                        <option value=""> Selecionado automaticamente </option>
                         @foreach($responsaveis as $r)
                             <option value="{{ $r->id }}">
-                                {{ $r->user->name ?? 'Responsável' }}
+                                {{ $r->user->name ?? 'Responsavel' }}
                             </option>
                         @endforeach
                     </select>
                     <p class="text-xs text-slate-500 mt-1">
-                        Ao selecionar um aluno, o responsável principal será preenchido automaticamente.
+                        Ao selecionar um aluno, o responsavel principal sera preenchido automaticamente.
                     </p>
                 </div>
 
@@ -111,7 +111,7 @@
 
             </div>
 
-            {{-- ================= AÇÕES ================= --}}
+            {{-- ================= ACOES ================= --}}
             <div class="flex justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
                 <a href="{{ route('admin.secretaria.atendimentos.index') }}"
                    class="px-4 py-2 rounded-xl border border-slate-300 dark:border-slate-700
@@ -129,7 +129,7 @@
         </form>
     </div>
 
-    {{-- ================= JS AUTO RESPONSÁVEL ================= --}}
+    {{-- ================= JS AUTO RESPONSAVEL ================= --}}
     <script>
         const alunos = @json($alunos);
 

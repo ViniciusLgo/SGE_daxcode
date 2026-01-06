@@ -11,7 +11,7 @@ use Carbon\Carbon;
 class RelatorioHorasController extends Controller
 {
     /**
-     * Relatório mensal de horas por professor
+     * Relatorio mensal de horas por professor
      */
     public function index(Request $request)
     {

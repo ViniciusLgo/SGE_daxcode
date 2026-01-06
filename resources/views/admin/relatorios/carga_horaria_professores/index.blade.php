@@ -7,10 +7,10 @@
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
                 <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light">
-                    📊 Carga Horária por Professor
+                     Carga Horaria por Professor
                 </h1>
                 <p class="text-sm text-slate-500">
-                    Relatório mensal de horas-aula e valor financeiro estimado.
+                    Relatorio mensal de horas-aula e valor financeiro estimado.
                 </p>
             </div>
         </div>
@@ -24,7 +24,7 @@
 
             <div>
                 <label class="block text-sm font-semibold mb-1">
-                    Mês
+                    Mes
                 </label>
                 <input type="month"
                        name="mes"
@@ -81,7 +81,7 @@
                     <tr>
                         <td colspan="4"
                             class="px-4 py-6 text-center text-slate-500">
-                            Nenhum registro encontrado para o período selecionado.
+                            Nenhum registro encontrado para o periodo selecionado.
                         </td>
                     </tr>
                 @endforelse

@@ -5,10 +5,10 @@
     <div class="flex items-center justify-between mb-6">
         <div>
             <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light">
-                ➕ Nova Avaliação
+                 Nova Avaliacao
             </h1>
             <p class="text-sm text-slate-500">
-                Cadastro de avaliação por turma e disciplina.
+                Cadastro de avaliacao por turma e disciplina.
             </p>
         </div>
 
@@ -16,7 +16,7 @@
            class="px-4 py-2 rounded-xl border
               border-slate-300 dark:border-slate-700
               hover:bg-slate-100 dark:hover:bg-slate-800">
-            ← Voltar
+             Voltar
         </a>
     </div>
 
@@ -49,7 +49,7 @@
                 @endforeach
 
                 <div class="md:col-span-2">
-                    <label class="block text-sm font-semibold mb-1">Título</label>
+                    <label class="block text-sm font-semibold mb-1">Titulo</label>
                     <input type="text" name="titulo" required
                            placeholder="Ex: Prova Bimestral"
                            class="w-full rounded-xl px-4 py-2.5
@@ -68,12 +68,12 @@
                         <option value="prova">Prova</option>
                         <option value="trabalho">Trabalho</option>
                         <option value="atividade">Atividade</option>
-                        <option value="recuperacao">Recuperação</option>
+                        <option value="recuperacao">Recuperacao</option>
                     </select>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-semibold mb-1">Data da Avaliação</label>
+                    <label class="block text-sm font-semibold mb-1">Data da Avaliacao</label>
                     <input type="date" name="data_avaliacao" required
                            class="w-full rounded-xl px-4 py-2.5
                   bg-white dark:bg-slate-900
@@ -89,7 +89,7 @@
                     Cancelar
                 </a>
                 <button class="px-5 py-2 rounded-xl bg-dax-green text-white font-semibold">
-                    💾 Salvar Avaliação
+                     Salvar Avaliacao
                 </button>
             </div>
 

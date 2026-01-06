@@ -11,13 +11,14 @@ use App\Models\Matricula;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use App\Services\CodeGenerator;
 
 class AlunoController extends Controller
 {
     /**
      * ============================================================
      * INDEX
-     * Listagem de alunos com filtros e status da matrícula
+     * Listagem de alunos com filtros e status da matricula
      * ============================================================
      */
     public function index(Request $request)
@@ -30,7 +31,7 @@ class AlunoController extends Controller
 
         $alunos = Aluno::with(['user', 'turma', 'matriculaModel'])
 
-            // BUSCA POR NOME / EMAIL / MATRÍCULA
+            // BUSCA POR NOME / EMAIL / MATRICULA
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($q) use ($search) {
                     $q->whereHas('user', function ($u) use ($search) {
@@ -41,14 +42,14 @@ class AlunoController extends Controller
                 });
             })
 
-            // FILTRO POR STATUS DA MATRÍCULA
+            // FILTRO POR STATUS DA MATRICULA
             ->when($status, function ($query) use ($status) {
                 $query->whereHas('matriculaModel', function ($q) use ($status) {
                     $q->where('status', $status);
                 });
             })
 
-            // FILTRO POR TURMA (VIA MATRÍCULA)
+            // FILTRO POR TURMA (VIA MATRICULA)
             ->when($turmaId, function ($query) use ($turmaId) {
                 $query->whereHas('matriculaModel', function ($q) use ($turmaId) {
                     $q->where('turma_id', $turmaId);
@@ -89,22 +90,22 @@ class AlunoController extends Controller
     /**
      * ============================================================
      * CREATE
-     * Tela de cadastro do aluno (complemento do usuário)
+     * Tela de cadastro do aluno (complemento do usuario)
      * ============================================================
      */
     public function create(Request $request)
     {
         $user = null;
 
-        // Quando vem do cadastro de usuário
+        // Quando vem do cadastro de usuario
         if ($request->has('user_id')) {
             $user = User::findOrFail($request->user_id);
 
-            // Evita criar aluno duplicado para o mesmo usuário
+            // Evita criar aluno duplicado para o mesmo usuario
             if ($user->aluno) {
                 return redirect()
                     ->route('admin.alunos.edit', $user->aluno->id)
-                    ->with('info', 'Este usuário já possui cadastro de aluno.');
+                    ->with('info', 'Este usuario ja possui cadastro de aluno.');
             }
         }
 
@@ -138,11 +139,7 @@ class AlunoController extends Controller
              * Ex: ALU-2025-00009
              * ------------------------------------------------------------
              */
-            $ultimoAluno = Aluno::lockForUpdate()->orderByDesc('id')->first();
-            $proximoNumeroAluno = $ultimoAluno ? $ultimoAluno->id + 1 : 1;
-
-            $codigoAluno = 'ALU-' . now()->format('Y') . '-' .
-                str_pad($proximoNumeroAluno, 5, '0', STR_PAD_LEFT);
+            $codigoAluno = CodeGenerator::next('aluno');
 
             /**
              * ------------------------------------------------------------
@@ -175,11 +172,7 @@ class AlunoController extends Controller
              * Ex: MAT-2025-00001
              * ------------------------------------------------------------
              */
-            $ultimaMatricula = Matricula::lockForUpdate()->orderByDesc('id')->first();
-            $proximoNumeroMatricula = $ultimaMatricula ? $ultimaMatricula->id + 1 : 1;
-
-            $codigoMatricula = 'MAT-' . now()->format('Y') . '-' .
-                str_pad($proximoNumeroMatricula, 5, '0', STR_PAD_LEFT);
+            $codigoMatricula = CodeGenerator::next('matricula');
 
             /**
              * ------------------------------------------------------------
@@ -251,14 +244,14 @@ class AlunoController extends Controller
                 ->store('alunos/fotos', 'public');
         }
 
-        // Atualiza dados editáveis do aluno
+        // Atualiza dados editaveis do aluno
         $aluno->update([
             'telefone'    => $validated['telefone'] ?? null,
             'turma_id'    => $validated['turma_id'],
             'foto_perfil' => $aluno->foto_perfil,
         ]);
 
-        // Sincroniza responsáveis (se houver)
+        // Sincroniza responsaveis (se houver)
         $aluno->responsaveis()->sync($request->responsaveis ?? []);
 
         return redirect()
@@ -303,17 +296,17 @@ class AlunoController extends Controller
             Storage::disk('public')->delete($aluno->foto_perfil);
         }
 
-        // Remove matrícula (se existir)
+        // Remove matricula (se existir)
         if ($aluno->matriculaModel) {
             $aluno->matriculaModel->delete();
         }
 
-        // Desvincula responsáveis (pivot)
+        // Desvincula responsaveis (pivot)
         if (method_exists($aluno, 'responsaveis')) {
             $aluno->responsaveis()->detach();
         }
 
-        // Remove usuário APENAS se existir
+        // Remove usuario APENAS se existir
         if ($aluno->user) {
             $aluno->user->delete();
         }

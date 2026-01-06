@@ -10,10 +10,10 @@
     {{-- ================= HEADER ================= --}}
     <div class="mb-6">
         <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light">
-            Painel do Responsável
+            Painel do Responsavel
         </h1>
         <p class="text-sm text-slate-500">
-            Bem-vindo, {{ auth()->user()->name }} — aqui você acompanha seus filhos e registros escolares.
+            Bem-vindo, {{ auth()->user()->name }}  aqui voce acompanha seus filhos e registros escolares.
         </p>
     </div>
 
@@ -25,7 +25,7 @@
                     border border-slate-200 dark:border-slate-800
                     p-6 flex flex-col justify-between">
 
-            <div class="text-3xl">🎓</div>
+            <div class="text-3xl"></div>
 
             <div class="mt-4">
                 <p class="text-sm font-semibold text-slate-500">
@@ -47,7 +47,7 @@
                     border border-slate-200 dark:border-slate-800
                     p-6 flex flex-col justify-between">
 
-            <div class="text-3xl">🏫</div>
+            <div class="text-3xl"></div>
 
             <div class="mt-4">
                 <p class="text-sm font-semibold text-slate-500">
@@ -69,7 +69,7 @@
                     border border-slate-200 dark:border-slate-800
                     p-6 flex flex-col justify-between">
 
-            <div class="text-3xl">📄</div>
+            <div class="text-3xl"></div>
 
             <div class="mt-4">
                 <p class="text-sm font-semibold text-slate-500">
@@ -81,7 +81,7 @@
                 </div>
 
                 <p class="text-sm text-slate-500 mt-1">
-                    Atestados, ocorrências ou documentos
+                    Atestados, ocorrencias ou documentos
                 </p>
             </div>
         </div>
@@ -94,7 +94,7 @@
 
         <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800">
             <h2 class="font-semibold text-dax-dark dark:text-dax-light">
-                👦👧 Filhos vinculados
+                 Filhos vinculados
             </h2>
         </div>
 

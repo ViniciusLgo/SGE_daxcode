@@ -20,10 +20,10 @@ class RelatoriosEvasaoController extends Controller
         $inicio  = $request->input('inicio'); // YYYY-MM-DD
         $fim     = $request->input('fim');    // YYYY-MM-DD
 
-        // Base: matrículas + turma
+        // Base: matriculas + turma
         $matriculas = Matricula::query()->with('turma');
 
-        // Filtro por turma (turma atual da matrícula)
+        // Filtro por turma (turma atual da matricula)
         if ($turmaId) {
             $matriculas->where('turma_id', $turmaId);
         }
@@ -43,9 +43,9 @@ class RelatoriosEvasaoController extends Controller
         $taxaEvasao = $total > 0 ? round(($desistentes / $total) * 100, 1) : 0;
 
         // -----------------------------
-        // Evasão por turma (ranking)
+        // Evasao por turma (ranking)
         // -----------------------------
-        // Considera o status atual da matrícula (com filtros).
+        // Considera o status atual da matricula (com filtros).
         $evasaoPorTurma = (clone $matriculas)
             ->selectRaw('turma_id,
                      SUM(CASE WHEN status = "desistente" THEN 1 ELSE 0 END) as desistentes,
@@ -62,7 +62,7 @@ class RelatoriosEvasaoController extends Controller
         // Carrega nome da turma para exibir
         $turmasMap = Turma::whereIn('id', $evasaoPorTurma->pluck('turma_id')->filter())->get()->keyBy('id');
         $evasaoPorTurma = $evasaoPorTurma->map(function ($row) use ($turmasMap) {
-            $row->turma_nome = $turmasMap[$row->turma_id]->nome ?? '—';
+            $row->turma_nome = $turmasMap[$row->turma_id]->nome ?? '';
             return $row;
         });
 
@@ -74,7 +74,7 @@ class RelatoriosEvasaoController extends Controller
             ->where('tipo_evento', 'status')
             ->where('status_novo', 'desistente');
 
-        // aplicar filtros via relação com matriculas/turmas
+        // aplicar filtros via relacao com matriculas/turmas
         if ($turmaId) {
             $historicos->whereHas('matricula', fn ($q) => $q->where('turma_id', $turmaId));
         }
@@ -85,7 +85,7 @@ class RelatoriosEvasaoController extends Controller
             $historicos->whereHas('matricula.turma', fn ($q) => $q->where('turno', $turno));
         }
 
-        // Filtro de período (created_at do evento)
+        // Filtro de periodo (created_at do evento)
         if ($inicio) {
             $historicos->whereDate('created_at', '>=', $inicio);
         }
@@ -94,14 +94,14 @@ class RelatoriosEvasaoController extends Controller
         }
 
         $topMotivos = (clone $historicos)
-            ->selectRaw('COALESCE(NULLIF(motivo, ""), "Não informado") as motivo_label, COUNT(*) as total')
+            ->selectRaw('COALESCE(NULLIF(motivo, ""), "Nao informado") as motivo_label, COUNT(*) as total')
             ->groupBy('motivo_label')
             ->orderByDesc('total')
             ->limit(8)
             ->get();
 
         // -----------------------------
-        // Série temporal (Chart.js) - desistências por dia
+        // Serie temporal (Chart.js) - desistencias por dia
         // -----------------------------
         $serie = (clone $historicos)
             ->selectRaw('DATE(created_at) as dia, COUNT(*) as total')
@@ -116,7 +116,7 @@ class RelatoriosEvasaoController extends Controller
         $turmas = Turma::orderBy('nome')->get();
 
         // -----------------------------
-// GRÁFICO POR TURMA (BARRAS)
+// GRAFICO POR TURMA (BARRAS)
 // -----------------------------
         $evasaoPorTurmaChart = (clone $matriculas)
             ->selectRaw('turma_id,
@@ -132,12 +132,12 @@ class RelatoriosEvasaoController extends Controller
             ->keyBy('id');
 
         foreach ($evasaoPorTurmaChart as $row) {
-            $labelsTurma[] = $turmasChartMap[$row->turma_id]->nome ?? '—';
+            $labelsTurma[] = $turmasChartMap[$row->turma_id]->nome ?? '';
             $dataTurma[]   = (int) $row->desistentes;
         }
 
 // -----------------------------
-// EVASÃO POR MÊS (LINHA)
+// EVASAO POR MES (LINHA)
 // -----------------------------
         $serieMensal = (clone $historicos)
             ->selectRaw('DATE_FORMAT(created_at, "%Y-%m") as mes, COUNT(*) as total')

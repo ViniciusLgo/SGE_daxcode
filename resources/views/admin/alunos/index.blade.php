@@ -23,11 +23,11 @@
 
             {{-- BUSCA SIMPLES --}}
             <div class="w-full md:w-80">
-                <label class="text-sm font-semibold">Busca rápida</label>
+                <label class="text-sm font-semibold">Busca rapida</label>
                 <input type="search"
                        name="search"
                        value="{{ $search }}"
-                       placeholder="Nome, matrícula ou e-mail"
+                       placeholder="Nome, matricula ou e-mail"
                        class="w-full rounded-xl border border-slate-300 dark:border-slate-700
                           bg-white dark:bg-slate-900 px-4 py-2.5">
             </div>
@@ -47,7 +47,7 @@
                 </select>
             </div>
 
-            {{-- BOTÕES --}}
+            {{-- BOTOES --}}
             <button class="px-5 py-2.5 rounded-xl border
                        border-dax-green text-dax-green font-bold
                        hover:bg-dax-green hover:text-white transition">
@@ -58,7 +58,7 @@
                     @click="advanced = !advanced"
                     class="px-4 py-2.5 rounded-xl border
                        text-slate-600 dark:text-slate-300">
-                <i class="bi bi-sliders"></i> Filtros avançados
+                <i class="bi bi-sliders"></i> Filtros avancados
             </button>
 
             <a href="{{ route('admin.relatorios.evasao.index') }}"
@@ -66,7 +66,7 @@
           border border-dax-green text-dax-green font-bold
           hover:bg-dax-green hover:text-white transition">
                 <i class="bi bi-graph-up"></i>
-                Relatório de Evasão
+                Relatorio de Evasao
             </a>
 
 
@@ -78,7 +78,7 @@
             @endif
         </div>
 
-        {{-- PAINEL AVANÇADO --}}
+        {{-- PAINEL AVANCADO --}}
         <div x-show="advanced" x-cloak
              class="rounded-2xl border border-slate-200 dark:border-slate-800
                 bg-slate-50 dark:bg-dax-dark/60 p-4">
@@ -119,7 +119,7 @@
                             class="w-full rounded-xl border border-slate-300 dark:border-slate-700
                                bg-white dark:bg-slate-900 px-4 py-2.5">
                         <option value="">Todos</option>
-                        @foreach(['manhã','tarde','noite'] as $t)
+                        @foreach(['manha','tarde','noite'] as $t)
                             <option value="{{ $t }}"
                                 {{ request('turno') === $t ? 'selected' : '' }}>
                                 {{ ucfirst($t) }}
@@ -144,10 +144,10 @@
             <thead class="bg-slate-50 dark:bg-slate-900">
             <tr class="text-left text-slate-500">
                 <th class="px-4 py-3">Nome</th>
-                <th class="px-4 py-3">Matrícula</th>
+                <th class="px-4 py-3">Matricula</th>
                 <th class="px-4 py-3">E-mail</th>
                 <th class="px-4 py-3">Turma</th>
-                <th class="px-4 py-3 text-right">Ações</th>
+                <th class="px-4 py-3 text-right">Acoes</th>
 
 
             </tr>
@@ -176,7 +176,7 @@
                             'class' => 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300'
                         ],
                         'concluido' => [
-                            'label' => 'CONCLUÍDO',
+                            'label' => 'CONCLUIDO',
                             'class' => 'bg-slate-200 text-slate-700 dark:bg-slate-700 dark:text-slate-200'
                         ],
                     ];
@@ -185,7 +185,7 @@
                 <tr class="border-t border-slate-200 dark:border-slate-800" x-data="{ open: false }">
                     <td class="px-4 py-3 font-semibold">
                         <div class="flex flex-col gap-1">
-                            <span>{{ $aluno->user->name ?? '—' }}</span>
+                            <span>{{ $aluno->user->name ?? '' }}</span>
 
                             <span class="inline-flex w-fit px-2 py-0.5 rounded-full text-xs font-bold
                 {{ $statusMap[$status]['class'] }}">
@@ -194,9 +194,9 @@
                         </div>
                     </td>
 
-                    <td class="px-4 py-3">{{ $aluno->matricula ?? '—' }}</td>
-                    <td class="px-4 py-3">{{ $aluno->user->email ?? '—' }}</td>
-                    <td class="px-4 py-3">{{ $aluno->turma->nome ?? '—' }}</td>
+                    <td class="px-4 py-3">{{ $aluno->matricula ?? '' }}</td>
+                    <td class="px-4 py-3">{{ $aluno->user->email ?? '' }}</td>
+                    <td class="px-4 py-3">{{ $aluno->turma->nome ?? '' }}</td>
 
                     <td class="px-4 py-3 text-right space-x-3">
                         <a href="{{ route('admin.alunos.show', $aluno) }}"
@@ -216,14 +216,14 @@
                                   action="{{ route('admin.alunos.reativar', $aluno) }}"
                                   class="inline">
                                 @csrf
-                                <input type="hidden" name="motivo" value="Reativação administrativa">
+                                <input type="hidden" name="motivo" value="Reativacao administrativa">
                                 <button class="text-green-600 hover:underline font-semibold">
                                     Reativar
                                 </button>
                             </form>
                         @else
                             <span class="text-slate-400 italic">
-        Ação indisponível
+        Acao indisponivel
     </span>
                         @endif
 
@@ -236,7 +236,7 @@
                             </button>
                         </form>
 
-                        {{-- MODAL DESISTÊNCIA --}}
+                        {{-- MODAL DESISTENCIA --}}
                         <div x-show="open" x-cloak
                              class="fixed inset-0 z-50 flex items-center justify-center
                     bg-black/50 backdrop-blur-sm">
@@ -248,7 +248,7 @@
                         shadow-xl p-6">
 
                                 <h2 class="text-xl font-black mb-4">
-                                    Desativar Matrícula
+                                    Desativar Matricula
                                 </h2>
 
                                 <form method="POST"
@@ -269,7 +269,7 @@
 
                                     <div>
                                         <label class="text-sm font-semibold">
-                                            Observação
+                                            Observacao
                                         </label>
                                         <textarea name="observacao"
                                                   rows="3"

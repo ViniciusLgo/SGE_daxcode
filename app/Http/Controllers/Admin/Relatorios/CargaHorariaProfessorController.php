@@ -13,7 +13,7 @@ class CargaHorariaProfessorController extends Controller
 {
     public function index(Request $request)
     {
-        // Mês selecionado (YYYY-MM)
+        // Mes selecionado (YYYY-MM)
         $mes = $request->get('mes', now()->format('Y-m'));
 
         [$ano, $mesNumero] = explode('-', $mes);

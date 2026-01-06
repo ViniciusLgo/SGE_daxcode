@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ config('app.name', 'SGE DaxCode') }}</title>
 
-    {{-- Ícones --}}
+    {{-- Icones --}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
     {{-- Assets --}}
@@ -34,7 +34,7 @@
     {{-- SIDEBAR ADMIN (DAX) --}}
     <x-admin.sidebar />
 
-    {{-- ÁREA PRINCIPAL --}}
+    {{-- AREA PRINCIPAL --}}
     <div class="flex-1 flex flex-col">
 
         {{-- TOPBAR --}}
@@ -65,7 +65,7 @@
                     </div>
                 </div>
 
-                {{-- Ações --}}
+                {{-- Acoes --}}
                 <div class="flex items-center gap-2">
                     <button type="button"
                             onclick="toggleTheme()"
@@ -83,7 +83,7 @@
             </div>
         </header>
 
-        {{-- CONTEÚDO --}}
+        {{-- CONTEUDO --}}
         <main class="flex-1
                      lg:ml-64
                      px-4 sm:px-6 py-6">

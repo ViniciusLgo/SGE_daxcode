@@ -7,7 +7,7 @@
             Painel do Aluno
         </h1>
         <p class="text-slate-500 dark:text-slate-400">
-            Olá, {{ auth()->user()->name }}
+            Ola, {{ auth()->user()->name }}
         </p>
     </div>
 
@@ -19,7 +19,7 @@
                 border border-slate-200 dark:border-slate-800
                 shadow-sm">
             <div class="flex justify-between items-center">
-                <span class="text-3xl">📝</span>
+                <span class="text-3xl"></span>
             </div>
             <div class="mt-3 text-xs font-extrabold uppercase text-slate-500">
                 Notas
@@ -27,22 +27,22 @@
             <div class="text-4xl font-black text-dax-green mt-1">
                 {{ rand(7,10) }}
             </div>
-            <p class="text-sm text-slate-500 mt-1">Média geral</p>
+            <p class="text-sm text-slate-500 mt-1">Media geral</p>
         </div>
 
-        {{-- FREQUÊNCIA --}}
+        {{-- FREQUENCIA --}}
         <div class="rounded-2xl p-5
                 bg-white dark:bg-dax-dark/60
                 border border-slate-200 dark:border-slate-800
                 shadow-sm">
-            <span class="text-3xl">📅</span>
+            <span class="text-3xl"></span>
             <div class="mt-3 text-xs font-extrabold uppercase text-slate-500">
-                Frequência
+                Frequencia
             </div>
             <div class="text-4xl font-black text-dax-green mt-1">
                 {{ rand(85,100) }}%
             </div>
-            <p class="text-sm text-slate-500 mt-1">Presença média</p>
+            <p class="text-sm text-slate-500 mt-1">Presenca media</p>
         </div>
 
         {{-- TURMA --}}
@@ -50,12 +50,12 @@
                 bg-white dark:bg-dax-dark/60
                 border border-slate-200 dark:border-slate-800
                 shadow-sm">
-            <span class="text-3xl">🏫</span>
+            <span class="text-3xl"></span>
             <div class="mt-3 text-xs font-extrabold uppercase text-slate-500">
                 Turma
             </div>
             <div class="text-2xl font-black text-dax-dark dark:text-dax-light mt-1">
-                {{ optional(auth()->user()->turma)->nome ?? '—' }}
+                {{ optional(auth()->user()->turma)->nome ?? '' }}
             </div>
             <p class="text-sm text-slate-500 mt-1">Turma atual</p>
         </div>

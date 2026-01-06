@@ -6,10 +6,10 @@
     <div class="flex items-center justify-between mb-6">
         <div>
             <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light">
-                ✏️ Editar Categoria de Despesa
+                 Editar Categoria de Despesa
             </h1>
             <p class="text-sm text-slate-500">
-                Atualize as informações da categoria.
+                Atualize as informacoes da categoria.
             </p>
         </div>
 
@@ -18,7 +18,7 @@
                   border-slate-300 dark:border-slate-700
                   text-sm font-semibold
                   hover:bg-slate-100 dark:hover:bg-slate-800">
-            ← Voltar
+             Voltar
         </a>
     </div>
 
@@ -64,11 +64,11 @@
                                   focus:ring-2 focus:ring-dax-green">
                 </div>
 
-                {{-- DESCRIÇÃO --}}
+                {{-- DESCRICAO --}}
                 <div>
                     <label class="block text-sm font-semibold mb-1
                                   text-dax-dark dark:text-dax-light">
-                        Descrição (opcional)
+                        Descricao (opcional)
                     </label>
                     <textarea name="descricao"
                               rows="3"
@@ -81,7 +81,7 @@
 
             </div>
 
-            {{-- ================= AÇÕES ================= --}}
+            {{-- ================= ACOES ================= --}}
             <div class="flex justify-end gap-3 mt-6">
                 <a href="{{ route('admin.financeiro.categorias.index') }}"
                    class="px-4 py-2 rounded-xl border
@@ -94,7 +94,7 @@
                         class="px-6 py-2 rounded-xl
                                bg-dax-green text-white font-semibold
                                hover:bg-dax-greenSoft transition">
-                    💾 Atualizar Categoria
+                     Atualizar Categoria
                 </button>
             </div>
 

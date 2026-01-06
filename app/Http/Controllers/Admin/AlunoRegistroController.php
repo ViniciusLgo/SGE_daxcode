@@ -37,7 +37,7 @@ class AlunoRegistroController extends Controller
 
     /**
      * =========================================================
-     * FORMULÁRIO DE CRIAÇÃO
+     * FORMULARIO DE CRIACAO
      * =========================================================
      */
     public function create()
@@ -49,7 +49,7 @@ class AlunoRegistroController extends Controller
             ->select('alunos.*')
             ->get();
 
-        // Turma agora é preenchida automaticamente — não precisa listar
+        // Turma agora e preenchida automaticamente  nao precisa listar
         return view('admin.aluno_registros.create', compact('alunos'));
     }
 
@@ -74,7 +74,7 @@ class AlunoRegistroController extends Controller
         $aluno = Aluno::with('turma')->findOrFail($request->aluno_id);
 
         $data = $validated;
-        $data['turma_id'] = $aluno->turma_id; // turma automática
+        $data['turma_id'] = $aluno->turma_id; // turma automatica
         $data['responsavel_id'] = auth()->id();
         $data['status'] = 'pendente';
 
@@ -108,7 +108,7 @@ class AlunoRegistroController extends Controller
 
     /**
      * =========================================================
-     * FORMULÁRIO DE EDIÇÃO
+     * FORMULARIO DE EDICAO
      * =========================================================
      */
     public function edit(AlunoRegistro $aluno_registro)
@@ -179,14 +179,14 @@ class AlunoRegistroController extends Controller
         $aluno_registro->delete();
 
         return redirect()->route('admin.aluno_registros.index')
-            ->with('success', 'Registro excluído com sucesso!');
+            ->with('success', 'Registro excluido com sucesso!');
     }
 
 
 
     /**
      * =========================================================
-     * AJAX — BUSCAR TURMA AUTOMÁTICA DO ALUNO
+     * AJAX  BUSCAR TURMA AUTOMATICA DO ALUNO
      * =========================================================
      */
     public function buscarTurmaAluno(Aluno $aluno)
