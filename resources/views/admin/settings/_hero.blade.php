@@ -28,7 +28,7 @@
                     w-12 h-12 rounded-xl
                     bg-white/40 text-dax-dark
                     shadow-sm">
-            
+            <i class="bi bi-sliders"></i>
         </div>
 
     </div>

@@ -1,22 +1,42 @@
-{{-- Nome --}}
-<div>
-    <label class="block text-sm font-medium mb-1">Nome</label>
-    <input type="text" name="nome" required
-           value="{{ old('nome', optional($professor->user ?? null)->name) }}"
-           class="w-full rounded-xl border px-4 py-2.5
-                  bg-white dark:bg-dax-dark/60
-                  border-slate-200 dark:border-slate-800">
-</div>
+@if(isset($professor))
+    {{-- Nome --}}
+    <div>
+        <label class="block text-sm font-medium mb-1">Nome</label>
+        <input type="text" name="user[name]" required
+               value="{{ old('user.name', $professor->user->name ?? '') }}"
+               class="w-full rounded-xl border px-4 py-2.5
+                      bg-white dark:bg-dax-dark/60
+                      border-slate-200 dark:border-slate-800">
+    </div>
 
-{{-- E-mail --}}
-<div>
-    <label class="block text-sm font-medium mb-1">E-mail</label>
-    <input type="email" name="email" required
-           value="{{ old('email', optional($professor->user ?? null)->email) }}"
-           class="w-full rounded-xl border px-4 py-2.5
-                  bg-white dark:bg-dax-dark/60
-                  border-slate-200 dark:border-slate-800">
-</div>
+    {{-- E-mail --}}
+    <div>
+        <label class="block text-sm font-medium mb-1">E-mail</label>
+        <input type="email" name="user[email]" required
+               value="{{ old('user.email', $professor->user->email ?? '') }}"
+               class="w-full rounded-xl border px-4 py-2.5
+                      bg-white dark:bg-dax-dark/60
+                      border-slate-200 dark:border-slate-800">
+    </div>
+@else
+    {{-- Nome (somente leitura) --}}
+    <div>
+        <label class="block text-sm font-medium mb-1">Nome</label>
+        <input type="text" value="{{ $user->name ?? '' }}" disabled
+               class="w-full rounded-xl border px-4 py-2.5
+                      bg-slate-100 dark:bg-slate-800
+                      border-slate-200 dark:border-slate-800">
+    </div>
+
+    {{-- E-mail (somente leitura) --}}
+    <div>
+        <label class="block text-sm font-medium mb-1">E-mail</label>
+        <input type="email" value="{{ $user->email ?? '' }}" disabled
+               class="w-full rounded-xl border px-4 py-2.5
+                      bg-slate-100 dark:bg-slate-800
+                      border-slate-200 dark:border-slate-800">
+    </div>
+@endif
 
 {{-- Telefone --}}
 <div>
@@ -56,6 +76,7 @@
                         border-slate-200 dark:border-slate-800">
         </div>
     @endif
+
 </div>
 
 {{-- Botoes --}}

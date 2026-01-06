@@ -76,6 +76,7 @@ use App\Http\Controllers\Admin\GestaoAcademica\{
 use App\Http\Controllers\Admin\Relatorios\RelatoriosEvasaoController;
 use App\Http\Controllers\Admin\Relatorios\CargaHorariaProfessorController;
 use App\Http\Controllers\Admin\Relatorios\RelatorioHorasController;
+use App\Http\Controllers\Admin\Relatorios\RelatoriosDashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -197,6 +198,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             | FINANCEIRO
             |--------------------------------------------------------------------------
             */
+
             Route::prefix('financeiro')->name('financeiro.')->group(function () {
 
                 Route::get('/', [FinanceiroDashboardController::class, 'index'])
@@ -277,6 +279,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
             */
             Route::prefix('relatorios')->name('relatorios.')->group(function () {
 
+                Route::get('/', [RelatoriosDashboardController::class, 'index'])
+                    ->name('index');
+
                 Route::get('evasao', [RelatoriosEvasaoController::class, 'index'])
                     ->name('evasao.index');
 
@@ -338,6 +343,46 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 'alunos/{aluno}/documentos',
                 [AlunoDocumentController::class, 'store']
             )->name('alunos.documentos.store');
+
+            Route::get(
+                'alunos/{aluno}/documentos',
+                [AlunoDocumentController::class, 'index']
+            )->name('alunos.documentos.index');
+
+            Route::get(
+                'alunos/{aluno}/documentos/create',
+                [AlunoDocumentController::class, 'create']
+            )->name('alunos.documentos.create');
+
+            Route::get(
+                'documentos',
+                [AlunoDocumentController::class, 'indexAll']
+            )->name('documentos.index');
+
+            Route::get(
+                'documentos/create',
+                [AlunoDocumentController::class, 'createAll']
+            )->name('documentos.create');
+
+            Route::post(
+                'documentos',
+                [AlunoDocumentController::class, 'storeAll']
+            )->name('documentos.store');
+
+            Route::get(
+                'documentos/{documento}',
+                [AlunoDocumentController::class, 'show']
+            )->name('documentos.show');
+
+            Route::get(
+                'documentos/{documento}/edit',
+                [AlunoDocumentController::class, 'edit']
+            )->name('documentos.edit');
+
+            Route::put(
+                'documentos/{documento}',
+                [AlunoDocumentController::class, 'update']
+            )->name('documentos.update');
 
             Route::delete(
                 'documentos/{documento}',
