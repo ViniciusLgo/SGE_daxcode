@@ -52,7 +52,7 @@ class AvaliacaoController extends Controller
             'turma_id'       => 'required|exists:turmas,id',
             'disciplina_id'  => 'required|exists:disciplinas,id',
             'titulo'         => 'required|string|max:255',
-            'tipo'           => 'required|string|max:50',
+            'tipo'           => 'required|in:prova,trabalho,atividade,recuperacao',
             'data_avaliacao' => 'required|date',
         ]);
 

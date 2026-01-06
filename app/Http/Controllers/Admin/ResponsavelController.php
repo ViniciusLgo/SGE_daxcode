@@ -34,7 +34,10 @@ class ResponsavelController extends Controller
     public function create(Request $request)
     {
         $user = User::findOrFail($request->user_id);
-        $alunos = Aluno::with(['user', 'turma'])->get();
+        $alunos = Aluno::select('id', 'user_id', 'turma_id')
+            ->with(['user:id,name', 'turma:id,nome'])
+            ->orderBy('id')
+            ->get();
 
         return view('admin.responsaveis.create', compact('user', 'alunos'));
     }
@@ -69,7 +72,10 @@ class ResponsavelController extends Controller
     public function edit($id)
     {
         $responsavel = Responsavel::with(['user', 'alunos'])->findOrFail($id);
-        $alunos = Aluno::with(['user', 'turma'])->get();
+        $alunos = Aluno::select('id', 'user_id', 'turma_id')
+            ->with(['user:id,name', 'turma:id,nome'])
+            ->orderBy('id')
+            ->get();
 
         return view('admin.responsaveis.edit', compact('responsavel', 'alunos'));
     }

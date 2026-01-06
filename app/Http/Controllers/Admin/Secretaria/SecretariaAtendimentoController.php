@@ -21,8 +21,13 @@ class SecretariaAtendimentoController extends Controller
 
     public function create()
     {
-        $alunos = Aluno::with('responsaveis.user')->get();
-        $responsaveis = Responsavel::with('user')->get();
+        $alunos = Aluno::select('id', 'user_id', 'turma_id')
+            ->with(['responsaveis.user', 'user:id,name'])
+            ->orderBy('id')
+            ->get();
+        $responsaveis = Responsavel::with('user')
+            ->orderBy('id')
+            ->get();
 
         return view('admin.secretaria.atendimentos.create', compact(
             'alunos',
@@ -33,7 +38,7 @@ class SecretariaAtendimentoController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'tipo' => 'required|string|max:255',
             'status' => 'required|in:pendente,concluido,cancelado',
             'aluno_id' => 'nullable|exists:alunos,id',
@@ -42,7 +47,7 @@ class SecretariaAtendimentoController extends Controller
             'data_atendimento' => 'required|date',
         ]);
 
-        SecretariaAtendimento::create($request->all());
+        SecretariaAtendimento::create($validated);
 
         return redirect()
             ->route('admin.secretaria.atendimentos.index')
@@ -51,8 +56,13 @@ class SecretariaAtendimentoController extends Controller
 
     public function edit(SecretariaAtendimento $atendimento)
     {
-        $alunos = Aluno::with('responsaveis.user')->get();
-        $responsaveis = Responsavel::with('user')->get();
+        $alunos = Aluno::select('id', 'user_id', 'turma_id')
+            ->with(['responsaveis.user', 'user:id,name'])
+            ->orderBy('id')
+            ->get();
+        $responsaveis = Responsavel::with('user')
+            ->orderBy('id')
+            ->get();
 
         return view('admin.secretaria.atendimentos.edit', compact(
             'atendimento',
@@ -75,7 +85,7 @@ class SecretariaAtendimentoController extends Controller
     }
     public function update(Request $request, SecretariaAtendimento $atendimento)
     {
-        $request->validate([
+        $validated = $request->validate([
             'tipo' => 'required|string|max:255',
             'status' => 'required|in:pendente,concluido,cancelado',
             'aluno_id' => 'nullable|exists:alunos,id',
@@ -84,7 +94,7 @@ class SecretariaAtendimentoController extends Controller
             'data_atendimento' => 'required|date',
         ]);
 
-        $atendimento->update($request->all());
+        $atendimento->update($validated);
 
         return redirect()
             ->route('admin.secretaria.atendimentos.index')

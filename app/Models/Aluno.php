@@ -25,18 +25,6 @@ class Aluno extends Model
         'data_nascimento' => 'date',
     ];
 
-    /**
-     * Documentos do aluno
-     */
-    public function documents()
-    {
-        return $this->hasMany(
-            \App\Models\UserDocument::class,
-            'aluno_id', // FK REAL
-            'id'        // PK do aluno
-        );
-    }
-
     public function turma()
     {
         return $this->belongsTo(Turma::class);

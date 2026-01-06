@@ -106,7 +106,12 @@ class DespesaController extends Controller
         ]);
 
         if ($request->hasFile('arquivo')) {
+            if ($despesa->arquivo && \Storage::disk('public')->exists($despesa->arquivo)) {
+                \Storage::disk('public')->delete($despesa->arquivo);
+            }
             $data['arquivo'] = $request->file('arquivo')->store('despesas', 'public');
+        } else {
+            unset($data['arquivo']);
         }
 
         // se não vier responsável, assume o logado

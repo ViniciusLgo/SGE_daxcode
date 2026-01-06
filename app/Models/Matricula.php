@@ -45,21 +45,7 @@ class Matricula extends Model
 
     public function desistir(string $motivo, ?string $observacao, int $userId): void
     {
-        $this->update([
-            'status' => 'desistente',
-            'data_status' => now(),
-            'motivo' => $motivo,
-            'observacao' => $observacao,
-            'user_id_alteracao' => $userId,
-        ]);
-
-        $this->historicos()->create([
-            'status' => 'desistente',
-            'data_status' => now(),
-            'motivo' => $motivo,
-            'observacao' => $observacao,
-            'user_id_alteracao' => $userId,
-        ]);
+        $this->registrarMudancaStatus('desistente', $motivo, $observacao, $userId);
     }
 
 

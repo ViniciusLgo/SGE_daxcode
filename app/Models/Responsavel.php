@@ -27,11 +27,6 @@ class Responsavel extends Model
             ->withPivot('observacao');
     }
 
-    // 🔗 Se tiver login vinculado
-    public function usuario()
-    {
-        return $this->belongsTo(User::class, 'usuario_id');
-    }
 
     public function user()
     {

@@ -32,12 +32,12 @@ class FinanceiroDashboardController extends Controller
         // QUERY BASE
         // (será usada p/ múltiplos relatórios)
         // ===========================
-        $query = Despesa::query();
+        $baseQuery = Despesa::query();
 
-        if ($ano) $query->whereYear('data', $ano);
-        if ($mes) $query->whereMonth('data', $mes);
-        if ($inicio) $query->whereDate('data', '>=', $inicio);
-        if ($fim) $query->whereDate('data', '<=', $fim);
+        if ($ano) $baseQuery->whereYear('data', $ano);
+        if ($mes) $baseQuery->whereMonth('data', $mes);
+        if ($inicio) $baseQuery->whereDate('data', '>=', $inicio);
+        if ($fim) $baseQuery->whereDate('data', '<=', $fim);
 
         // =======================================================
         // TOTAIS RESUMIDOS
@@ -52,10 +52,10 @@ class FinanceiroDashboardController extends Controller
         $totalAno = Despesa::whereYear('data', $ano)->sum('valor');
 
         // Total de lançamentos filtrados
-        $totalLancamentos = $query->count();
+        $totalLancamentos = (clone $baseQuery)->count();
 
         // Categoria mais cara dentro do filtro
-        $categoriaMaisCara = $query
+        $categoriaMaisCara = (clone $baseQuery)
             ->select('categoria_id', DB::raw('SUM(valor) as total'))
             ->with('categoria')
             ->groupBy('categoria_id')
@@ -63,7 +63,7 @@ class FinanceiroDashboardController extends Controller
             ->first();
 
         // Top 5 categorias
-        $topCategorias = $query
+        $topCategorias = (clone $baseQuery)
             ->select('categoria_id', DB::raw('SUM(valor) as total'))
             ->with('categoria')
             ->groupBy('categoria_id')
@@ -83,7 +83,7 @@ class FinanceiroDashboardController extends Controller
         // =======================================================
         // GRÁFICO: Por categoria
         // =======================================================
-        $porCategoria = $query
+        $porCategoria = (clone $baseQuery)
             ->select('categoria_id', DB::raw('SUM(valor) as total'))
             ->with('categoria')
             ->groupBy('categoria_id')
@@ -93,7 +93,7 @@ class FinanceiroDashboardController extends Controller
         // =======================================================
         // GRÁFICO: Por forma de pagamento
         // =======================================================
-        $porFormaPagamento = $query
+        $porFormaPagamento = (clone $baseQuery)
             ->select('forma_pagamento', DB::raw('SUM(valor) as total'))
             ->groupBy('forma_pagamento')
             ->orderBy('forma_pagamento')
@@ -102,7 +102,7 @@ class FinanceiroDashboardController extends Controller
         // =======================================================
         // GRÁFICO: Por centro de custo
         // =======================================================
-        $porCentro = $query
+        $porCentro = (clone $baseQuery)
             ->select('centro_custo_id', DB::raw('SUM(valor) as total'))
             ->with('centroCusto')
             ->groupBy('centro_custo_id')

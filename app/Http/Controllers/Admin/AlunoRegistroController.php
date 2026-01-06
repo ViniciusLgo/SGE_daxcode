@@ -62,7 +62,7 @@ class AlunoRegistroController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'aluno_id' => 'required|exists:alunos,id',
             'tipo' => 'required|string|max:255',
             'categoria' => 'nullable|string|max:255',
@@ -73,7 +73,7 @@ class AlunoRegistroController extends Controller
 
         $aluno = Aluno::with('turma')->findOrFail($request->aluno_id);
 
-        $data = $request->all();
+        $data = $validated;
         $data['turma_id'] = $aluno->turma_id; // turma automática
         $data['responsavel_id'] = auth()->id();
         $data['status'] = 'pendente';
@@ -131,7 +131,7 @@ class AlunoRegistroController extends Controller
      */
     public function update(Request $request, AlunoRegistro $aluno_registro)
     {
-        $request->validate([
+        $validated = $request->validate([
             'aluno_id' => 'required|exists:alunos,id',
             'tipo' => 'required|string|max:255',
             'categoria' => 'nullable|string|max:255',
@@ -143,7 +143,7 @@ class AlunoRegistroController extends Controller
 
         $aluno = Aluno::findOrFail($request->aluno_id);
 
-        $data = $request->all();
+        $data = $validated;
         $data['turma_id'] = $aluno->turma_id;
 
         if ($request->hasFile('arquivo')) {

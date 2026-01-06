@@ -25,7 +25,7 @@ class SettingController extends Controller
                 'phone'              => '',
                 'address'            => '',
                 'version'            => '1.0',
-                'logo_path'          => null,
+                'logo'               => null,
                 'academic_settings'  => [
                     'ano_letivo'  => date('Y'),
                     'modelo_ano'  => 'bimestre',
@@ -73,13 +73,13 @@ class SettingController extends Controller
         // -----------------------------
         if ($request->hasFile('logo')) {
             // Apaga o logo anterior se existir
-            if ($settings->logo_path && Storage::disk('public')->exists($settings->logo_path)) {
-                Storage::disk('public')->delete($settings->logo_path);
+            if ($settings->logo && Storage::disk('public')->exists($settings->logo)) {
+                Storage::disk('public')->delete($settings->logo);
             }
 
             // Salva o novo logo em storage/app/public/settings
             $path = $request->file('logo')->store('settings', 'public');
-            $settings->logo_path = $path;
+            $settings->logo = $path;
         }
 
         // -----------------------------

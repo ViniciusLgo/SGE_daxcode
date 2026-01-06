@@ -2,7 +2,7 @@
 
 {{-- ============================================================
 | CONTEXTO
-| - $user  -> quando o aluno vem de um usuário já criado
+| - $user  -> quando o aluno vem de um usuario ja criado
 | - $aluno -> quando estamos editando um aluno existente
 ============================================================ --}}
 
@@ -13,10 +13,10 @@
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
     {{-- ============================================================
-    | DADOS DO USUÁRIO (IDENTIDADE)
-    | Esses dados vêm do User e NÃO devem ser editados aqui
-    | Servem apenas para visualização e vínculo
-    ============================================================ --}}
+| DADOS DO USUARIO (IDENTIDADE)
+| Esses dados vem do User e NAO devem ser editados aqui
+| Servem apenas para visualizacao e vinculo
+============================================================ --}}
     @if(isset($user))
         <div>
             <label class="block text-sm font-semibold mb-1">
@@ -50,12 +50,10 @@
         <input type="hidden" name="user_id" value="{{ $user->id }}">
 
     @elseif(isset($aluno))
-        {{-- ============================================================
-        | CENÁRIO DE EDIÇÃO
-        | Nome e e-mail vêm do relacionamento aluno -> user
-        ============================================================ --}}
-        <div>
-            <label class="block text-sm font-semibold mb-1">
+        {{-- ==========={{-- ============================================================
+| DADOS ACADEMICOS DO ALUNO
+| Esses campos pertencem exclusivamente a entidade Aluno
+============================================================ --}}           <label class="block text-sm font-semibold mb-1">
                 Nome do Aluno
             </label>
             <input type="text"
@@ -81,14 +79,10 @@
         </div>
     @endif
 
-    {{-- ============================================================
-    | DADOS ACADÊMICOS DO ALUNO
-    | Esses campos pertencem exclusivamente à entidade Aluno
-    ============================================================ --}}
-    @if(isset($aluno))
-        <div>
-            <label class="block text-sm font-semibold mb-1">
-                Matrícula
+    {{-- =========================================================={{-- ============================================================
+| ACOES DO FORMULARIO
+============================================================ --}}"block text-sm font-semibold mb-1">
+                Matricula
             </label>
             <input type="text"
                    value="{{ $aluno->matricula }}"
@@ -181,7 +175,8 @@
 </div>
 
 {{-- ============================================================
-| AÇÕES DO FORMULÁRIO
+| DADOS ACADEMICOS DO ALUNO
+| Esses campos pertencem exclusivamente a entidade Aluno
 ============================================================ --}}
 <div class="mt-8 flex justify-end gap-4">
     <a href="{{ route('admin.alunos.index') }}"

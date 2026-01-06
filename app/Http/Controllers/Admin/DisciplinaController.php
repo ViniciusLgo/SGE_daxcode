@@ -25,8 +25,8 @@ class DisciplinaController extends Controller
                     $subQuery
                         ->where('nome', 'like', "%{$search}%")
                         ->orWhere('descricao', 'like', "%{$search}%")
-                        ->orWhereHas('professores', function ($profQuery) use ($search) {
-                            $profQuery->where('nome', 'like', "%{$search}%");
+                        ->orWhereHas('professores.user', function ($profQuery) use ($search) {
+                            $profQuery->where('name', 'like', "%{$search}%");
                         });
                 });
             })

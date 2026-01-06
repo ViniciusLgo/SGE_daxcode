@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Responsavel;
 use App\Models\Matricula;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class AlunoController extends Controller
@@ -117,7 +118,7 @@ class AlunoController extends Controller
      * STORE
      * Cria:
      * 1) Aluno
-     * 2) Matrícula acadêmica (status)
+     * 2) Matricula academica (status)
      * ============================================================
      */
     public function store(Request $request)
@@ -130,69 +131,71 @@ class AlunoController extends Controller
             'data_nascimento' => 'nullable|date',
         ]);
 
-        /**
-         * ------------------------------------------------------------
-         * GERA CÓDIGO DO ALUNO (IDENTIDADE)
-         * Ex: ALU-2025-00009
-         * ------------------------------------------------------------
-         */
-        $ultimoAluno = Aluno::orderByDesc('id')->first();
-        $proximoNumeroAluno = $ultimoAluno ? $ultimoAluno->id + 1 : 1;
+        DB::transaction(function () use ($request, $validated) {
+            /**
+             * ------------------------------------------------------------
+             * GERA CODIGO DO ALUNO (IDENTIDADE)
+             * Ex: ALU-2025-00009
+             * ------------------------------------------------------------
+             */
+            $ultimoAluno = Aluno::lockForUpdate()->orderByDesc('id')->first();
+            $proximoNumeroAluno = $ultimoAluno ? $ultimoAluno->id + 1 : 1;
 
-        $codigoAluno = 'ALU-' . now()->format('Y') . '-' .
-            str_pad($proximoNumeroAluno, 5, '0', STR_PAD_LEFT);
+            $codigoAluno = 'ALU-' . now()->format('Y') . '-' .
+                str_pad($proximoNumeroAluno, 5, '0', STR_PAD_LEFT);
 
-        /**
-         * ------------------------------------------------------------
-         * UPLOAD DA FOTO (SE EXISTIR)
-         * ------------------------------------------------------------
-         */
-        $foto = null;
-        if ($request->hasFile('foto_perfil')) {
-            $foto = $request->file('foto_perfil')
-                ->store('alunos/fotos', 'public');
-        }
+            /**
+             * ------------------------------------------------------------
+             * UPLOAD DA FOTO (SE EXISTIR)
+             * ------------------------------------------------------------
+             */
+            $foto = null;
+            if ($request->hasFile('foto_perfil')) {
+                $foto = $request->file('foto_perfil')
+                    ->store('alunos/fotos', 'public');
+            }
 
-        /**
-         * ------------------------------------------------------------
-         * CRIA O ALUNO
-         * ------------------------------------------------------------
-         */
-        $aluno = Aluno::create([
-            'user_id'         => $validated['user_id'],
-            'turma_id'        => $validated['turma_id'],
-            'data_nascimento' => $validated['data_nascimento'] ?? null,
-            'matricula'       => $codigoAluno,
-            'telefone'        => $validated['telefone'] ?? null,
-            'foto_perfil'     => $foto,
-        ]);
+            /**
+             * ------------------------------------------------------------
+             * CRIA O ALUNO
+             * ------------------------------------------------------------
+             */
+            $aluno = Aluno::create([
+                'user_id'         => $validated['user_id'],
+                'turma_id'        => $validated['turma_id'],
+                'data_nascimento' => $validated['data_nascimento'] ?? null,
+                'matricula'       => $codigoAluno,
+                'telefone'        => $validated['telefone'] ?? null,
+                'foto_perfil'     => $foto,
+            ]);
 
-        /**
-         * ------------------------------------------------------------
-         * GERA CÓDIGO DA MATRÍCULA (OBRIGATÓRIO NO BANCO)
-         * Ex: MAT-2025-00001
-         * ------------------------------------------------------------
-         */
-        $ultimaMatricula = Matricula::orderByDesc('id')->first();
-        $proximoNumeroMatricula = $ultimaMatricula ? $ultimaMatricula->id + 1 : 1;
+            /**
+             * ------------------------------------------------------------
+             * GERA CODIGO DA MATRICULA (OBRIGATORIO NO BANCO)
+             * Ex: MAT-2025-00001
+             * ------------------------------------------------------------
+             */
+            $ultimaMatricula = Matricula::lockForUpdate()->orderByDesc('id')->first();
+            $proximoNumeroMatricula = $ultimaMatricula ? $ultimaMatricula->id + 1 : 1;
 
-        $codigoMatricula = 'MAT-' . now()->format('Y') . '-' .
-            str_pad($proximoNumeroMatricula, 5, '0', STR_PAD_LEFT);
+            $codigoMatricula = 'MAT-' . now()->format('Y') . '-' .
+                str_pad($proximoNumeroMatricula, 5, '0', STR_PAD_LEFT);
 
-        /**
-         * ------------------------------------------------------------
-         * CRIA MATRÍCULA ACADÊMICA
-         * ------------------------------------------------------------
-         */
-        $aluno->matriculaModel()->create([
-            'codigo'            => $codigoMatricula,
-            'turma_id'          => $validated['turma_id'],
-            'status'            => 'ativo',
-            'data_status'       => now(),
-            'motivo'            => null,
-            'observacao'        => 'Matrícula inicial criada automaticamente',
-            'user_id_alteracao' => auth()->id(),
-        ]);
+            /**
+             * ------------------------------------------------------------
+             * CRIA MATRICULA ACADEMICA
+             * ------------------------------------------------------------
+             */
+            $aluno->matriculaModel()->create([
+                'codigo'            => $codigoMatricula,
+                'turma_id'          => $validated['turma_id'],
+                'status'            => 'ativo',
+                'data_status'       => now(),
+                'motivo'            => null,
+                'observacao'        => 'Matricula inicial criada automaticamente',
+                'user_id_alteracao' => auth()->id(),
+            ]);
+        });
 
         return redirect()
             ->route('admin.alunos.index')

@@ -214,10 +214,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 Route::get('despesas/{despesa}/duplicar', [DespesaController::class, 'duplicar'])
                     ->name('despesas.duplicar');
 
-                Route::post('despesas/clonar-mes-anterior', [DespesaController::class, 'clonarMesAnterior'])
+                Route::post('despesas/clonar-mes-anterior', [FinanceiroDashboardController::class, 'clonarMesAnterior'])
                     ->name('despesas.clonarMesAnterior');
 
-                Route::delete('despesas/excluir-multiplas', [DespesaController::class, 'excluirMultiplas'])
+                Route::delete('despesas/excluir-multiplas', [FinanceiroDashboardController::class, 'excluirMultiplas'])
                     ->name('despesas.excluirMultiplas');
             });
 

@@ -161,8 +161,19 @@ class TurmaController extends Controller
         ]);
 
         $aluno = Aluno::findOrFail($request->aluno_id);
-        $aluno->turma_id = $turmaId;
-        $aluno->save();
+        $matricula = $aluno->matriculaModel;
+
+        if ($matricula) {
+            $matricula->trocarTurma(
+                (int) $turmaId,
+                'Atribuicao manual de turma',
+                null,
+                auth()->id()
+            );
+        } else {
+            $aluno->turma_id = $turmaId;
+            $aluno->save();
+        }
 
         return back()->with('success', 'Aluno atribuído à turma.');
     }

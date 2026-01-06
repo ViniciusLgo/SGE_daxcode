@@ -6,10 +6,10 @@
     <div class="flex items-center justify-between mb-6">
         <div>
             <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light">
-                💰 Despesas do Projeto Social
+                Despesas do Projeto Social
             </h1>
             <p class="text-sm text-slate-500">
-                Lançamentos de gastos por categoria e centro de custo.
+                Lancamentos de gastos por categoria e centro de custo.
             </p>
         </div>
 
@@ -153,11 +153,11 @@
                 <tr class="border-t">
                     <td class="px-4 py-3">{{ \Carbon\Carbon::parse($despesa->data)->format('d/m/Y') }}</td>
                     <td class="px-4 py-3">{{ $despesa->categoria?->nome }}</td>
-                    <td class="px-4 py-3">{{ $despesa->centroCusto?->nome ?? '-' }}</td>
+                    <td class="px-4 py-3">{{ $despesa->centroCusto?->nome  '-' }}</td>
                     <td class="px-4 py-3 text-right font-semibold">
                         R$ {{ number_format($despesa->valor,2,',','.') }}
                     </td>
-                    <td class="px-4 py-3">{{ $despesa->user?->name ?? '-' }}</td>
+                    <td class="px-4 py-3">{{ $despesa->user?->name  '-' }}</td>
                     <td class="px-4 py-3 text-right space-x-2">
                         <a href="{{ route('admin.financeiro.despesas.edit',$despesa) }}"
                            class="text-blue-600 font-semibold">Editar</a>

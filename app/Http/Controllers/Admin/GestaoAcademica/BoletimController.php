@@ -19,7 +19,13 @@ class BoletimController extends Controller
         $aluno->load(['user', 'turma']);
 
         // Busca TODOS os resultados do aluno
-        $resultados = AvaliacaoResultado::with(['avaliacao.disciplina'])
+        $resultados = AvaliacaoResultado::select([
+            'id',
+            'avaliacao_id',
+            'aluno_id',
+            'nota',
+            'entregue',
+        ])->with(['avaliacao.disciplina'])
             ->where('aluno_id', $aluno->id)
             ->get();
 
@@ -47,7 +53,7 @@ class BoletimController extends Controller
                 // Situação do aluno na disciplina
                 $situacao = match (true) {
                     $media >= 6 => 'Aprovado',
-                    $media >= 4 => 'Recuperação',
+                    $media >= 4 => 'Recuperacao',
                     default     => 'Reprovado',
                 };
 
@@ -74,7 +80,13 @@ class BoletimController extends Controller
         $turma->load('alunos.user');
 
         // Busca todos os resultados dos alunos da turma
-        $resultados = AvaliacaoResultado::with([
+        $resultados = AvaliacaoResultado::select([
+            'id',
+            'avaliacao_id',
+            'aluno_id',
+            'nota',
+            'entregue',
+        ])->with([
             'avaliacao.disciplina',
             'aluno.user'
         ])
@@ -121,7 +133,7 @@ class BoletimController extends Controller
 
                         $situacao = match (true) {
                             $media >= 6 => 'Aprovado',
-                            $media >= 4 => 'Recuperação',
+                            $media >= 4 => 'Recuperacao',
                             default     => 'Reprovado',
                         };
 

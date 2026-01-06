@@ -29,7 +29,7 @@ class AlunoDocumentController extends Controller
             'observacoes' => $validated['observacoes'] ?? null,
         ]);
 
-        return back()->with('status', '📎 Documento enviado com sucesso!');
+        return back()->with('status', 'Documento enviado com sucesso!');
     }
 
     /**
@@ -43,6 +43,6 @@ class AlunoDocumentController extends Controller
 
         $documento->delete();
 
-        return back()->with('status', '🗑️ Documento excluído com sucesso.');
+        return back()->with('status', 'Documento excluido com sucesso.');
     }
 }
