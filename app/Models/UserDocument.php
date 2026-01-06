@@ -6,10 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserDocument extends Model
 {
-protected $fillable = ['aluno_id', 'tipo', 'arquivo', 'observacoes', 'data_envio'];
+    protected $fillable = ['aluno_id', 'tipo', 'arquivo', 'observacoes', 'data_envio'];
 
-public function aluno()
-{
-return $this->belongsTo(Aluno::class);
-}
+    protected $casts = [
+        'data_envio' => 'datetime',
+    ];
+
+    public function aluno()
+    {
+        return $this->belongsTo(Aluno::class);
+    }
 }
