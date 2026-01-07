@@ -1,38 +1,43 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Professor;
 
 use App\Http\Controllers\Controller;
 use App\Models\Aula;
-use App\Models\Turma;
 use App\Models\Disciplina;
-use App\Models\Professor;
-use Illuminate\Http\Request;
+use App\Models\DisciplinaTurma;
+use App\Models\Turma;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class AulaController extends Controller
 {
-    /**
-     * LISTAGEM DE AULAS
-     */
+    private function professorId(): int
+    {
+        $professor = auth()->user()?->professor;
+        abort_unless($professor, 403);
+        return (int) $professor->id;
+    }
+
+    private function validarVinculo(int $professorId, int $turmaId, int $disciplinaId): bool
+    {
+        return DisciplinaTurma::where('turma_id', $turmaId)
+            ->where('disciplina_id', $disciplinaId)
+            ->whereHas('professores', function ($q) use ($professorId) {
+                $q->where('professor_id', $professorId);
+            })
+            ->exists();
+    }
+
     public function index(Request $request)
     {
-        $query = Aula::with([
-            'turma',
-            'disciplina',
-            'professor.user'
-        ]);
+        $professorId = $this->professorId();
 
-        // Ordem cronologica
+        $query = Aula::with(['turma', 'disciplina', 'professor.user'])
+            ->where('professor_id', $professorId);
+
         $ordem = $request->get('ordem', 'asc');
-
-        $query->orderBy('data', $ordem)
-            ->orderBy('hora_inicio', $ordem);
-
-        // Filtros
-        if ($request->filled('professor_id')) {
-            $query->where('professor_id', $request->professor_id);
-        }
+        $query->orderBy('data', $ordem)->orderBy('hora_inicio', $ordem);
 
         if ($request->filled('turma_id')) {
             $query->where('turma_id', $request->turma_id);
@@ -52,34 +57,54 @@ class AulaController extends Controller
         }
 
         $aulas = $query->paginate(15)->withQueryString();
-        $professores = Professor::with('user')->orderBy('id')->get();
-        $turmas = Turma::orderBy('nome')->get();
-        $disciplinas = Disciplina::orderBy('nome')->get();
 
-        return view('admin.aulas.index', compact('aulas', 'professores', 'turmas', 'disciplinas'));
-    }
+        $turmas = Turma::whereHas('disciplinaTurmas.professores', function ($q) use ($professorId) {
+            $q->where('professor_id', $professorId);
+        })->orderBy('nome')->get();
 
-    /**
-     * FORMULARIO DE CADASTRO
-     */
-    public function create()
-    {
-        return view('admin.aulas.create', [
-            'turmas'      => Turma::orderBy('nome')->get(),
-            'disciplinas' => Disciplina::orderBy('nome')->get(),
-            'professores' => Professor::with('user')->orderBy('id')->get(),
+        $disciplinas = Disciplina::whereHas('professores', function ($q) use ($professorId) {
+            $q->where('professores.id', $professorId);
+        })->orderBy('nome')->get();
+
+        return view('admin.aulas.index', [
+            'aulas' => $aulas,
+            'professores' => collect(),
+            'turmas' => $turmas,
+            'disciplinas' => $disciplinas,
+            'routePrefix' => 'professor',
+            'isProfessor' => true,
         ]);
     }
 
-    /**
-     * STORE
-     */
+    public function create()
+    {
+        $professorId = $this->professorId();
+
+        $vinculos = DisciplinaTurma::with(['turma', 'disciplina'])
+            ->whereHas('professores', function ($q) use ($professorId) {
+                $q->where('professor_id', $professorId);
+            })
+            ->get();
+
+        $turmas = $vinculos->pluck('turma')->unique('id')->values();
+        $disciplinas = $vinculos->pluck('disciplina')->unique('id')->values();
+
+        return view('admin.aulas.create', [
+            'turmas' => $turmas,
+            'disciplinas' => $disciplinas,
+            'professores' => collect(),
+            'routePrefix' => 'professor',
+            'isProfessor' => true,
+        ]);
+    }
+
     public function store(Request $request)
     {
+        $professorId = $this->professorId();
+
         $validated = $request->validate([
             'turma_id'          => 'required|exists:turmas,id',
             'disciplina_id'     => 'required|exists:disciplinas,id',
-            'professor_id'      => 'required|exists:professores,id',
             'tipo'              => 'required|string',
             'data'              => 'required|date_format:d/m/Y',
             'hora_inicio'       => 'required|date_format:H:i',
@@ -89,10 +114,14 @@ class AulaController extends Controller
             'atividade_casa'    => 'nullable|boolean',
         ]);
 
+        if (!$this->validarVinculo($professorId, (int) $validated['turma_id'], (int) $validated['disciplina_id'])) {
+            return back()
+                ->withInput()
+                ->withErrors(['disciplina_id' => 'Disciplina nao vinculada a esta turma para voce.']);
+        }
+
         $data = Carbon::createFromFormat('d/m/Y', $validated['data'])->format('Y-m-d');
-
         $duracaoMinutos = $validated['quantidade_blocos'] * 50;
-
         $horaFim = Carbon::createFromFormat('H:i', $validated['hora_inicio'])
             ->addMinutes($duracaoMinutos)
             ->format('H:i');
@@ -100,7 +129,7 @@ class AulaController extends Controller
         Aula::create([
             'turma_id'          => $validated['turma_id'],
             'disciplina_id'     => $validated['disciplina_id'],
-            'professor_id'      => $validated['professor_id'],
+            'professor_id'      => $professorId,
             'tipo'              => $validated['tipo'],
             'data'              => $data,
             'hora_inicio'       => $validated['hora_inicio'],
@@ -114,41 +143,56 @@ class AulaController extends Controller
         ]);
 
         return redirect()
-            ->route('admin.aulas.index')
+            ->route('professor.aulas.index')
             ->with('success', 'Aula registrada com sucesso.');
     }
 
-    /**
-     * SHOW
-     */
     public function show(Aula $aula)
     {
-        $aula->load(['turma', 'disciplina', 'professor.user']);
-        return view('admin.aulas.show', compact('aula'));
-    }
+        $professorId = $this->professorId();
+        abort_unless($aula->professor_id == $professorId, 403);
 
-    /**
-     * EDIT
-     */
-    public function edit(Aula $aula)
-    {
-        return view('admin.aulas.edit', [
-            'aula'        => $aula,
-            'turmas'      => Turma::orderBy('nome')->get(),
-            'disciplinas' => Disciplina::orderBy('nome')->get(),
-            'professores' => Professor::with('user')->orderBy('id')->get(),
+        $aula->load(['turma', 'disciplina', 'professor.user']);
+
+        return view('admin.aulas.show', [
+            'aula' => $aula,
+            'routePrefix' => 'professor',
+            'isProfessor' => true,
         ]);
     }
 
-    /**
-     * UPDATE
-     */
+    public function edit(Aula $aula)
+    {
+        $professorId = $this->professorId();
+        abort_unless($aula->professor_id == $professorId, 403);
+
+        $vinculos = DisciplinaTurma::with(['turma', 'disciplina'])
+            ->whereHas('professores', function ($q) use ($professorId) {
+                $q->where('professor_id', $professorId);
+            })
+            ->get();
+
+        $turmas = $vinculos->pluck('turma')->unique('id')->values();
+        $disciplinas = $vinculos->pluck('disciplina')->unique('id')->values();
+
+        return view('admin.aulas.edit', [
+            'aula' => $aula,
+            'turmas' => $turmas,
+            'disciplinas' => $disciplinas,
+            'professores' => collect(),
+            'routePrefix' => 'professor',
+            'isProfessor' => true,
+        ]);
+    }
+
     public function update(Request $request, Aula $aula)
     {
+        $professorId = $this->professorId();
+        abort_unless($aula->professor_id == $professorId, 403);
+
         $validated = $request->validate([
             'turma_id'          => 'required|exists:turmas,id',
             'disciplina_id'     => 'required|exists:disciplinas,id',
-            'professor_id'      => 'required|exists:professores,id',
             'tipo'              => 'required|string',
             'data'              => 'required|date_format:d/m/Y',
             'hora_inicio'       => 'required|date_format:H:i',
@@ -158,10 +202,14 @@ class AulaController extends Controller
             'atividade_casa'    => 'nullable|boolean',
         ]);
 
+        if (!$this->validarVinculo($professorId, (int) $validated['turma_id'], (int) $validated['disciplina_id'])) {
+            return back()
+                ->withInput()
+                ->withErrors(['disciplina_id' => 'Disciplina nao vinculada a esta turma para voce.']);
+        }
+
         $data = Carbon::createFromFormat('d/m/Y', $validated['data'])->format('Y-m-d');
-
         $duracaoMinutos = $validated['quantidade_blocos'] * 50;
-
         $horaFim = Carbon::createFromFormat('H:i', $validated['hora_inicio'])
             ->addMinutes($duracaoMinutos)
             ->format('H:i');
@@ -169,7 +217,7 @@ class AulaController extends Controller
         $aula->update([
             'turma_id'          => $validated['turma_id'],
             'disciplina_id'     => $validated['disciplina_id'],
-            'professor_id'      => $validated['professor_id'],
+            'professor_id'      => $professorId,
             'tipo'              => $validated['tipo'],
             'data'              => $data,
             'hora_inicio'       => $validated['hora_inicio'],
@@ -182,19 +230,19 @@ class AulaController extends Controller
         ]);
 
         return redirect()
-            ->route('admin.aulas.show', $aula)
+            ->route('professor.aulas.show', $aula)
             ->with('success', 'Aula atualizada com sucesso.');
     }
 
-    /**
-     * DESTROY
-     */
     public function destroy(Aula $aula)
     {
+        $professorId = $this->professorId();
+        abort_unless($aula->professor_id == $professorId, 403);
+
         $aula->delete();
 
         return redirect()
-            ->route('admin.aulas.index')
+            ->route('professor.aulas.index')
             ->with('success', 'Registro de aula removido com sucesso.');
     }
 }
