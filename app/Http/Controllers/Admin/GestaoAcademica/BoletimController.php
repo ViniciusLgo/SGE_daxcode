@@ -11,15 +11,21 @@ use Illuminate\Support\Collection;
 class BoletimController extends Controller
 {
     /**
-     * 📘 Boletim detalhado de um aluno
+     *  Boletim detalhado de um aluno
      */
     public function aluno(Aluno $aluno)
     {
-        // Carrega relações necessárias
+        // Carrega relacoes necessarias
         $aluno->load(['user', 'turma']);
 
         // Busca TODOS os resultados do aluno
-        $resultados = AvaliacaoResultado::with(['avaliacao.disciplina'])
+        $resultados = AvaliacaoResultado::select([
+            'id',
+            'avaliacao_id',
+            'aluno_id',
+            'nota',
+            'entregue',
+        ])->with(['avaliacao.disciplina'])
             ->where('aluno_id', $aluno->id)
             ->get();
 
@@ -32,7 +38,7 @@ class BoletimController extends Controller
 
                 $disciplina = $items->first()->avaliacao->disciplina;
 
-                // Notas: não entregue ou nulo = 0
+                // Notas: nao entregue ou nulo = 0
                 $notas = $items->map(function ($item) {
                     if (!$item->entregue || $item->nota === null) {
                         return 0;
@@ -44,10 +50,10 @@ class BoletimController extends Controller
                     ? round($notas->avg(), 2)
                     : 0;
 
-                // Situação do aluno na disciplina
+                // Situacao do aluno na disciplina
                 $situacao = match (true) {
                     $media >= 6 => 'Aprovado',
-                    $media >= 4 => 'Recuperação',
+                    $media >= 4 => 'Recuperacao',
                     default     => 'Reprovado',
                 };
 
@@ -66,15 +72,21 @@ class BoletimController extends Controller
     }
 
     /**
-     * 📘 Boletim consolidado da turma (visão da secretaria)
+     *  Boletim consolidado da turma (visao da secretaria)
      */
     public function turma(Turma $turma)
     {
-        // Carrega alunos e usuários
+        // Carrega alunos e usuarios
         $turma->load('alunos.user');
 
         // Busca todos os resultados dos alunos da turma
-        $resultados = AvaliacaoResultado::with([
+        $resultados = AvaliacaoResultado::select([
+            'id',
+            'avaliacao_id',
+            'aluno_id',
+            'nota',
+            'entregue',
+        ])->with([
             'avaliacao.disciplina',
             'aluno.user'
         ])
@@ -121,7 +133,7 @@ class BoletimController extends Controller
 
                         $situacao = match (true) {
                             $media >= 6 => 'Aprovado',
-                            $media >= 4 => 'Recuperação',
+                            $media >= 4 => 'Recuperacao',
                             default     => 'Reprovado',
                         };
 

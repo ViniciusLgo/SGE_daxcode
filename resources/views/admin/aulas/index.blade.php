@@ -7,12 +7,12 @@
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
                 <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light">
-                    📅 Registro de Aulas
+                     Registro de Aulas
                 </h1>
                 <p class="text-sm text-slate-500">
-                    Linha do tempo acadêmica de aulas, reuniões, eventos e formações
+                    Linha do tempo academica de aulas, reunioes, eventos e formacoes
                     <span class="block text-xs mt-1">
-                    ⏱️ Cálculo baseado em <strong>hora-aula (50 minutos)</strong>
+                     Calculo baseado em <strong>hora-aula (50 minutos)</strong>
                 </span>
                 </p>
             </div>
@@ -22,7 +22,7 @@
                   px-4 py-2 rounded-xl
                   bg-dax-green text-white font-semibold
                   hover:bg-dax-greenSoft transition">
-                ➕ Nova Aula
+                 Nova Aula
             </a>
         </div>
 
@@ -77,7 +77,7 @@
                 </select>
             </div>
 
-            {{-- Turma (preparado para filtro avançado) --}}
+            {{-- Turma (preparado para filtro avancado) --}}
             <div>
                 <label class="block text-sm font-semibold mb-1">Turma</label>
                 <input type="text"
@@ -88,9 +88,9 @@
                           bg-white dark:bg-dax-dark">
             </div>
 
-            {{-- Ordenação --}}
+            {{-- Ordenacao --}}
             <div>
-                <label class="block text-sm font-semibold mb-1">Ordenação</label>
+                <label class="block text-sm font-semibold mb-1">Ordenacao</label>
                 <select name="ordem"
                         class="w-full rounded-xl border px-4 py-2.5
                            bg-white dark:bg-dax-dark">
@@ -103,7 +103,7 @@
                 </select>
             </div>
 
-            {{-- Ações --}}
+            {{-- Acoes --}}
             <div class="flex items-end gap-2">
                 <button type="submit"
                         class="px-4 py-2.5 rounded-xl border font-semibold
@@ -141,7 +141,7 @@
                         Hora-aula
                         <div class="text-xs font-normal">(1 h/a = 50 min)</div>
                     </th>
-                    <th class="px-4 py-3 text-right">Ações</th>
+                    <th class="px-4 py-3 text-right">Acoes</th>
                 </tr>
                 </thead>
 
@@ -153,7 +153,7 @@
 
                     <div class="flex flex-wrap items-center gap-3">
 
-                        {{-- Atalho Presenças --}}
+                        {{-- Atalho Presencas --}}
                         <a href="{{ route('admin.presencas.index') }}"
                            class="inline-flex items-center gap-2
                   px-4 py-2 rounded-xl
@@ -162,11 +162,11 @@
                   hover:bg-slate-100 dark:hover:bg-slate-800
                   transition">
                             <i class="bi bi-clipboard2-check"></i>
-                            Presenças
+                            Presencas
                         </a>
 
-                        {{-- espaço para futuros atalhos --}}
-                        {{-- Relatórios, Exportações, etc --}}
+                        {{-- espaco para futuros atalhos --}}
+                        {{-- Relatorios, Exportacoes, etc --}}
 
                     </div>
                 </div>
@@ -182,7 +182,7 @@
                                 {{ $aula->data->format('d/m/Y') }}
                             </div>
                             <div class="text-xs text-slate-500">
-                                {{ $aula->hora_inicio }} → {{ $aula->hora_fim }}
+                                {{ $aula->hora_inicio }}  {{ $aula->hora_fim }}
                             </div>
                         </td>
 
@@ -215,7 +215,7 @@
                             {{ $aula->quantidade_blocos }} h/a
                         </td>
 
-                        {{-- Ações --}}
+                        {{-- Acoes --}}
                         <td class="px-4 py-3 text-right space-x-3 font-semibold">
                             <a href="{{ route('admin.aulas.show', $aula) }}"
                                class="text-sky-600 hover:underline">
@@ -231,14 +231,14 @@
                     <tr>
                         <td colspan="7"
                             class="px-4 py-8 text-center text-slate-500">
-                            Nenhuma aula registrada até o momento.
+                            Nenhuma aula registrada ate o momento.
                         </td>
                     </tr>
                 @endforelse
                 </tbody>
             </table>
 
-            {{-- Paginação --}}
+            {{-- Paginacao --}}
             @if($aulas->hasPages())
                 <div class="p-4 border-t border-slate-200 dark:border-slate-800">
                     {{ $aulas->links() }}

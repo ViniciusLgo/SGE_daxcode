@@ -82,18 +82,18 @@
                 @foreach($alunos as $aluno)
                     <option value="{{ $aluno->id }}"
                         @selected(isset($responsavel) && $responsavel->alunos->contains($aluno->id))>
-                        {{ $aluno->user->name }} — {{ $aluno->turma->nome ?? 'Sem turma' }}
+                        {{ $aluno->user->name }}  {{ $aluno->turma->nome ?? 'Sem turma' }}
                     </option>
                 @endforeach
             </select>
 
             <p class="text-xs text-slate-500 mt-1">
-                Segure CTRL para selecionar múltiplos alunos.
+                Segure CTRL para selecionar multiplos alunos.
             </p>
         </div>
     </div>
 
-    {{-- Botões --}}
+    {{-- Botoes --}}
     <div class="flex justify-between items-center mt-6">
         <a href="{{ route('admin.responsaveis.index') }}"
            class="px-4 py-2 rounded-xl border

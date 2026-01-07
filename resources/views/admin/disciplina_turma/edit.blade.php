@@ -7,10 +7,10 @@
         <div class="flex justify-between items-start">
             <div>
                 <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light">
-                    Gerenciar Disciplinas — {{ $turma->nome }}
+                    Gerenciar Disciplinas  {{ $turma->nome }}
                 </h1>
                 <p class="text-slate-500">
-                    Adicione disciplinas e vincule professores à turma.
+                    Adicione disciplinas e vincule professores a turma.
                 </p>
             </div>
 
@@ -43,10 +43,10 @@
                         <div>
                             <h3 class="font-semibold">{{ $vinculo->disciplina->nome }}</h3>
                             <p class="text-sm text-slate-500">
-                                Ano letivo: {{ $vinculo->ano_letivo ?? '—' }}
+                                Ano letivo: {{ $vinculo->ano_letivo ?? '' }}
                             </p>
                             <p class="text-sm text-slate-500">
-                                Observação: {{ $vinculo->observacao ?? '—' }}
+                                Observacao: {{ $vinculo->observacao ?? '' }}
                             </p>
                         </div>
 
@@ -99,7 +99,7 @@
                               class="bg-white dark:bg-dax-dark rounded-2xl p-6 w-full max-w-md">
                             @csrf @method('DELETE')
 
-                            <h3 class="font-semibold mb-3">Confirmar Remoção</h3>
+                            <h3 class="font-semibold mb-3">Confirmar Remocao</h3>
                             <p class="text-sm mb-4">
                                 Remover a disciplina
                                 <strong>{{ $vinculo->disciplina->nome }}</strong> da turma?
@@ -134,7 +134,7 @@
                                 <option value="">Selecione...</option>
                                 @foreach($professores as $prof)
                                     <option value="{{ $prof->id }}">
-                                        {{ $prof->user->name }} — {{ $prof->user->email }}
+                                        {{ $prof->user->name }}  {{ $prof->user->email }}
                                     </option>
                                 @endforeach
                             </select>
@@ -190,7 +190,7 @@
                           class="w-full rounded-xl border px-4 py-2.5 mb-4
                              bg-white dark:bg-dax-dark/60
                              border-slate-200 dark:border-slate-800"
-                          placeholder="Observação"></textarea>
+                          placeholder="Observacao"></textarea>
 
                 <div class="flex justify-end gap-2">
                     <button type="button" @click="addDisciplina = false"

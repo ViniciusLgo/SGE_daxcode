@@ -1,5 +1,5 @@
 {{-- ===================================================== --}}
-{{-- SEÇÃO: USUÁRIOS & ACESSO                            --}}
+{{-- SECAO: USUARIOS & ACESSO                            --}}
 {{-- ===================================================== --}}
 
 <div class="settings-card mb-4">
@@ -7,20 +7,20 @@
     {{-- HEADER --}}
     <div class="settings-card-header">
         <h5>
-            👤 Usuários & Acesso
+             Usuarios & Acesso
         </h5>
 
         <p class="settings-card-subtitle">
-            Controle de permissões, perfis, autenticação e políticas de acesso.
+            Controle de permissoes, perfis, autenticacao e politicas de acesso.
         </p>
     </div>
 
     {{-- BODY --}}
     <div class="settings-card-body">
         <p class="text-muted mb-0">
-            Nesta seção será possível definir regras de acesso por perfil
-            (Administrador, Professor, Aluno e Responsável),
-            políticas de senha, autenticação avançada, bloqueios e permissões específicas.
+            Nesta secao sera possivel definir regras de acesso por perfil
+            (Administrador, Professor, Aluno e Responsavel),
+            politicas de senha, autenticacao avancada, bloqueios e permissoes especificas.
         </p>
     </div>
 

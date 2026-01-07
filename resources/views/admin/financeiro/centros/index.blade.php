@@ -6,7 +6,7 @@
     <div class="flex items-center justify-between mb-6">
         <div>
             <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light">
-                🧮 Centros de Custo
+                 Centros de Custo
             </h1>
             <p class="text-sm text-slate-500">
                 Agrupe despesas por projeto, turma ou atividade.
@@ -29,7 +29,7 @@
         </div>
     @endif
 
-    {{-- ================= CONTEÚDO ================= --}}
+    {{-- ================= CONTEUDO ================= --}}
     @if($centros->count() === 0)
 
         <div class="rounded-2xl border border-slate-200 dark:border-slate-800
@@ -50,8 +50,8 @@
                     <tr class="text-left font-semibold text-slate-600 dark:text-slate-300">
                         <th class="px-4 py-3 w-16">#</th>
                         <th class="px-4 py-3">Nome</th>
-                        <th class="px-4 py-3">Descrição</th>
-                        <th class="px-4 py-3 text-right">Ações</th>
+                        <th class="px-4 py-3">Descricao</th>
+                        <th class="px-4 py-3 text-right">Acoes</th>
                     </tr>
                     </thead>
 
@@ -68,7 +68,7 @@
                             </td>
 
                             <td class="px-4 py-3 text-slate-600 dark:text-slate-300">
-                                {{ $centro->descricao ?? '—' }}
+                                {{ $centro->descricao ?? '' }}
                             </td>
 
                             <td class="px-4 py-3 text-right space-x-3">

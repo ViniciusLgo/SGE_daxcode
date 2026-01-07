@@ -26,14 +26,14 @@ class DashboardController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | CONFIGURAÇÕES DO SISTEMA
+        | CONFIGURACOES DO SISTEMA
         |--------------------------------------------------------------------------
         */
         $settings = Setting::first();
 
         /*
         |--------------------------------------------------------------------------
-        | ALUNOS POR TURMA (GRÁFICO DE PIZZA)
+        | ALUNOS POR TURMA (GRAFICO DE PIZZA)
         |--------------------------------------------------------------------------
         */
         $alunosPorTurma = Turma::withCount('alunos')
@@ -42,7 +42,7 @@ class DashboardController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | PROFESSORES POR DISCIPLINA (GRÁFICO DE BARRAS)
+        | PROFESSORES POR DISCIPLINA (GRAFICO DE BARRAS)
         |--------------------------------------------------------------------------
         */
         $professoresPorDisciplina = Disciplina::withCount('professores')
@@ -51,7 +51,7 @@ class DashboardController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | EVOLUÇÃO DE MATRÍCULAS (ÚLTIMOS 12 MESES)
+        | EVOLUCAO DE MATRICULAS (ULTIMOS 12 MESES)
         |--------------------------------------------------------------------------
         */
         $evolucaoMatriculas = Aluno::select(
@@ -75,7 +75,7 @@ class DashboardController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | OCUPAÇÃO MÉDIA DAS TURMAS (BASE: 30 ALUNOS)
+        | OCUPACAO MEDIA DAS TURMAS (BASE: 30 ALUNOS)
         |--------------------------------------------------------------------------
         */
         $ocupacaoMedia = $turmasCount > 0
@@ -94,7 +94,7 @@ class DashboardController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | DADOS DO DIA (PODENDO SER EVOLUÍDO DEPOIS)
+        | DADOS DO DIA (PODENDO SER EVOLUIDO DEPOIS)
         |--------------------------------------------------------------------------
         */
         $aniversariantesHoje = Aluno::whereMonth('data_nascimento', now()->month)

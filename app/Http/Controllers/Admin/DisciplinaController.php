@@ -25,8 +25,8 @@ class DisciplinaController extends Controller
                     $subQuery
                         ->where('nome', 'like', "%{$search}%")
                         ->orWhere('descricao', 'like', "%{$search}%")
-                        ->orWhereHas('professores', function ($profQuery) use ($search) {
-                            $profQuery->where('nome', 'like', "%{$search}%");
+                        ->orWhereHas('professores.user', function ($profQuery) use ($search) {
+                            $profQuery->where('name', 'like', "%{$search}%");
                         });
                 });
             })
@@ -49,7 +49,7 @@ class DisciplinaController extends Controller
 
         $turmas = \App\Models\Turma::orderBy('nome')->pluck('nome', 'id')->toArray();
 
-        // Na criação não há selecionados ainda:
+        // Na criacao nao ha selecionados ainda:
         $professoresSelecionados = [];
 
         return view('admin.disciplinas.create', compact('professores', 'turmas', 'professoresSelecionados'));
@@ -94,7 +94,7 @@ class DisciplinaController extends Controller
             ->sort()
             ->toArray();
 
-        // IDs já vinculados à disciplina
+        // IDs ja vinculados a disciplina
         $professoresSelecionados = $disciplina->professores->pluck('id')->toArray();
 
         $turmas = \App\Models\Turma::orderBy('nome')->pluck('nome', 'id')->toArray();

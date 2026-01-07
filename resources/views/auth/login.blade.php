@@ -1,9 +1,9 @@
 <x-guest-layout>
 
-    {{-- Cabeçalho --}}
+    {{-- Cabecalho --}}
     <div class="text-center mb-10">
         <h1 class="text-3xl font-bold text-dax-dark">
-            Sistema de Gestão Educacional
+            Sistema de Gestao Educacional
         </h1>
         <p class="text-slate-500 mt-1">
             Acesso ao painel do sistema
@@ -72,7 +72,7 @@
                        class="rounded border-slate-300
                               text-dax-green
                               focus:ring-dax-green">
-                <span class="ml-2">Manter sessão ativa</span>
+                <span class="ml-2">Manter sessao ativa</span>
             </label>
 
             @if (Route::has('password.request'))
@@ -83,7 +83,7 @@
             @endif
         </div>
 
-        {{-- Botão --}}
+        {{-- Botao --}}
         <button type="submit"
                 class="w-full py-3
                        bg-dax-green hover:bg-dax-greenSoft

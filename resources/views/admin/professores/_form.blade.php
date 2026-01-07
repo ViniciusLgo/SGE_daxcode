@@ -29,12 +29,12 @@
                   border-slate-200 dark:border-slate-800">
 </div>
 
-{{-- Especialização --}}
+{{-- Especializacao --}}
 <div>
-    <label class="block text-sm font-medium mb-1">Especialização</label>
+    <label class="block text-sm font-medium mb-1">Especializacao</label>
     <input type="text" name="especializacao"
            value="{{ old('especializacao', $professor->especializacao ?? '') }}"
-           placeholder="Ex: Matemática, História..."
+           placeholder="Ex: Matematica, Historia..."
            class="w-full rounded-xl border px-4 py-2.5
                   bg-white dark:bg-dax-dark/60
                   border-slate-200 dark:border-slate-800">
@@ -58,7 +58,7 @@
     @endif
 </div>
 
-{{-- Botões --}}
+{{-- Botoes --}}
 <div class="md:col-span-2 flex justify-end gap-2 pt-4">
     <a href="{{ route('admin.professores.index') }}"
        class="px-4 py-2 rounded-xl border

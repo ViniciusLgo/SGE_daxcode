@@ -5,10 +5,10 @@
     {{-- ================= HEADER ================= --}}
     <div class="mb-6">
         <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light">
-            ➕ Novo Registro
+             Novo Registro
         </h1>
         <p class="text-sm text-slate-500">
-            Adicione um documento ou ocorrência para um aluno.
+            Adicione um documento ou ocorrencia para um aluno.
         </p>
     </div>
 
@@ -31,7 +31,7 @@
                         class="w-full rounded-xl border border-slate-300 dark:border-slate-700
                                px-4 py-2.5 bg-white dark:bg-dax-dark/60
                                text-dax-dark dark:text-dax-light">
-                    <option value="">Selecione…</option>
+                    <option value="">Selecione...</option>
                     @foreach($alunos as $aluno)
                         <option value="{{ $aluno->id }}">
                             {{ $aluno->user->name ?? 'Sem nome' }}
@@ -67,7 +67,7 @@
             <div>
                 <label class="block font-semibold mb-1">Categoria</label>
                 <input type="text" name="categoria"
-                       placeholder="Ex: Frequência"
+                       placeholder="Ex: Frequencia"
                        class="w-full rounded-xl border border-slate-300 dark:border-slate-700
                               px-4 py-2.5 bg-white dark:bg-dax-dark/60
                               text-dax-dark dark:text-dax-light">
@@ -82,9 +82,9 @@
                               text-dax-dark dark:text-dax-light">
             </div>
 
-            {{-- ================= DESCRIÇÃO ================= --}}
+            {{-- ================= DESCRICAO ================= --}}
             <div class="md:col-span-2">
-                <label class="block font-semibold mb-1">Descrição / Observações</label>
+                <label class="block font-semibold mb-1">Descricao / Observacoes</label>
                 <textarea name="descricao" rows="4"
                           class="w-full rounded-xl border border-slate-300 dark:border-slate-700
                                  px-4 py-2.5 bg-white dark:bg-dax-dark/60
@@ -99,23 +99,23 @@
                               px-4 py-2 bg-white dark:bg-dax-dark/60
                               text-dax-dark dark:text-dax-light">
                 <p class="mt-1 text-sm text-slate-500">
-                    PDF, JPG, PNG — máx. 5MB
+                    PDF, JPG, PNG  max. 5MB
                 </p>
             </div>
 
-            {{-- ================= BOTÕES ================= --}}
+            {{-- ================= BOTOES ================= --}}
             <div class="md:col-span-2 flex justify-between mt-4">
 
                 <a href="{{ route('admin.aluno_registros.index') }}"
                    class="px-4 py-2 rounded-xl border border-slate-300 dark:border-slate-700
                           hover:bg-slate-100 dark:hover:bg-dax-dark/80">
-                    ← Voltar
+                     Voltar
                 </a>
 
                 <button type="submit"
                         class="px-6 py-2 rounded-xl bg-dax-green text-white font-semibold
                                hover:bg-dax-greenSoft transition">
-                    💾 Salvar
+                     Salvar
                 </button>
 
             </div>
@@ -135,7 +135,7 @@
                 .then(data => {
 
                     if (data.sem_turma) {
-                        alert("⚠️ Este aluno não está vinculado a nenhuma turma!");
+                        alert(" Este aluno nao esta vinculado a nenhuma turma!");
                         document.getElementById('turma_nome').value = '';
                         document.getElementById('turma_id').value = '';
                         return;

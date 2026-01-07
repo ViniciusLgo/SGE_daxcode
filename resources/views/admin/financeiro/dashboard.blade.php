@@ -8,17 +8,17 @@
     <div class="flex items-center justify-between mb-6">
         <div>
             <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light">
-                💰 Dashboard Financeiro
+                 Dashboard Financeiro
             </h1>
             <p class="text-sm text-slate-500">
-                Visão geral das despesas do projeto social.
+                Visao geral das despesas do projeto social.
             </p>
         </div>
 
         <a href="{{ route('admin.financeiro.despesas.create') }}"
            class="px-5 py-2 rounded-xl bg-dax-green text-white font-semibold
               hover:bg-dax-greenSoft transition">
-            + Lançar Despesa
+            + Lancar Despesa
         </a>
     </div>
 
@@ -49,10 +49,10 @@
                     </select>
                 </div>
 
-                {{-- Mês --}}
+                {{-- Mes --}}
                 <div>
                     <label class="block text-sm font-semibold mb-1 text-dax-dark dark:text-dax-light">
-                        Mês
+                        Mes
                     </label>
                     <select name="mes"
                             class="w-full rounded-xl px-4 py-2.5
@@ -61,7 +61,7 @@
                        border border-slate-300 dark:border-slate-700">
                         <option value="">Todos</option>
                         @foreach([
-                            1=>'Janeiro',2=>'Fevereiro',3=>'Março',4=>'Abril',5=>'Maio',
+                            1=>'Janeiro',2=>'Fevereiro',3=>'Marco',4=>'Abril',5=>'Maio',
                             6=>'Junho',7=>'Julho',8=>'Agosto',9=>'Setembro',
                             10=>'Outubro',11=>'Novembro',12=>'Dezembro'
                         ] as $m => $nome)
@@ -72,7 +72,7 @@
                     </select>
                 </div>
 
-                {{-- Início --}}
+                {{-- Inicio --}}
                 <div>
                     <label class="block text-sm font-semibold mb-1 text-dax-dark dark:text-dax-light">
                         De
@@ -87,7 +87,7 @@
                 {{-- Fim --}}
                 <div>
                     <label class="block text-sm font-semibold mb-1 text-dax-dark dark:text-dax-light">
-                        Até
+                        Ate
                     </label>
                     <input type="date" name="fim" value="{{ $fim }}"
                            class="w-full rounded-xl px-4 py-2.5
@@ -115,9 +115,9 @@
     {{-- ========================================================= --}}
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
 
-        {{-- Total mês --}}
+        {{-- Total mes --}}
         <div class="rounded-2xl border bg-white dark:bg-dax-dark/60 p-6">
-            <p class="text-sm text-slate-500 mb-1">Total do mês</p>
+            <p class="text-sm text-slate-500 mb-1">Total do mes</p>
             <h3 class="text-2xl font-black">
                 R$ {{ number_format($totalMes, 2, ',', '.') }}
             </h3>
@@ -143,7 +143,7 @@
                         </strong>
                     </li>
                 @empty
-                    <li class="text-slate-500">Nenhuma despesa lançada.</li>
+                    <li class="text-slate-500">Nenhuma despesa lancada.</li>
                 @endforelse
             </ul>
         </div>
@@ -155,7 +155,7 @@
     {{-- ========================================================= --}}
     <div class="rounded-2xl border bg-white dark:bg-dax-dark/60 p-6 mb-6">
         <h2 class="text-lg font-black mb-4">
-            🏆 Ranking de Categorias (Top 5)
+             Ranking de Categorias (Top 5)
         </h2>
 
         <ol class="space-y-2">
@@ -172,13 +172,13 @@
     </div>
 
     {{-- ========================================================= --}}
-    {{-- GRÁFICOS --}}
+    {{-- GRAFICOS --}}
     {{-- ========================================================= --}}
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
         @foreach([
-            ['id'=>'graficoMes','titulo'=>"Gastos por mês ($ano)"],
-            ['id'=>'graficoCategoria','titulo'=>'Distribuição por categoria'],
+            ['id'=>'graficoMes','titulo'=>"Gastos por mes ($ano)"],
+            ['id'=>'graficoCategoria','titulo'=>'Distribuicao por categoria'],
             ['id'=>'graficoCentro','titulo'=>'Gastos por centro de custo'],
             ['id'=>'graficoForma','titulo'=>'Forma de pagamento']
         ] as $g)
@@ -194,17 +194,17 @@
 
 
 {{-- ========================================================= --}}
-{{-- SCRIPTS DOS GRÁFICOS --}}
+{{-- SCRIPTS DOS GRAFICOS --}}
 {{-- ========================================================= --}}
 @section('scripts')
 
-    {{-- Chart.js + plugin de rótulos --}}
+    {{-- Chart.js + plugin de rotulos --}}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 
     <script>
         /* ===========================================================
-           PREPARAÇÃO DOS DADOS
+           PREPARACAO DOS DADOS
         =========================================================== */
 
         const mesesFixos = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
@@ -221,7 +221,7 @@
         const labelsCategoria = @json($porCategoria->map(fn($c)=>$c->categoria->nome ?? 'Sem categoria'));
         const dadosCategoria  = @json($porCategoria->pluck('total'));
 
-        // Gerar cores automáticas
+        // Gerar cores automaticas
         const coresCategorias = labelsCategoria.map((_, i) => {
             const paleta = [
                 "#2196F3","#E91E63","#FF9800","#4CAF50","#9C27B0",
@@ -241,7 +241,7 @@
 
 
         /* ===========================================================
-           GRÁFICO: LINHA (GASTOS POR MÊS)
+           GRAFICO: LINHA (GASTOS POR MES)
         =========================================================== */
         new Chart(document.getElementById('graficoMes'), {
             type: 'line',
@@ -261,7 +261,7 @@
 
 
         /* ===========================================================
-           GRÁFICO: PIZZA (CATEGORIAS)
+           GRAFICO: PIZZA (CATEGORIAS)
         =========================================================== */
         new Chart(document.getElementById('graficoCategoria'), {
             type: 'pie',
@@ -286,7 +286,7 @@
 
 
         /* ===========================================================
-           GRÁFICO: BARRA (CENTRO DE CUSTO)
+           GRAFICO: BARRA (CENTRO DE CUSTO)
         =========================================================== */
         new Chart(document.getElementById('graficoCentro'), {
             type: 'bar',
@@ -302,7 +302,7 @@
 
 
         /* ===========================================================
-           GRÁFICO: PIZZA (FORMA DE PAGAMENTO)
+           GRAFICO: PIZZA (FORMA DE PAGAMENTO)
         =========================================================== */
         new Chart(document.getElementById('graficoForma'), {
             type: 'pie',

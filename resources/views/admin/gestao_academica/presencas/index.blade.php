@@ -1,17 +1,17 @@
 {{-- =============================================================================
-| VIEW: INDEX DE PRESENÇAS
+| VIEW: INDEX DE PRESENCAS
 | CAMINHO: resources/views/admin/gestao_academica/presencas/index.blade.php
 |
 | RESPONSABILIDADE:
-| - Dashboard de controle de presença por aula
+| - Dashboard de controle de presenca por aula
 | - Exibir KPIs consolidados
-| - Permitir filtros simples e avançados
-| - Exibir listagem de aulas com status de presença
+| - Permitir filtros simples e avancados
+| - Exibir listagem de aulas com status de presenca
 |
-| OBSERVAÇÕES IMPORTANTES:
-| - ESTA VIEW NÃO LISTA ALUNOS (apenas aulas)
-| - Regras de aluno ativo/inativo NÃO se aplicam aqui
-| - Contagem de alunos é feita em outras telas (show/edit)
+| OBSERVACOES IMPORTANTES:
+| - ESTA VIEW NAO LISTA ALUNOS (apenas aulas)
+| - Regras de aluno ativo/inativo NAO se aplicam aqui
+| - Contagem de alunos e feita em outras telas (show/edit)
 ============================================================================= --}}
 
 @extends('layouts.app')
@@ -20,43 +20,43 @@
     <div class="space-y-6">
 
         {{-- =========================================================
-            HEADER DA PÁGINA
+            HEADER DA PAGINA
         ========================================================= --}}
         <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
             <div>
                 <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light">
-                    📋 Presenças
+                     Presencas
                 </h1>
                 <p class="text-sm text-slate-500">
-                    Cobertura de presença por aula (inclui aulas sem chamada)
+                    Cobertura de presenca por aula (inclui aulas sem chamada)
                 </p>
             </div>
         </div>
 
         {{-- =========================================================
-            KPIs (INDICADORES RÁPIDOS)
+            KPIs (INDICADORES RAPIDOS)
         ========================================================= --}}
         <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
 
-            {{-- Total de aulas no período --}}
+            {{-- Total de aulas no periodo --}}
             <div class="rounded-2xl bg-white dark:bg-dax-dark/60 border border-slate-200 dark:border-slate-800 p-5">
-                <div class="text-sm text-slate-500">Aulas no período</div>
+                <div class="text-sm text-slate-500">Aulas no periodo</div>
                 <div class="text-2xl font-black">{{ $totalAulas }}</div>
             </div>
 
-            {{-- Aulas com presença registrada --}}
+            {{-- Aulas com presenca registrada --}}
             <div class="rounded-2xl bg-white dark:bg-dax-dark/60 border border-slate-200 dark:border-slate-800 p-5">
-                <div class="text-sm text-slate-500">Com presença</div>
+                <div class="text-sm text-slate-500">Com presenca</div>
                 <div class="text-2xl font-black">{{ $comPresenca }}</div>
             </div>
 
-            {{-- Aulas sem presença --}}
+            {{-- Aulas sem presenca --}}
             <div class="rounded-2xl bg-white dark:bg-dax-dark/60 border border-slate-200 dark:border-slate-800 p-5">
-                <div class="text-sm text-slate-500">Sem presença</div>
+                <div class="text-sm text-slate-500">Sem presenca</div>
                 <div class="text-2xl font-black">{{ $semPresenca }}</div>
             </div>
 
-            {{-- Presenças finalizadas --}}
+            {{-- Presencas finalizadas --}}
             <div class="rounded-2xl bg-white dark:bg-dax-dark/60 border border-slate-200 dark:border-slate-800 p-5">
                 <div class="text-sm text-slate-500">Finalizadas</div>
                 <div class="text-2xl font-black">{{ $finalizadas }}</div>
@@ -70,11 +70,11 @@
         </div>
 
         {{-- =========================================================
-            ALERTA: AULAS SEM PRESENÇA ANTIGAS
+            ALERTA: AULAS SEM PRESENCA ANTIGAS
         ========================================================= --}}
         <div class="rounded-2xl bg-white dark:bg-dax-dark/60 border border-red-300 dark:border-red-700 p-5">
             <div class="text-sm text-red-600 font-semibold">
-                ⚠️ Aulas sem presença há {{ $limiteDias }} dias
+                 Aulas sem presenca ha {{ $limiteDias }} dias
             </div>
             <div class="text-2xl font-black text-red-700">
                 {{ $aulasPendentesAntigas }}
@@ -82,19 +82,19 @@
         </div>
 
         {{-- =========================================================
-            GRÁFICO + FILTRO RÁPIDO
+            GRAFICO + FILTRO RAPIDO
         ========================================================= --}}
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
 
-            {{-- ================= GRÁFICO ================= --}}
+            {{-- ================= GRAFICO ================= --}}
             <div class="lg:col-span-2 rounded-2xl bg-white dark:bg-dax-dark/60 border border-slate-200 dark:border-slate-800 p-6">
 
                 <div class="flex items-center justify-between mb-4">
                     <div class="font-semibold">
-                        Distribuição por status
+                        Distribuicao por status
                     </div>
                     <div class="text-xs text-slate-500">
-                        {{ $inicio->format('d/m/Y') }} → {{ $fim->format('d/m/Y') }}
+                        {{ $inicio->format('d/m/Y') }}  {{ $fim->format('d/m/Y') }}
                     </div>
                 </div>
 
@@ -104,18 +104,18 @@
                 </div>
             </div>
 
-            {{-- ================= FILTRO RÁPIDO ================= --}}
+            {{-- ================= FILTRO RAPIDO ================= --}}
             <div class="rounded-2xl bg-white dark:bg-dax-dark/60 border border-slate-200 dark:border-slate-800 p-6">
 
                 <div class="font-semibold mb-4">
-                    Filtro rápido (período)
+                    Filtro rapido (periodo)
                 </div>
 
                 <form method="GET" class="space-y-3">
 
-                    {{-- Data início --}}
+                    {{-- Data inicio --}}
                     <div>
-                        <label class="block text-sm font-semibold mb-1">Data início</label>
+                        <label class="block text-sm font-semibold mb-1">Data inicio</label>
                         <input type="date"
                                name="data_inicio"
                                value="{{ request('data_inicio', $inicio->toDateString()) }}"
@@ -137,7 +137,7 @@
                         <select name="status" class="w-full rounded-xl border px-4 py-2.5 bg-white dark:bg-dax-dark">
                             <option value="">Todos</option>
                             <option value="sem_presenca" {{ request('status') === 'sem_presenca' ? 'selected' : '' }}>
-                                Sem presença
+                                Sem presenca
                             </option>
                             <option value="aberta" {{ request('status') === 'aberta' ? 'selected' : '' }}>
                                 Aberta
@@ -148,7 +148,7 @@
                         </select>
                     </div>
 
-                    {{-- Ações --}}
+                    {{-- Acoes --}}
                     <div class="flex gap-2 pt-2">
                         <button class="px-4 py-2.5 rounded-xl border font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 transition">
                             Aplicar
@@ -167,26 +167,26 @@
         </div>
 
         {{-- =========================================================
-            FILTROS AVANÇADOS (ALPINE.JS)
+            FILTROS AVANCADOS (ALPINE.JS)
         ========================================================= --}}
         <div x-data="{ open: false }"
              class="rounded-2xl bg-white dark:bg-dax-dark/60 border border-slate-200 dark:border-slate-800 p-6">
 
-            {{-- Botão toggle --}}
+            {{-- Botao toggle --}}
             <button type="button"
                     @click="open = !open"
                     class="flex items-center gap-2 font-semibold text-dax-dark dark:text-dax-light">
                 <i class="bi bi-funnel"></i>
-                Filtros avançados
+                Filtros avancados
                 <span class="text-xs text-slate-500" x-text="open ? '(ocultar)' : '(expandir)'"></span>
             </button>
 
-            {{-- Conteúdo --}}
+            {{-- Conteudo --}}
             <div x-show="open" x-transition class="mt-4">
 
                 <form method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4">
 
-                    {{-- Mantém filtros simples --}}
+                    {{-- Mantem filtros simples --}}
                     <input type="hidden" name="data_inicio" value="{{ request('data_inicio') }}">
                     <input type="hidden" name="data_fim" value="{{ request('data_fim') }}">
                     <input type="hidden" name="status" value="{{ request('status') }}">
@@ -230,7 +230,7 @@
                         </select>
                     </div>
 
-                    {{-- Ações --}}
+                    {{-- Acoes --}}
                     <div class="flex items-end gap-2">
                         <button class="px-4 py-2.5 rounded-xl border font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 transition">
                             Aplicar
@@ -252,7 +252,7 @@
 
             {{-- Tabela --}}
             <table class="min-w-full text-sm">
-                {{-- Cabeçalho --}}
+                {{-- Cabecalho --}}
                 <thead class="bg-slate-50 dark:bg-slate-900/60 text-slate-500">
                 <tr>
                     <th class="px-4 py-3 text-left">Data</th>
@@ -261,7 +261,7 @@
                     <th class="px-4 py-3 text-left">Disciplina</th>
                     <th class="px-4 py-3 text-center">h/a</th>
                     <th class="px-4 py-3 text-center">Status</th>
-                    <th class="px-4 py-3 text-right">Ações</th>
+                    <th class="px-4 py-3 text-right">Acoes</th>
                 </tr>
                 </thead>
 
@@ -276,7 +276,7 @@
                     <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition">
                         <td class="px-4 py-3">
                             <div class="font-semibold">{{ $aula->data->format('d/m/Y') }}</div>
-                            <div class="text-xs text-slate-500">{{ $aula->hora_inicio }} → {{ $aula->hora_fim }}</div>
+                            <div class="text-xs text-slate-500">{{ $aula->hora_inicio }}  {{ $aula->hora_fim }}</div>
                         </td>
 
                         <td class="px-4 py-3 font-semibold">{{ $aula->professor->user->name }}</td>
@@ -291,14 +291,14 @@
                             @elseif($status === 'aberta')
                                 <span class="inline-flex px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-700">Aberta</span>
                             @else
-                                <span class="inline-flex px-3 py-1 rounded-full text-xs font-semibold bg-slate-200 text-slate-700">Sem presença</span>
+                                <span class="inline-flex px-3 py-1 rounded-full text-xs font-semibold bg-slate-200 text-slate-700">Sem presenca</span>
                             @endif
                         </td>
 
-                        {{-- Ações --}}
+                        {{-- Acoes --}}
                         <td class="px-4 py-3 text-right space-x-3 font-semibold">
                             <a href="{{ route('admin.aulas.show', $aula) }}" class="text-sky-600 hover:underline">Ver aula</a>
-                            <a href="{{ route('admin.aulas.presenca.edit', $aula) }}" class="text-amber-600 hover:underline">Presença</a>
+                            <a href="{{ route('admin.aulas.presenca.edit', $aula) }}" class="text-amber-600 hover:underline">Presenca</a>
 
                             @if($p)
                                 <a href="{{ route('admin.presencas.show', $p) }}" class="text-slate-600 hover:underline">Ver</a>
@@ -308,14 +308,14 @@
                 @empty
                     <tr>
                         <td colspan="7" class="px-4 py-8 text-center text-slate-500">
-                            Nenhuma aula encontrada no período.
+                            Nenhuma aula encontrada no periodo.
                         </td>
                     </tr>
                 @endforelse
                 </tbody>
             </table>
 
-            {{-- Paginação --}}
+            {{-- Paginacao --}}
             @if($aulas->hasPages())
                 <div class="p-4 border-t border-slate-200 dark:border-slate-800">
                     {{ $aulas->links() }}

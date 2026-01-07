@@ -2,14 +2,14 @@
 
 @section('content')
 
-    {{-- CABEÇALHO --}}
+    {{-- CABECALHO --}}
     <div class="mb-6 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
             <h1 class="text-2xl font-black flex items-center gap-2 text-dax-dark dark:text-dax-light">
                 <i class="bi bi-person-vcard"></i> Ficha Completa do Aluno
             </h1>
             <p class="text-slate-500 dark:text-slate-400">
-                Informações gerais, responsáveis, documentos e registros vinculados.
+                Informacoes gerais, responsaveis, documentos e registros vinculados.
             </p>
         </div>
 
@@ -17,7 +17,7 @@
             <a href="{{ route('admin.boletim.aluno', $aluno) }}"
                class="px-4 py-2 rounded-xl border border-dax-green
                   text-dax-green font-semibold hover:bg-dax-green hover:text-white transition">
-                📘 Ver Boletim
+                 Ver Boletim
             </a>
 
             <a href="{{ route('admin.alunos.edit', $aluno->id) }}"
@@ -54,19 +54,19 @@
 
                 <span class="inline-block mt-1 px-3 py-1 text-xs rounded-full
                          bg-dax-green/10 text-dax-green font-bold">
-                {{ $aluno->turma->nome ?? 'Sem turma atribuída' }}
+                {{ $aluno->turma->nome ?? 'Sem turma atribuida' }}
             </span>
             </div>
 
-            {{-- INFORMAÇÕES --}}
+            {{-- INFORMACOES --}}
             <div class="flex-1">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                    <div><strong>Matrícula:</strong> {{ $aluno->matricula ?? '—' }}</div>
+                    <div><strong>Matricula:</strong> {{ $aluno->matricula ?? '' }}</div>
                     <div><strong>E-mail:</strong> {{ $aluno->user->email }}</div>
-                    <div><strong>Telefone:</strong> {{ $aluno->telefone ?? '—' }}</div>
+                    <div><strong>Telefone:</strong> {{ $aluno->telefone ?? '' }}</div>
                     <div>
                         <strong>Data de Nascimento:</strong>
-                        {{ $aluno->data_nascimento ? \Carbon\Carbon::parse($aluno->data_nascimento)->format('d/m/Y') : '—' }}
+                        {{ $aluno->data_nascimento ? \Carbon\Carbon::parse($aluno->data_nascimento)->format('d/m/Y') : '' }}
                     </div>
                     <div>
                         <strong>Data de Cadastro:</strong>
@@ -78,7 +78,7 @@
         </div>
     </div>
 
-    {{-- RESPONSÁVEIS --}}
+    {{-- RESPONSAVEIS --}}
     <div class="rounded-2xl bg-white dark:bg-dax-dark/60
             border border-slate-200 dark:border-slate-800
             shadow-sm mb-6">
@@ -86,7 +86,7 @@
         <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800
                 flex justify-between items-center">
             <h3 class="font-black flex items-center gap-2">
-                <i class="bi bi-people-fill"></i> Responsáveis
+                <i class="bi bi-people-fill"></i> Responsaveis
             </h3>
 
             <a href="{{ route('admin.alunos.edit', $aluno->id) }}"
@@ -97,7 +97,7 @@
 
         <div class="p-6">
             @if($aluno->responsaveis->isEmpty())
-                <p class="text-slate-500">Nenhum responsável vinculado.</p>
+                <p class="text-slate-500">Nenhum responsavel vinculado.</p>
             @else
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm">
@@ -107,16 +107,16 @@
                             <th class="py-2 text-left">Parentesco</th>
                             <th class="py-2 text-left">Telefone</th>
                             <th class="py-2 text-left">Email</th>
-                            <th class="py-2 text-right">Ações</th>
+                            <th class="py-2 text-right">Acoes</th>
                         </tr>
                         </thead>
                         <tbody>
                         @foreach($aluno->responsaveis as $resp)
                             <tr class="border-t border-slate-200 dark:border-slate-800">
                                 <td class="py-2">{{ $resp->nome }}</td>
-                                <td class="py-2">{{ $resp->grau_parentesco ?? '—' }}</td>
-                                <td class="py-2">{{ $resp->telefone ?? '—' }}</td>
-                                <td class="py-2">{{ $resp->email ?? '—' }}</td>
+                                <td class="py-2">{{ $resp->grau_parentesco ?? '' }}</td>
+                                <td class="py-2">{{ $resp->telefone ?? '' }}</td>
+                                <td class="py-2">{{ $resp->email ?? '' }}</td>
                                 <td class="py-2 text-right">
                                     <a href="{{ route('admin.responsaveis.show', $resp->id) }}"
                                        class="text-dax-green hover:underline">
@@ -152,7 +152,7 @@
                             <th class="py-2 text-left">Tipo</th>
                             <th class="py-2 text-left">Arquivo</th>
                             <th class="py-2 text-left">Data</th>
-                            <th class="py-2 text-left">Observações</th>
+                            <th class="py-2 text-left">Observacoes</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -167,7 +167,7 @@
                                     </a>
                                 </td>
                                 <td class="py-2">{{ $doc->created_at->format('d/m/Y H:i') }}</td>
-                                <td class="py-2">{{ $doc->observacoes ?? '—' }}</td>
+                                <td class="py-2">{{ $doc->observacoes ?? '' }}</td>
                             </tr>
                         @endforeach
                         </tbody>
@@ -207,14 +207,14 @@
                             <th class="py-2 text-left">Tipo</th>
                             <th class="py-2 text-left">Categoria</th>
                             <th class="py-2 text-left">Data</th>
-                            <th class="py-2 text-right">Ações</th>
+                            <th class="py-2 text-right">Acoes</th>
                         </tr>
                         </thead>
                         <tbody>
                         @foreach($aluno->registros as $registro)
                             <tr class="border-t border-slate-200 dark:border-slate-800">
                                 <td class="py-2">{{ $registro->tipo }}</td>
-                                <td class="py-2">{{ $registro->categoria ?? '—' }}</td>
+                                <td class="py-2">{{ $registro->categoria ?? '' }}</td>
                                 <td class="py-2">{{ $registro->created_at->format('d/m/Y H:i') }}</td>
                                 <td class="py-2 text-right space-x-2">
                                     <a href="{{ route('admin.aluno_registros.show', $registro->id) }}"

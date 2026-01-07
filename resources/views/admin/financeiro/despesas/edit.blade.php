@@ -6,10 +6,10 @@
     <div class="flex items-center justify-between mb-6">
         <div>
             <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light">
-                ✏️ Editar Despesa
+                 Editar Despesa
             </h1>
             <p class="text-sm text-slate-500">
-                Atualização dos dados da despesa financeira.
+                Atualizacao dos dados da despesa financeira.
             </p>
         </div>
 
@@ -17,7 +17,7 @@
            class="px-4 py-2 rounded-xl border
               border-slate-300 dark:border-slate-700
               hover:bg-slate-100 dark:hover:bg-slate-800">
-            ← Voltar
+             Voltar
         </a>
     </div>
 
@@ -70,7 +70,7 @@
                        bg-white dark:bg-slate-900
                        text-dax-dark dark:text-dax-light
                        border border-slate-300 dark:border-slate-700">
-                        <option value="">Selecione…</option>
+                        <option value="">Selecione...</option>
                         @foreach($categorias as $cat)
                             <option value="{{ $cat->id }}"
                                 @selected(old('categoria_id', $despesa->categoria_id) == $cat->id)>
@@ -113,10 +113,10 @@
                       border border-slate-300 dark:border-slate-700">
                 </div>
 
-                {{-- DESCRIÇÃO --}}
+                {{-- DESCRICAO --}}
                 <div class="md:col-span-2">
                     <label class="block text-sm font-semibold mb-1 text-dax-dark dark:text-dax-light">
-                        Descrição
+                        Descricao
                     </label>
                     <input type="text" name="descricao"
                            value="{{ old('descricao', $despesa->descricao) }}"
@@ -149,7 +149,7 @@
                        bg-white dark:bg-slate-900
                        text-dax-dark dark:text-dax-light
                        border border-slate-300 dark:border-slate-700">
-                        <option value="">Selecione…</option>
+                        <option value="">Selecione...</option>
                         @foreach(['pix','dinheiro','transferencia','cartao','outros'] as $fp)
                             <option value="{{ $fp }}"
                                 @selected(old('forma_pagamento', $despesa->forma_pagamento) == $fp)>
@@ -181,7 +181,7 @@
                 {{-- NF --}}
                 <div>
                     <label class="block text-sm font-semibold mb-1 text-dax-dark dark:text-dax-light">
-                        Nº Nota Fiscal
+                        No Nota Fiscal
                     </label>
                     <input type="text" name="numero_nf"
                            value="{{ old('numero_nf', $despesa->numero_nf) }}"
@@ -204,17 +204,17 @@
                       border border-slate-300 dark:border-slate-700">
                 </div>
 
-                {{-- RESPONSÁVEL --}}
+                {{-- RESPONSAVEL --}}
                 <div>
                     <label class="block text-sm font-semibold mb-1 text-dax-dark dark:text-dax-light">
-                        Responsável
+                        Responsavel
                     </label>
                     <select name="responsavel_id"
                             class="w-full rounded-xl px-4 py-2.5
                        bg-white dark:bg-slate-900
                        text-dax-dark dark:text-dax-light
                        border border-slate-300 dark:border-slate-700">
-                        <option value="">Selecione…</option>
+                        <option value="">Selecione...</option>
                         @foreach($usuarios as $u)
                             <option value="{{ $u->id }}"
                                 @selected(old('responsavel_id', $despesa->responsavel_id) == $u->id)>
@@ -247,7 +247,7 @@
 
             </div>
 
-            {{-- AÇÕES --}}
+            {{-- ACOES --}}
             <div class="flex justify-end mt-6 gap-3">
                 <a href="{{ route('admin.financeiro.despesas.index') }}"
                    class="px-4 py-2 rounded-xl border">

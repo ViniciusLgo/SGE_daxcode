@@ -12,22 +12,22 @@ use Illuminate\Support\Facades\Storage;
 class AvaliacaoResultadoController extends Controller
 {
     /**
-     * Tela de lançamento / visualização dos resultados
+     * Tela de lancamento / visualizacao dos resultados
      */
     public function index(Avaliacao $avaliacao)
     {
         /**
-         * Se a avaliação estiver encerrada,
+         * Se a avaliacao estiver encerrada,
          * a tela passa a ser somente leitura
          */
         $somenteLeitura = $avaliacao->status === 'encerrada';
 
         /**
-         * Alunos ATIVOS da turma vinculada à avaliação
+         * Alunos ATIVOS da turma vinculada a avaliacao
          * Regra correta:
          * - aluno ativo
-         * - matrícula ativa
-         * - mesma turma da avaliação
+         * - matricula ativa
+         * - mesma turma da avaliacao
          */
         $alunos = Aluno::ativos()
             ->with('user')
@@ -35,14 +35,14 @@ class AvaliacaoResultadoController extends Controller
                 $q->where('turma_id', $avaliacao->turma_id);
             })
             ->orderBy(
-            // Ordena pelo nome do usuário
+            // Ordena pelo nome do usuario
                 \App\Models\User::select('name')
                     ->whereColumn('users.id', 'alunos.user_id')
             )
             ->get();
 
         /**
-         * Resultados já lançados,
+         * Resultados ja lancados,
          * indexados por aluno_id
          */
         $resultados = AvaliacaoResultado::where('avaliacao_id', $avaliacao->id)
@@ -63,13 +63,13 @@ class AvaliacaoResultadoController extends Controller
     public function store(Request $request, Avaliacao $avaliacao)
     {
         /**
-         * Bloqueio de segurança:
-         * avaliação encerrada não pode ser alterada
+         * Bloqueio de seguranca:
+         * avaliacao encerrada nao pode ser alterada
          */
         if ($avaliacao->status === 'encerrada') {
             return back()->with(
                 'error',
-                'Avaliação encerrada. Não é possível alterar resultados.'
+                'Avaliacao encerrada. Nao e possivel alterar resultados.'
             );
         }
 

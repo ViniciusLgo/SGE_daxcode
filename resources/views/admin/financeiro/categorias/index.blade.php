@@ -6,7 +6,7 @@
     <div class="flex items-center justify-between mb-6">
         <div>
             <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light">
-                🏷️ Categorias de Despesas
+                 Categorias de Despesas
             </h1>
             <p class="text-sm text-slate-500">
                 Gerencie os tipos de gastos do projeto social.
@@ -17,7 +17,7 @@
            class="inline-flex items-center gap-2 px-4 py-2 rounded-xl
                   bg-dax-green text-white font-semibold
                   hover:bg-dax-greenSoft transition">
-            ➕ Nova Categoria
+             Nova Categoria
         </a>
     </div>
 
@@ -38,18 +38,18 @@
                 Nenhuma categoria cadastrada ainda.
             </p>
             <p class="mt-2 text-sm text-slate-400">
-                Clique em <strong>“Nova Categoria”</strong> para começar.
+                Clique em <strong>Nova Categoria</strong> para comecar.
             </p>
         </div>
     @else
-        {{-- ================= GRÁFICOS ================= --}}
+        {{-- ================= GRAFICOS ================= --}}
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
 
             {{-- TOTAL POR CATEGORIA --}}
             <div class="rounded-2xl border border-slate-200 dark:border-slate-800
                 bg-white dark:bg-dax-dark/60 p-5">
                 <h2 class="text-sm font-semibold mb-3 text-dax-dark dark:text-dax-light">
-                    💰 Total gasto por categoria
+                     Total gasto por categoria
                 </h2>
                 <canvas id="graficoCategorias"></canvas>
             </div>
@@ -58,7 +58,7 @@
             <div class="rounded-2xl border border-slate-200 dark:border-slate-800
                 bg-white dark:bg-dax-dark/60 p-5">
                 <h2 class="text-sm font-semibold mb-3 text-dax-dark dark:text-dax-light">
-                    📊 Quantidade de despesas
+                     Quantidade de despesas
                 </h2>
                 <canvas id="graficoQuantidade"></canvas>
             </div>
@@ -78,8 +78,8 @@
                     <tr class="text-left text-sm font-semibold text-slate-600 dark:text-slate-300">
                         <th class="px-4 py-3 w-16">#</th>
                         <th class="px-4 py-3">Nome</th>
-                        <th class="px-4 py-3">Descrição</th>
-                        <th class="px-4 py-3 text-right">Ações</th>
+                        <th class="px-4 py-3">Descricao</th>
+                        <th class="px-4 py-3 text-right">Acoes</th>
                     </tr>
                     </thead>
 
@@ -97,7 +97,7 @@
                             </td>
 
                             <td class="px-4 py-3 text-sm text-slate-500">
-                                {{ $categoria->descricao ?: '—' }}
+                                {{ $categoria->descricao ?: '' }}
                             </td>
 
                             <td class="text-right space-x-2">

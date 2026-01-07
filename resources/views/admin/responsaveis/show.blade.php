@@ -7,10 +7,10 @@
         <div>
             <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light flex items-center gap-2">
                 <i class="bi bi-person-vcard text-dax-yellow"></i>
-                Detalhes do Responsável
+                Detalhes do Responsavel
             </h1>
             <p class="text-slate-500">
-                Informações completas e alunos vinculados.
+                Informacoes completas e alunos vinculados.
             </p>
         </div>
 
@@ -21,15 +21,15 @@
             <div>
                 <h2 class="font-semibold mb-3 flex items-center gap-2">
                     <i class="bi bi-person-fill"></i>
-                    Informações Pessoais
+                    Informacoes Pessoais
                 </h2>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                     <div><span class="text-slate-500">Nome:</span> {{ $responsavel->user->name }}</div>
                     <div><span class="text-slate-500">E-mail:</span> {{ $responsavel->user->email }}</div>
-                    <div><span class="text-slate-500">Telefone:</span> {{ $responsavel->telefone ?? '—' }}</div>
-                    <div><span class="text-slate-500">CPF:</span> {{ $responsavel->cpf ?? '—' }}</div>
-                    <div><span class="text-slate-500">Grau de Parentesco:</span> {{ $responsavel->grau_parentesco ?? '—' }}</div>
+                    <div><span class="text-slate-500">Telefone:</span> {{ $responsavel->telefone ?? '' }}</div>
+                    <div><span class="text-slate-500">CPF:</span> {{ $responsavel->cpf ?? '' }}</div>
+                    <div><span class="text-slate-500">Grau de Parentesco:</span> {{ $responsavel->grau_parentesco ?? '' }}</div>
                 </div>
             </div>
 
@@ -65,7 +65,7 @@
                 @endif
             </div>
 
-            {{-- Ações --}}
+            {{-- Acoes --}}
             <div class="flex justify-end gap-2 pt-4">
                 <a href="{{ route('admin.responsaveis.edit', $responsavel) }}"
                    class="px-4 py-2 rounded-xl bg-dax-yellow text-dax-dark">

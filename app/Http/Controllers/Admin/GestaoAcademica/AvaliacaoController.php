@@ -13,7 +13,7 @@ use App\Models\Professor;
 class AvaliacaoController extends Controller
 {
     /**
-     * Lista todas as avaliações
+     * Lista todas as avaliacoes
      */
     public function index()
     {
@@ -28,7 +28,7 @@ class AvaliacaoController extends Controller
     }
 
     /**
-     * Formulário de criação
+     * Formulario de criacao
      */
     public function create()
     {
@@ -44,7 +44,7 @@ class AvaliacaoController extends Controller
     }
 
     /**
-     * Salvar nova avaliação
+     * Salvar nova avaliacao
      */
     public function store(Request $request)
     {
@@ -52,7 +52,7 @@ class AvaliacaoController extends Controller
             'turma_id'       => 'required|exists:turmas,id',
             'disciplina_id'  => 'required|exists:disciplinas,id',
             'titulo'         => 'required|string|max:255',
-            'tipo'           => 'required|string|max:50',
+            'tipo'           => 'required|in:prova,trabalho,atividade,recuperacao',
             'data_avaliacao' => 'required|date',
         ]);
 
@@ -67,11 +67,11 @@ class AvaliacaoController extends Controller
 
         return redirect()
             ->route('admin.gestao_academica.avaliacoes.index')
-            ->with('success', 'Avaliação criada com sucesso.');
+            ->with('success', 'Avaliacao criada com sucesso.');
     }
 
     /**
-     * Editar avaliação
+     * Editar avaliacao
      */
     public function edit(Avaliacao $avaliacao)
     {
@@ -88,7 +88,7 @@ class AvaliacaoController extends Controller
     }
 
     /**
-     * Atualizar avaliação
+     * Atualizar avaliacao
      */
     public function update(Request $request, Avaliacao $avaliacao)
     {
@@ -112,21 +112,21 @@ class AvaliacaoController extends Controller
 
         return redirect()
             ->route('admin.gestao_academica.avaliacoes.index')
-            ->with('success', 'Avaliação atualizada com sucesso.');
+            ->with('success', 'Avaliacao atualizada com sucesso.');
     }
 
 
     /**
-     * Encerrar avaliação
+     * Encerrar avaliacao
      */
     public function encerrar(Avaliacao $avaliacao)
     {
         $avaliacao->update(['status' => 'encerrada']);
 
-        return back()->with('success', 'Avaliação encerrada.');
+        return back()->with('success', 'Avaliacao encerrada.');
     }
     /**
-     * Reabrir avaliação encerrada
+     * Reabrir avaliacao encerrada
      */
     public function reabrir(Avaliacao $avaliacao)
     {
@@ -138,26 +138,26 @@ class AvaliacaoController extends Controller
 
         return redirect()
             ->route('admin.gestao_academica.avaliacoes.edit', $avaliacao)
-            ->with('success', 'Avaliação reaberta com sucesso.');
+            ->with('success', 'Avaliacao reaberta com sucesso.');
     }
 
     /**
-     * Remove a avaliação do sistema
+     * Remove a avaliacao do sistema
      */
     public function destroy(Avaliacao $avaliacao)
     {
-        // ❌ Bloqueia APENAS exclusão
+        //  Bloqueia APENAS exclusao
         if ($avaliacao->resultados()->exists()) {
             return redirect()
                 ->route('admin.gestao_academica.avaliacoes.index')
-                ->with('error', 'Não é possível excluir uma avaliação que já possui resultados.');
+                ->with('error', 'Nao e possivel excluir uma avaliacao que ja possui resultados.');
         }
 
         $avaliacao->delete();
 
         return redirect()
             ->route('admin.gestao_academica.avaliacoes.index')
-            ->with('success', 'Avaliação excluída com sucesso.');
+            ->with('success', 'Avaliacao excluida com sucesso.');
     }
 
 

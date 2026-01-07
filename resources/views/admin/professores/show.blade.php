@@ -11,7 +11,7 @@
                     {{ $professor->user->name }}
                 </h1>
                 <p class="text-slate-500">
-                    Informações detalhadas do professor e suas disciplinas associadas.
+                    Informacoes detalhadas do professor e suas disciplinas associadas.
                 </p>
             </div>
 
@@ -40,13 +40,13 @@
                     <dd>{{ $professor->user->email }}</dd>
 
                     <dt class="text-slate-500">Telefone</dt>
-                    <dd>{{ $professor->telefone ?? '—' }}</dd>
+                    <dd>{{ $professor->telefone ?? '' }}</dd>
 
-                    <dt class="text-slate-500">Especialização</dt>
-                    <dd>{{ $professor->especializacao ?? '—' }}</dd>
+                    <dt class="text-slate-500">Especializacao</dt>
+                    <dd>{{ $professor->especializacao ?? '' }}</dd>
 
                     <dt class="text-slate-500">Criado em</dt>
-                    <dd>{{ optional($professor->created_at)->format('d/m/Y H:i') ?? '—' }}</dd>
+                    <dd>{{ optional($professor->created_at)->format('d/m/Y H:i') ?? '' }}</dd>
                 </dl>
             </div>
 
@@ -71,8 +71,8 @@
                         <thead class="text-left text-slate-500">
                         <tr>
                             <th class="py-2">Nome</th>
-                            <th class="py-2">Carga Horária</th>
-                            <th class="py-2 text-right">Ações</th>
+                            <th class="py-2">Carga Horaria</th>
+                            <th class="py-2 text-right">Acoes</th>
                         </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
@@ -80,7 +80,7 @@
                             <tr>
                                 <td class="py-2">{{ $disciplina->nome }}</td>
                                 <td class="py-2">
-                                    {{ $disciplina->carga_horaria ? $disciplina->carga_horaria.'h' : '—' }}
+                                    {{ $disciplina->carga_horaria ? $disciplina->carga_horaria.'h' : '' }}
                                 </td>
                                 <td class="py-2 text-right">
                                     <a href="{{ route('admin.disciplinas.show', $disciplina) }}"

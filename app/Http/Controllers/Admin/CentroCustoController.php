@@ -62,6 +62,6 @@ class CentroCustoController extends Controller
 
         return redirect()
             ->route('admin.financeiro.centros.index')
-            ->with('success', 'Centro de custo excluído com sucesso!');
+            ->with('success', 'Centro de custo excluido com sucesso!');
     }
 }

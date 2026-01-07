@@ -8,12 +8,12 @@
         {{-- ================= HEADER ================= --}}
         <div>
             <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light">
-                📘 Registro de Aula / Atividade
+                 Registro de Aula / Atividade
             </h1>
             <p class="text-sm text-slate-500">
-                Registre aulas, reuniões, eventos ou formações.
+                Registre aulas, reunioes, eventos ou formacoes.
                 <span class="block text-xs mt-1">
-                ⏱️ Cálculo baseado em <strong>hora-aula (50 minutos)</strong>
+                 Calculo baseado em <strong>hora-aula (50 minutos)</strong>
             </span>
             </p>
         </div>
@@ -28,10 +28,10 @@
 
             @csrf
 
-            {{-- ================= INFORMAÇÕES BÁSICAS ================= --}}
+            {{-- ================= INFORMACOES BASICAS ================= --}}
             <div>
                 <h2 class="font-semibold text-lg mb-4">
-                    📌 Informações Básicas
+                     Informacoes Basicas
                 </h2>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -93,10 +93,10 @@
                 </div>
             </div>
 
-            {{-- ================= DATA / HORÁRIO ================= --}}
+            {{-- ================= DATA / HORARIO ================= --}}
             <div>
                 <h2 class="font-semibold text-lg mb-4">
-                    ⏰ Data e Horário
+                     Data e Horario
                 </h2>
 
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -111,9 +111,9 @@
                                bg-white dark:bg-dax-dark
                                text-dax-dark dark:text-dax-light">
                             <option value="aula">Aula</option>
-                            <option value="reuniao">Reunião</option>
+                            <option value="reuniao">Reuniao</option>
                             <option value="evento">Evento</option>
-                            <option value="formacao">Formação</option>
+                            <option value="formacao">Formacao</option>
                         </select>
                     </div>
 
@@ -132,7 +132,7 @@
                               text-dax-dark dark:text-dax-light">
                     </div>
 
-                    {{-- Hora início --}}
+                    {{-- Hora inicio --}}
                     <div>
                         <label class="block text-sm font-semibold mb-1">Hora inicial</label>
                         <input type="text"
@@ -171,25 +171,25 @@
                 </div>
             </div>
 
-            {{-- ================= PREVIEW AUTOMÁTICO ================= --}}
+            {{-- ================= PREVIEW AUTOMATICO ================= --}}
             <div class="rounded-xl
                 bg-slate-50 dark:bg-slate-900/40
                 border border-slate-200 dark:border-slate-800
                 p-4 text-sm">
-                <strong>Resumo automático:</strong><br>
-                ⏱️ Duração total: <span x-text="duracao"></span> minutos<br>
-                🕒 Horário final previsto:
+                <strong>Resumo automatico:</strong><br>
+                 Duracao total: <span x-text="duracao"></span> minutos<br>
+                 Horario final previsto:
                 <span class="font-bold" x-text="horaFim"></span>
             </div>
 
-            {{-- ================= CONTEÚDO ================= --}}
+            {{-- ================= CONTEUDO ================= --}}
             <div>
                 <label class="block text-sm font-semibold mb-1">
-                    📚 Conteúdo ministrado
+                     Conteudo ministrado
                 </label>
                 <input type="text"
                        name="conteudo"
-                       placeholder="Ex: Frações – operações básicas"
+                       placeholder="Ex: Fracoes  operacoes basicas"
                        class="w-full rounded-xl border
                       border-slate-300 dark:border-slate-700
                       px-4 py-2.5
@@ -197,14 +197,14 @@
                       text-dax-dark dark:text-dax-light">
             </div>
 
-            {{-- ================= OBSERVAÇÕES ================= --}}
+            {{-- ================= OBSERVACOES ================= --}}
             <div>
                 <label class="block text-sm font-semibold mb-1">
-                    📝 Observações
+                     Observacoes
                 </label>
                 <textarea name="observacoes"
                           rows="3"
-                          placeholder="Atividades realizadas, dinâmica da aula, observações importantes"
+                          placeholder="Atividades realizadas, dinamica da aula, observacoes importantes"
                           class="w-full rounded-xl border
                          border-slate-300 dark:border-slate-700
                          px-4 py-2.5
@@ -223,7 +223,7 @@
                 </label>
             </div>
 
-            {{-- ================= AÇÕES ================= --}}
+            {{-- ================= ACOES ================= --}}
             <div class="flex justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
                 <a href="{{ route('admin.aulas.index') }}"
                    class="px-4 py-2.5 rounded-xl border

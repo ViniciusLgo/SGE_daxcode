@@ -1,7 +1,7 @@
 <nav class="settings-nav">
 
     <div class="settings-sidebar-title">
-        Configurações
+        Configuracoes
     </div>
 
     <ul class="settings-menu">
@@ -12,12 +12,12 @@
         <li class="settings-item">
             <a href="{{ route('admin.settings.edit', ['sec' => 'geral']) }}"
                class="settings-link {{ request('sec', 'geral') === 'geral' ? 'active' : '' }}">
-                ⚙️ Gerais
+                 Gerais
             </a>
         </li>
 
         {{-- =============================== --}}
-        {{-- ACADÊMICO (COM SUBMENU) --}}
+        {{-- ACADEMICO (COM SUBMENU) --}}
         {{-- =============================== --}}
         @php
             $academicoOpen = request('sec') === 'academico';
@@ -29,21 +29,21 @@
                     class="settings-link has-submenu"
                     data-toggle="submenu"
                     aria-expanded="{{ $academicoOpen ? 'true' : 'false' }}">
-                📚 Acadêmicas
-                <span class="chevron">▾</span>
+                 Academicas
+                <span class="chevron"></span>
             </button>
 
             <ul class="settings-submenu">
 
                 @foreach([
-                    'ano-letivo'  => 'Ano letivo & Avaliações',
-                    'calendario'  => 'Calendário escolar',
-                    'feriados'    => 'Feriados & dias não letivos',
+                    'ano-letivo'  => 'Ano letivo & Avaliacoes',
+                    'calendario'  => 'Calendario escolar',
+                    'feriados'    => 'Feriados & dias nao letivos',
                     'turnos'      => 'Turnos da escola',
                     'modulos'     => 'Estrutura modular',
-                    'carga-curso' => 'Carga horária / curso',
+                    'carga-curso' => 'Carga horaria / curso',
                     'fechamento'  => 'Fechamento de notas',
-                    'promocao'    => 'Promoção & globais',
+                    'promocao'    => 'Promocao & globais',
                 ] as $key => $label)
 
                     <li>
@@ -59,33 +59,33 @@
         </li>
 
         {{-- =============================== --}}
-        {{-- OUTRAS SEÇÕES --}}
+        {{-- OUTRAS SECOES --}}
         {{-- =============================== --}}
         <li class="settings-item">
             <a href="{{ route('admin.settings.edit', ['sec'=>'documentos']) }}"
                class="settings-link {{ request('sec') === 'documentos' ? 'active' : '' }}">
-                📄 Documentos & PDFs
+                 Documentos & PDFs
             </a>
         </li>
 
         <li class="settings-item">
             <a href="{{ route('admin.settings.edit', ['sec'=>'usuarios']) }}"
                class="settings-link {{ request('sec') === 'usuarios' ? 'active' : '' }}">
-                👤 Usuários & Acesso
+                 Usuarios & Acesso
             </a>
         </li>
 
         <li class="settings-item">
             <a href="{{ route('admin.settings.edit', ['sec'=>'notificacoes']) }}"
                class="settings-link {{ request('sec') === 'notificacoes' ? 'active' : '' }}">
-                🔔 Notificações
+                 Notificacoes
             </a>
         </li>
 
         <li class="settings-item">
             <a href="{{ route('admin.settings.edit', ['sec'=>'financeiro']) }}"
                class="settings-link {{ request('sec') === 'financeiro' ? 'active' : '' }}">
-                💰 Financeiro
+                 Financeiro
             </a>
         </li>
 

@@ -3,21 +3,21 @@
 @section('content')
 
     {{-- =========================================================
-    | CABEÇALHO
+    | CABECALHO
     ========================================================= --}}
     <div class="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
             <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light flex gap-2">
-                <i class="bi bi-graph-up"></i> Relatório de Evasão
+                <i class="bi bi-graph-up"></i> Relatorio de Evasao
             </h1>
             <p class="text-slate-500 dark:text-slate-400">
-                Indicadores e tendências de evasão com filtros por turma e período.
+                Indicadores e tendencias de evasao com filtros por turma e periodo.
             </p>
         </div>
     </div>
 
     {{-- =========================================================
-    | FILTROS DO RELATÓRIO
+    | FILTROS DO RELATORIO
     ========================================================= --}}
     <form method="GET"
           class="mb-6 rounded-2xl bg-white dark:bg-dax-dark/60
@@ -56,7 +56,7 @@
                         class="w-full rounded-xl border border-slate-300 dark:border-slate-700
                            bg-white dark:bg-slate-900 px-4 py-2.5">
                     <option value="">Todos</option>
-                    @foreach(['manhã','tarde','noite'] as $t)
+                    @foreach(['manha','tarde','noite'] as $t)
                         <option value="{{ $t }}" {{ $turno === $t ? 'selected' : '' }}>
                             {{ ucfirst($t) }}
                         </option>
@@ -64,9 +64,9 @@
                 </select>
             </div>
 
-            {{-- PERÍODO --}}
+            {{-- PERIODO --}}
             <div>
-                <label class="text-sm font-semibold">Início</label>
+                <label class="text-sm font-semibold">Inicio</label>
                 <input type="date" name="inicio" value="{{ $inicio }}"
                        class="w-full rounded-xl border border-slate-300 dark:border-slate-700
                           bg-white dark:bg-slate-900 px-4 py-2.5">
@@ -79,7 +79,7 @@
                           bg-white dark:bg-slate-900 px-4 py-2.5">
             </div>
 
-            {{-- AÇÕES --}}
+            {{-- ACOES --}}
             <div class="flex gap-3">
                 <button class="px-5 py-2.5 rounded-xl border border-dax-green
                            text-dax-green font-bold hover:bg-dax-green hover:text-white transition">
@@ -103,7 +103,7 @@
 
         {{-- TOTAL --}}
         <div class="rounded-2xl bg-white dark:bg-dax-dark/60 border p-5">
-            <div class="text-sm text-slate-500">Total de Matrículas</div>
+            <div class="text-sm text-slate-500">Total de Matriculas</div>
             <div class="text-3xl font-black">{{ $total }}</div>
         </div>
 
@@ -129,38 +129,38 @@
 
         {{-- TAXA --}}
         <div class="rounded-2xl bg-white dark:bg-dax-dark/60 border p-5">
-            <div class="text-sm text-slate-500">Taxa de Evasão</div>
+            <div class="text-sm text-slate-500">Taxa de Evasao</div>
             <div class="text-3xl font-black">{{ $taxaEvasao }}%</div>
-            <div class="text-xs text-slate-500">(desistentes ÷ total)</div>
+            <div class="text-xs text-slate-500">(desistentes  total)</div>
         </div>
     </div>
 
     {{-- =========================================================
-    | GRÁFICOS (Chart.js)
+    | GRAFICOS (Chart.js)
     ========================================================= --}}
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
 
-        {{-- EVASÃO DIÁRIA --}}
+        {{-- EVASAO DIARIA --}}
         <div class="rounded-2xl bg-white dark:bg-dax-dark/60 border p-5">
-            <h2 class="text-lg font-black mb-3">Desistências por Dia</h2>
+            <h2 class="text-lg font-black mb-3">Desistencias por Dia</h2>
             <canvas id="evasaoChart" height="130"></canvas>
         </div>
 
-        {{-- EVASÃO MENSAL --}}
+        {{-- EVASAO MENSAL --}}
         <div class="rounded-2xl bg-white dark:bg-dax-dark/60 border p-5">
-            <h2 class="text-lg font-black mb-3">Evasão por Mês</h2>
+            <h2 class="text-lg font-black mb-3">Evasao por Mes</h2>
             <canvas id="evasaoMensalChart" height="130"></canvas>
         </div>
     </div>
 
     {{-- =========================================================
-    | EVASÃO POR TURMA + TOP MOTIVOS
+    | EVASAO POR TURMA + TOP MOTIVOS
     ========================================================= --}}
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
 
-        {{-- EVASÃO POR TURMA (GRÁFICO) --}}
+        {{-- EVASAO POR TURMA (GRAFICO) --}}
         <div class="lg:col-span-2 rounded-2xl bg-white dark:bg-dax-dark/60 border p-5">
-            <h2 class="text-lg font-black mb-3">Evasão por Turma</h2>
+            <h2 class="text-lg font-black mb-3">Evasao por Turma</h2>
             <canvas id="evasaoPorTurmaChart" height="140"></canvas>
         </div>
 
@@ -179,7 +179,7 @@
                 </span>
                 </div>
             @empty
-                <p class="text-sm text-slate-500">Sem dados no período.</p>
+                <p class="text-sm text-slate-500">Sem dados no periodo.</p>
             @endforelse
         </div>
     </div>
@@ -189,7 +189,7 @@
     ========================================================= --}}
     <div class="rounded-2xl bg-white dark:bg-dax-dark/60 border overflow-hidden">
         <div class="p-5">
-            <h2 class="text-lg font-black">Últimos alunos desistentes</h2>
+            <h2 class="text-lg font-black">Ultimos alunos desistentes</h2>
         </div>
 
         <table class="w-full text-sm">
@@ -199,7 +199,7 @@
                 <th class="px-4 py-3">Turma</th>
                 <th class="px-4 py-3">Data</th>
                 <th class="px-4 py-3">Motivo</th>
-                <th class="px-4 py-3 text-right">Ação</th>
+                <th class="px-4 py-3 text-right">Acao</th>
             </tr>
             </thead>
             <tbody>
@@ -208,7 +208,7 @@
                     <td class="px-4 py-3 font-semibold">{{ $m->aluno->user->name }}</td>
                     <td class="px-4 py-3">{{ $m->turma->nome }}</td>
                     <td class="px-4 py-3">{{ optional($m->data_status)->format('d/m/Y') }}</td>
-                    <td class="px-4 py-3">{{ $m->motivo ?? '—' }}</td>
+                    <td class="px-4 py-3">{{ $m->motivo ?? '' }}</td>
                     <td class="px-4 py-3 text-right">
                         <a href="{{ route('admin.alunos.show', $m->aluno_id) }}"
                            class="text-dax-blue hover:underline">
@@ -219,7 +219,7 @@
             @empty
                 <tr>
                     <td colspan="5" class="px-4 py-6 text-center text-slate-500">
-                        Nenhuma desistência encontrada.
+                        Nenhuma desistencia encontrada.
                     </td>
                 </tr>
             @endforelse
@@ -236,7 +236,7 @@
             type: 'line',
             data: {
                 labels: @json($chartLabels),
-                datasets: [{ label: 'Desistências', data: @json($chartData), tension: 0.25 }]
+                datasets: [{ label: 'Desistencias', data: @json($chartData), tension: 0.25 }]
             },
             options: { responsive: true, scales: { y: { beginAtZero: true } } }
         });

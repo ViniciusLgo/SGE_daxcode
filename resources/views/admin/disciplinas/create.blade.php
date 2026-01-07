@@ -10,7 +10,7 @@
                 Nova Disciplina
             </h1>
             <p class="text-slate-500">
-                Cadastre uma nova disciplina e vincule um ou mais professores responsáveis.
+                Cadastre uma nova disciplina e vincule um ou mais professores responsaveis.
             </p>
         </div>
 

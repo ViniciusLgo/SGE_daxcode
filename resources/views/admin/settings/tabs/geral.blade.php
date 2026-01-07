@@ -1,5 +1,5 @@
 {{-- ===================================================== --}}
-{{-- SEÇÃO: GERAIS – IDENTIDADE DA INSTITUIÇÃO            --}}
+{{-- SECAO: GERAIS  IDENTIDADE DA INSTITUICAO            --}}
 {{-- ===================================================== --}}
 
 <div class="settings-card mb-4">
@@ -7,11 +7,11 @@
     {{-- HEADER --}}
     <div class="settings-card-header">
         <h5>
-            🏫 Identidade da Instituição
+             Identidade da Instituicao
         </h5>
 
         <p class="settings-card-subtitle">
-            Informações básicas utilizadas em relatórios, cabeçalhos e comunicações oficiais.
+            Informacoes basicas utilizadas em relatorios, cabecalhos e comunicacoes oficiais.
         </p>
     </div>
 
@@ -19,15 +19,15 @@
     <div class="settings-card-body">
 
         {{-- ============================== --}}
-        {{-- INFORMAÇÕES PRINCIPAIS         --}}
+        {{-- INFORMACOES PRINCIPAIS         --}}
         {{-- ============================== --}}
         <div class="settings-group-label">
-            Informações principais
+            Informacoes principais
         </div>
 
         <div class="row mb-3">
             <div class="col-md-6">
-                <label class="form-label">Nome da Instituição</label>
+                <label class="form-label">Nome da Instituicao</label>
                 <input type="text"
                        class="form-control"
                        name="school_name"
@@ -53,7 +53,7 @@
             </div>
 
             <div class="col-md-6">
-                <label class="form-label">Endereço</label>
+                <label class="form-label">Endereco</label>
                 <input type="text"
                        class="form-control"
                        name="address"
@@ -79,7 +79,7 @@
             </div>
 
             <div class="col-md-3 mb-3">
-                <label class="form-label">Versão do Sistema</label>
+                <label class="form-label">Versao do Sistema</label>
                 <input type="text"
                        class="form-control"
                        name="version"

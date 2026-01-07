@@ -2,14 +2,14 @@
 
 @section('content')
 
-    {{-- Cabeçalho --}}
+    {{-- Cabecalho --}}
     <div class="mb-6">
         <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light flex items-center gap-2">
             <i class="bi bi-person-plus-fill text-dax-green"></i>
-            Cadastrar Novo Usuário
+            Cadastrar Novo Usuario
         </h1>
         <p class="text-slate-500 dark:text-slate-400">
-            Preencha as informações abaixo para criar um novo acesso.
+            Preencha as informacoes abaixo para criar um novo acesso.
         </p>
     </div>
 
@@ -20,7 +20,7 @@
 
         <div class="p-6">
 
-            {{-- Erros de validação --}}
+            {{-- Erros de validacao --}}
             @if ($errors->any())
                 <div class="mb-6 rounded-xl bg-red-50 dark:bg-red-900/20
                         border border-red-200 dark:border-red-800
@@ -87,7 +87,7 @@
                         </label>
                         <input type="password"
                                name="password"
-                               placeholder="Mínimo 6 caracteres"
+                               placeholder="Minimo 6 caracteres"
                                required
                                class="w-full rounded-xl
                                   border border-slate-300 dark:border-slate-700
@@ -121,7 +121,7 @@
                     {{-- Tipo --}}
                     <div>
                         <label class="block text-sm font-semibold mb-1">
-                            Tipo de Usuário
+                            Tipo de Usuario
                         </label>
                         <select name="tipo"
                                 required
@@ -137,12 +137,12 @@
                             <option value="admin">Administrador</option>
                             <option value="professor">Professor</option>
                             <option value="aluno">Aluno</option>
-                            <option value="responsavel">Responsável</option>
+                            <option value="responsavel">Responsavel</option>
                         </select>
                     </div>
                 </div>
 
-                {{-- Ações --}}
+                {{-- Acoes --}}
                 <div class="mt-8 flex items-center gap-4">
                     <button type="submit"
                             class="inline-flex items-center gap-2

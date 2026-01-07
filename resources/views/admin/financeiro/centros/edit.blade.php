@@ -6,10 +6,10 @@
     <div class="flex items-center justify-between mb-6">
         <div>
             <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light">
-                ✏️ Editar Centro de Custo
+                 Editar Centro de Custo
             </h1>
             <p class="text-sm text-slate-500">
-                Atualização das informações do centro de custo.
+                Atualizacao das informacoes do centro de custo.
             </p>
         </div>
 
@@ -18,7 +18,7 @@
               border-slate-300 dark:border-slate-700
               text-dax-dark dark:text-dax-light
               hover:bg-slate-100 dark:hover:bg-slate-800">
-            ← Voltar
+             Voltar
         </a>
     </div>
 
@@ -59,10 +59,10 @@
                       border border-slate-300 dark:border-slate-700">
                 </div>
 
-                {{-- DESCRIÇÃO --}}
+                {{-- DESCRICAO --}}
                 <div>
                     <label class="block text-sm font-semibold mb-1 text-dax-dark dark:text-dax-light">
-                        Descrição (opcional)
+                        Descricao (opcional)
                     </label>
                     <textarea name="descricao" rows="3"
                               class="w-full rounded-xl px-4 py-2.5
@@ -73,7 +73,7 @@
 
             </div>
 
-            {{-- AÇÕES --}}
+            {{-- ACOES --}}
             <div class="flex justify-end gap-3 mt-6">
                 <a href="{{ route('admin.financeiro.centros.index') }}"
                    class="px-4 py-2 rounded-xl border">

@@ -7,10 +7,10 @@
         <div>
             <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light flex items-center gap-2">
                 <i class="bi bi-pencil-square text-dax-yellow"></i>
-                Editar Responsável
+                Editar Responsavel
             </h1>
             <p class="text-slate-500">
-                Atualize os dados cadastrados e os vínculos do responsável.
+                Atualize os dados cadastrados e os vinculos do responsavel.
             </p>
         </div>
 

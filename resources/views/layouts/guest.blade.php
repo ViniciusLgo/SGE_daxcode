@@ -4,12 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>SGE DaxCode — Acesso ao Sistema</title>
+    <title>SGE DaxCode  Acesso ao Sistema</title>
 
     {{-- Fonte --}}
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
-    {{-- Ícones --}}
+    {{-- Icones --}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
     {{-- Assets --}}
@@ -41,12 +41,12 @@
         </h1>
 
         <p class="text-[#F8F4E6] text-sm leading-relaxed max-w-xs">
-            Sistema de Gestão Escolar,<br>
+            Sistema de Gestao Escolar,<br>
             desenvolvido com os valores da DAX OIL.
         </p>
     </div>
 
-    {{-- Conteúdo dinâmico --}}
+    {{-- Conteudo dinamico --}}
     <div class="md:w-1/2 w-full
                     p-8 md:p-12
                     bg-slate-50">
@@ -58,9 +58,9 @@
 
 </div>
 
-{{-- Rodapé --}}
+{{-- Rodape --}}
 <footer class="absolute bottom-4 text-center text-white/70 text-xs">
-    © {{ date('Y') }} DaxCode Tecnologia — Grupo DAX OIL
+     {{ date('Y') }} DaxCode Tecnologia  Grupo DAX OIL
 </footer>
 
 </body>

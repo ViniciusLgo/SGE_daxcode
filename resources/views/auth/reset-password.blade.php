@@ -1,6 +1,6 @@
 <x-guest-layout>
 
-    {{-- Cabeçalho --}}
+    {{-- Cabecalho --}}
     <div class="text-center mb-10">
         <h1 class="text-3xl font-bold text-dax-dark">
             Redefinir senha
@@ -78,7 +78,7 @@
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2 text-dax-green" />
         </div>
 
-        {{-- Botão --}}
+        {{-- Botao --}}
         <button type="submit"
                 class="w-full py-3
                        bg-dax-green hover:bg-dax-greenSoft

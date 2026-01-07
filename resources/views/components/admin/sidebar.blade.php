@@ -56,21 +56,21 @@
             Dashboard
         </a>
 
-        {{-- ================= USUÁRIOS ================= --}}
+        {{-- ================= USUARIOS ================= --}}
         <div x-data="{ open: {{ $isUsuarios || $isAlunos || $isProfessores || $isResponsaveis ? 'true' : 'false' }} }">
 
             <button @click="open = !open"
                     class="w-full flex items-center justify-between px-4 py-2
                            text-xs font-bold uppercase text-slate-400
                            hover:text-slate-600 dark:hover:text-slate-300">
-                <span>Usuários</span>
+                <span>Usuarios</span>
                 <i class="bi" :class="open ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
             </button>
 
             <div x-show="open" x-collapse class="space-y-1">
                 <a href="{{ route('admin.usuarios.index') }}"
                    class="sidebar-link {{ $isUsuarios ? 'sidebar-link-active' : '' }}">
-                    <i class="bi bi-people-fill"></i> Usuários
+                    <i class="bi bi-people-fill"></i> Usuarios
                 </a>
 
                 <a href="{{ route('admin.alunos.index') }}"
@@ -85,19 +85,19 @@
 
                 <a href="{{ route('admin.responsaveis.index') }}"
                    class="sidebar-link {{ $isResponsaveis ? 'sidebar-link-active' : '' }}">
-                    <i class="bi bi-person-heart"></i> Responsáveis
+                    <i class="bi bi-person-heart"></i> Responsaveis
                 </a>
             </div>
         </div>
 
-        {{-- ================= ACADÊMICO ================= --}}
+        {{-- ================= ACADEMICO ================= --}}
         <div x-data="{ open: {{ $isDisciplinas || $isTurmas || $isVinculos || $isAvaliacoes || $isAulas || $isPresencas || $isBoletim ? 'true' : 'false' }} }">
 
             <button @click="open = !open"
                     class="w-full flex items-center justify-between px-4 py-2
                            text-xs font-bold uppercase text-slate-400
                            hover:text-slate-600 dark:hover:text-slate-300">
-                <span>Acadêmico</span>
+                <span>Academico</span>
                 <i class="bi" :class="open ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
             </button>
 
@@ -120,7 +120,7 @@
 
                 <a href="{{ route('admin.gestao_academica.avaliacoes.index') }}"
                    class="sidebar-link {{ $isAvaliacoes ? 'sidebar-link-active' : '' }}">
-                    <i class="bi bi-clipboard-check"></i> Avaliações
+                    <i class="bi bi-clipboard-check"></i> Avaliacoes
                 </a>
 
                 <a href="{{ route('admin.aulas.index') }}"
@@ -130,7 +130,7 @@
 
                 <a href="{{ route('admin.presencas.index') }}"
                    class="sidebar-link {{ $isPresencas ? 'sidebar-link-active' : '' }}">
-                    <i class="bi bi-clipboard2-check"></i> Presenças
+                    <i class="bi bi-clipboard2-check"></i> Presencas
                 </a>
 
                 <a href="{{ route('admin.boletim.index') }}"
@@ -204,14 +204,14 @@
             </div>
         </div>
 
-        {{-- ================= RELATÓRIOS ================= --}}
+        {{-- ================= RELATORIOS ================= --}}
         <div x-data="{ open: {{ $isRelatorios || $isEvasao || $isCargaHoraria ? 'true' : 'false' }} }">
 
             <button @click="open = !open"
                     class="w-full flex items-center justify-between px-4 py-2
                            text-xs font-bold uppercase text-slate-400
                            hover:text-slate-600 dark:hover:text-slate-300">
-                <span>Relatórios</span>
+                <span>Relatorios</span>
                 <i class="bi" :class="open ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
             </button>
 
@@ -219,12 +219,12 @@
 
                 <a href="{{ route('admin.relatorios.evasao.index') }}"
                    class="sidebar-link {{ $isEvasao ? 'sidebar-link-active' : '' }}">
-                    <i class="bi bi-graph-up"></i> Evasão Escolar
+                    <i class="bi bi-graph-up"></i> Evasao Escolar
                 </a>
 
                 <a href="{{ route('admin.relatorios.carga_horaria_professores.index') }}"
                    class="sidebar-link {{ $isCargaHoraria ? 'sidebar-link-active' : '' }}">
-                    <i class="bi bi-clock-history"></i> Carga Horária
+                    <i class="bi bi-clock-history"></i> Carga Horaria
                 </a>
 
                 <span class="sidebar-link opacity-50 cursor-not-allowed">
@@ -232,17 +232,17 @@
                 </span>
 
                 <span class="sidebar-link opacity-50 cursor-not-allowed">
-                    <i class="bi bi-file-earmark-bar-graph"></i> Exportações (em breve)
+                    <i class="bi bi-file-earmark-bar-graph"></i> Exportacoes (em breve)
                 </span>
 
             </div>
         </div>
 
-        {{-- CONFIGURAÇÕES --}}
+        {{-- CONFIGURACOES --}}
         <div class="mt-4 border-t border-slate-200 dark:border-slate-800 pt-4">
             <a href="{{ route('admin.settings.edit') }}"
                class="sidebar-link {{ $isSettings ? 'sidebar-link-active' : '' }}">
-                <i class="bi bi-gear-fill"></i> Configurações
+                <i class="bi bi-gear-fill"></i> Configuracoes
             </a>
         </div>
 

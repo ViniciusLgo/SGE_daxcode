@@ -1,5 +1,5 @@
 {{-- ========================================================= --}}
-{{-- CONTAINER PRINCIPAL – SIDEBAR + CONTEÚDO                  --}}
+{{-- CONTAINER PRINCIPAL  SIDEBAR + CONTEUDO                  --}}
 {{-- ========================================================= --}}
 
 @php
@@ -14,7 +14,7 @@
         @include('admin.settings._sidebar')
     </aside>
 
-    {{-- CONTEÚDO CENTRAL --}}
+    {{-- CONTEUDO CENTRAL --}}
     <main class="settings-content">
 
         <form action="{{ route('admin.settings.update') }}"
@@ -26,28 +26,28 @@
             @method('PUT')
 
             {{-- ================================================= --}}
-            {{-- SEÇÃO: GERAL                                     --}}
+            {{-- SECAO: GERAL                                     --}}
             {{-- ================================================= --}}
             @if ($sec === 'geral')
                 @include('admin.settings.tabs.geral')
             @endif
 
             {{-- ================================================= --}}
-            {{-- SEÇÃO: ACADÊMICO                                 --}}
+            {{-- SECAO: ACADEMICO                                 --}}
             {{-- ================================================= --}}
             @if ($sec === 'academico')
 
                 @if ($sub)
                     @includeIf('admin.settings.academico.' . $sub)
                 @else
-                    {{-- fallback: visão geral acadêmica --}}
+                    {{-- fallback: visao geral academica --}}
                     @include('admin.settings.tabs.academico')
                 @endif
 
             @endif
 
             {{-- ================================================= --}}
-            {{-- SEÇÕES SIMPLES (PLACEHOLDERS)                    --}}
+            {{-- SECOES SIMPLES (PLACEHOLDERS)                    --}}
             {{-- ================================================= --}}
             @if ($sec === 'documentos')
                 @include('admin.settings.tabs.documentos')
@@ -82,11 +82,11 @@
             @endif
 
             {{-- ================================================= --}}
-            {{-- FOOTER FIXO DO FORMULÁRIO                         --}}
+            {{-- FOOTER FIXO DO FORMULARIO                         --}}
             {{-- ================================================= --}}
             <div class="settings-footer">
                 <button type="submit" class="btn btn-primary btn-save-settings">
-                    💾 <span>Salvar alterações</span>
+                     <span>Salvar alteracoes</span>
                 </button>
             </div>
 

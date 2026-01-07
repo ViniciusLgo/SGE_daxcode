@@ -2,14 +2,14 @@
 
 @section('content')
 
-    {{-- Cabeçalho --}}
+    {{-- Cabecalho --}}
     <div class="mb-6">
         <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light flex items-center gap-2">
             <i class="bi bi-people-fill text-dax-green"></i>
-            Usuários do Sistema
+            Usuarios do Sistema
         </h1>
         <p class="text-slate-500 dark:text-slate-400">
-            Gerencie os acessos e perfis dos usuários.
+            Gerencie os acessos e perfis dos usuarios.
         </p>
     </div>
 
@@ -23,7 +23,7 @@
                 border-b border-slate-200 dark:border-slate-800">
 
         <span class="font-bold text-dax-dark dark:text-dax-light">
-            Lista de Usuários
+            Lista de Usuarios
         </span>
 
             <a href="{{ route('admin.usuarios.create') }}"
@@ -32,7 +32,7 @@
                   bg-dax-green text-white font-bold
                   hover:bg-dax-greenSoft transition">
                 <i class="bi bi-plus-circle"></i>
-                Novo Usuário
+                Novo Usuario
             </a>
         </div>
 
@@ -55,7 +55,7 @@
                         <th class="pb-3">Nome</th>
                         <th>Email</th>
                         <th>Tipo</th>
-                        <th class="text-right">Ações</th>
+                        <th class="text-right">Acoes</th>
                     </tr>
                     </thead>
 
@@ -83,7 +83,7 @@
                                 <form action="{{ route('admin.usuarios.destroy', $u->id) }}"
                                       method="POST"
                                       class="inline"
-                                      onsubmit="return confirm('Tem certeza que deseja excluir este usuário?')">
+                                      onsubmit="return confirm('Tem certeza que deseja excluir este usuario?')">
                                     @csrf
                                     @method('DELETE')
                                     <button class="font-semibold text-red-600 hover:underline">
@@ -95,7 +95,7 @@
                     @empty
                         <tr>
                             <td colspan="4" class="py-6 text-center text-slate-500">
-                                Nenhum usuário encontrado.
+                                Nenhum usuario encontrado.
                             </td>
                         </tr>
                     @endforelse

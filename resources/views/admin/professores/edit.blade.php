@@ -11,7 +11,7 @@
                     Editar Professor
                 </h1>
                 <p class="text-slate-500">
-                    Atualize as informações deste professor.
+                    Atualize as informacoes deste professor.
                 </p>
             </div>
 

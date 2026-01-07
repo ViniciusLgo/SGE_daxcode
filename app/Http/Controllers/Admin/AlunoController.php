@@ -9,14 +9,16 @@ use App\Models\User;
 use App\Models\Responsavel;
 use App\Models\Matricula;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use App\Services\CodeGenerator;
 
 class AlunoController extends Controller
 {
     /**
      * ============================================================
      * INDEX
-     * Listagem de alunos com filtros e status da matrícula
+     * Listagem de alunos com filtros e status da matricula
      * ============================================================
      */
     public function index(Request $request)
@@ -29,7 +31,7 @@ class AlunoController extends Controller
 
         $alunos = Aluno::with(['user', 'turma', 'matriculaModel'])
 
-            // BUSCA POR NOME / EMAIL / MATRÍCULA
+            // BUSCA POR NOME / EMAIL / MATRICULA
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($q) use ($search) {
                     $q->whereHas('user', function ($u) use ($search) {
@@ -40,14 +42,14 @@ class AlunoController extends Controller
                 });
             })
 
-            // FILTRO POR STATUS DA MATRÍCULA
+            // FILTRO POR STATUS DA MATRICULA
             ->when($status, function ($query) use ($status) {
                 $query->whereHas('matriculaModel', function ($q) use ($status) {
                     $q->where('status', $status);
                 });
             })
 
-            // FILTRO POR TURMA (VIA MATRÍCULA)
+            // FILTRO POR TURMA (VIA MATRICULA)
             ->when($turmaId, function ($query) use ($turmaId) {
                 $query->whereHas('matriculaModel', function ($q) use ($turmaId) {
                     $q->where('turma_id', $turmaId);
@@ -88,22 +90,22 @@ class AlunoController extends Controller
     /**
      * ============================================================
      * CREATE
-     * Tela de cadastro do aluno (complemento do usuário)
+     * Tela de cadastro do aluno (complemento do usuario)
      * ============================================================
      */
     public function create(Request $request)
     {
         $user = null;
 
-        // Quando vem do cadastro de usuário
+        // Quando vem do cadastro de usuario
         if ($request->has('user_id')) {
             $user = User::findOrFail($request->user_id);
 
-            // Evita criar aluno duplicado para o mesmo usuário
+            // Evita criar aluno duplicado para o mesmo usuario
             if ($user->aluno) {
                 return redirect()
                     ->route('admin.alunos.edit', $user->aluno->id)
-                    ->with('info', 'Este usuário já possui cadastro de aluno.');
+                    ->with('info', 'Este usuario ja possui cadastro de aluno.');
             }
         }
 
@@ -117,7 +119,7 @@ class AlunoController extends Controller
      * STORE
      * Cria:
      * 1) Aluno
-     * 2) Matrícula acadêmica (status)
+     * 2) Matricula academica (status)
      * ============================================================
      */
     public function store(Request $request)
@@ -130,69 +132,63 @@ class AlunoController extends Controller
             'data_nascimento' => 'nullable|date',
         ]);
 
-        /**
-         * ------------------------------------------------------------
-         * GERA CÓDIGO DO ALUNO (IDENTIDADE)
-         * Ex: ALU-2025-00009
-         * ------------------------------------------------------------
-         */
-        $ultimoAluno = Aluno::orderByDesc('id')->first();
-        $proximoNumeroAluno = $ultimoAluno ? $ultimoAluno->id + 1 : 1;
+        DB::transaction(function () use ($request, $validated) {
+            /**
+             * ------------------------------------------------------------
+             * GERA CODIGO DO ALUNO (IDENTIDADE)
+             * Ex: ALU-2025-00009
+             * ------------------------------------------------------------
+             */
+            $codigoAluno = CodeGenerator::next('aluno');
 
-        $codigoAluno = 'ALU-' . now()->format('Y') . '-' .
-            str_pad($proximoNumeroAluno, 5, '0', STR_PAD_LEFT);
+            /**
+             * ------------------------------------------------------------
+             * UPLOAD DA FOTO (SE EXISTIR)
+             * ------------------------------------------------------------
+             */
+            $foto = null;
+            if ($request->hasFile('foto_perfil')) {
+                $foto = $request->file('foto_perfil')
+                    ->store('alunos/fotos', 'public');
+            }
 
-        /**
-         * ------------------------------------------------------------
-         * UPLOAD DA FOTO (SE EXISTIR)
-         * ------------------------------------------------------------
-         */
-        $foto = null;
-        if ($request->hasFile('foto_perfil')) {
-            $foto = $request->file('foto_perfil')
-                ->store('alunos/fotos', 'public');
-        }
+            /**
+             * ------------------------------------------------------------
+             * CRIA O ALUNO
+             * ------------------------------------------------------------
+             */
+            $aluno = Aluno::create([
+                'user_id'         => $validated['user_id'],
+                'turma_id'        => $validated['turma_id'],
+                'data_nascimento' => $validated['data_nascimento'] ?? null,
+                'matricula'       => $codigoAluno,
+                'telefone'        => $validated['telefone'] ?? null,
+                'foto_perfil'     => $foto,
+            ]);
 
-        /**
-         * ------------------------------------------------------------
-         * CRIA O ALUNO
-         * ------------------------------------------------------------
-         */
-        $aluno = Aluno::create([
-            'user_id'         => $validated['user_id'],
-            'turma_id'        => $validated['turma_id'],
-            'data_nascimento' => $validated['data_nascimento'] ?? null,
-            'matricula'       => $codigoAluno,
-            'telefone'        => $validated['telefone'] ?? null,
-            'foto_perfil'     => $foto,
-        ]);
+            /**
+             * ------------------------------------------------------------
+             * GERA CODIGO DA MATRICULA (OBRIGATORIO NO BANCO)
+             * Ex: MAT-2025-00001
+             * ------------------------------------------------------------
+             */
+            $codigoMatricula = CodeGenerator::next('matricula');
 
-        /**
-         * ------------------------------------------------------------
-         * GERA CÓDIGO DA MATRÍCULA (OBRIGATÓRIO NO BANCO)
-         * Ex: MAT-2025-00001
-         * ------------------------------------------------------------
-         */
-        $ultimaMatricula = Matricula::orderByDesc('id')->first();
-        $proximoNumeroMatricula = $ultimaMatricula ? $ultimaMatricula->id + 1 : 1;
-
-        $codigoMatricula = 'MAT-' . now()->format('Y') . '-' .
-            str_pad($proximoNumeroMatricula, 5, '0', STR_PAD_LEFT);
-
-        /**
-         * ------------------------------------------------------------
-         * CRIA MATRÍCULA ACADÊMICA
-         * ------------------------------------------------------------
-         */
-        $aluno->matriculaModel()->create([
-            'codigo'            => $codigoMatricula,
-            'turma_id'          => $validated['turma_id'],
-            'status'            => 'ativo',
-            'data_status'       => now(),
-            'motivo'            => null,
-            'observacao'        => 'Matrícula inicial criada automaticamente',
-            'user_id_alteracao' => auth()->id(),
-        ]);
+            /**
+             * ------------------------------------------------------------
+             * CRIA MATRICULA ACADEMICA
+             * ------------------------------------------------------------
+             */
+            $aluno->matriculaModel()->create([
+                'codigo'            => $codigoMatricula,
+                'turma_id'          => $validated['turma_id'],
+                'status'            => 'ativo',
+                'data_status'       => now(),
+                'motivo'            => null,
+                'observacao'        => 'Matricula inicial criada automaticamente',
+                'user_id_alteracao' => auth()->id(),
+            ]);
+        });
 
         return redirect()
             ->route('admin.alunos.index')
@@ -248,14 +244,14 @@ class AlunoController extends Controller
                 ->store('alunos/fotos', 'public');
         }
 
-        // Atualiza dados editáveis do aluno
+        // Atualiza dados editaveis do aluno
         $aluno->update([
             'telefone'    => $validated['telefone'] ?? null,
             'turma_id'    => $validated['turma_id'],
             'foto_perfil' => $aluno->foto_perfil,
         ]);
 
-        // Sincroniza responsáveis (se houver)
+        // Sincroniza responsaveis (se houver)
         $aluno->responsaveis()->sync($request->responsaveis ?? []);
 
         return redirect()
@@ -300,17 +296,17 @@ class AlunoController extends Controller
             Storage::disk('public')->delete($aluno->foto_perfil);
         }
 
-        // Remove matrícula (se existir)
+        // Remove matricula (se existir)
         if ($aluno->matriculaModel) {
             $aluno->matriculaModel->delete();
         }
 
-        // Desvincula responsáveis (pivot)
+        // Desvincula responsaveis (pivot)
         if (method_exists($aluno, 'responsaveis')) {
             $aluno->responsaveis()->detach();
         }
 
-        // Remove usuário APENAS se existir
+        // Remove usuario APENAS se existir
         if ($aluno->user) {
             $aluno->user->delete();
         }

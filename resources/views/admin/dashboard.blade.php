@@ -11,7 +11,7 @@
         $recentUsuarios   = $recentUsuarios ?? collect();
         $recentAlunos     = $recentAlunos ?? collect();
 
-        $version = optional($settings)->versao_sistema ?? '1.0.0';
+        $version = optional($settings)->version ?? '1.0.0';
     @endphp
 
     {{-- HEADER --}}
@@ -32,14 +32,14 @@
     {{-- GRID DE BLOCOS --}}
     <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
 
-        {{-- Usuários Recentes --}}
+        {{-- Usuarios Recentes --}}
         <div class="xl:col-span-2 bg-white dark:bg-dax-dark/60
                 border border-slate-200 dark:border-slate-800
                 rounded-2xl p-6 shadow-sm">
 
             <div class="flex items-center justify-between mb-4">
                 <h3 class="font-black text-dax-dark dark:text-dax-light">
-                    Usuários Recentes
+                    Usuarios Recentes
                 </h3>
 
                 <a href="{{ route('admin.usuarios.index') }}"
@@ -66,7 +66,7 @@
                 @empty
                     <tr>
                         <td colspan="3" class="py-4 text-center text-slate-500">
-                            Nenhum usuário recente
+                            Nenhum usuario recente
                         </td>
                     </tr>
                 @endforelse
@@ -80,12 +80,12 @@
                 rounded-2xl p-6 shadow-sm">
 
             <h3 class="font-black text-dax-dark dark:text-dax-light mb-4">
-                Atalhos Rápidos
+                Atalhos Rapidos
             </h3>
 
             <div class="space-y-3">
                 <x-admin.tile :href="route('admin.usuarios.create')" icon="bi-person-plus-fill">
-                    Novo Usuário
+                    Novo Usuario
                 </x-admin.tile>
 
                 <x-admin.tile :href="route('admin.alunos.index')" icon="bi-mortarboard-fill">

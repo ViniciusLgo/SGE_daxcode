@@ -5,10 +5,10 @@
     {{-- ================= HEADER ================= --}}
     <div class="mb-6">
         <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light">
-            ✏️ Editar Registro
+             Editar Registro
         </h1>
         <p class="text-sm text-slate-500">
-            Atualize as informações deste registro.
+            Atualize as informacoes deste registro.
         </p>
     </div>
 
@@ -100,9 +100,9 @@
                 </select>
             </div>
 
-            {{-- ================= DESCRIÇÃO ================= --}}
+            {{-- ================= DESCRICAO ================= --}}
             <div class="md:col-span-2">
-                <label class="block font-semibold mb-1">Descrição</label>
+                <label class="block font-semibold mb-1">Descricao</label>
                 <textarea name="descricao" rows="4"
                           class="w-full rounded-xl border border-slate-300 dark:border-slate-700
                                  px-4 py-2.5 bg-white dark:bg-dax-dark/60
@@ -119,7 +119,7 @@
 
                 @if($aluno_registro->arquivo)
                     <p class="mt-2 text-sm text-slate-500">
-                        📎 Arquivo atual:
+                         Arquivo atual:
                         <a href="{{ asset($aluno_registro->arquivo) }}"
                            target="_blank"
                            class="text-dax-green font-semibold hover:underline">
@@ -129,19 +129,19 @@
                 @endif
             </div>
 
-            {{-- ================= BOTÕES ================= --}}
+            {{-- ================= BOTOES ================= --}}
             <div class="md:col-span-2 flex justify-between mt-4">
 
                 <a href="{{ route('admin.aluno_registros.index') }}"
                    class="px-4 py-2 rounded-xl border border-slate-300 dark:border-slate-700
                           hover:bg-slate-100 dark:hover:bg-dax-dark/80">
-                    ← Voltar
+                     Voltar
                 </a>
 
                 <button type="submit"
                         class="px-6 py-2 rounded-xl bg-dax-green text-white font-semibold
                                hover:bg-dax-greenSoft transition">
-                    💾 Atualizar
+                     Atualizar
                 </button>
 
             </div>
@@ -161,7 +161,7 @@
                 .then(data => {
 
                     if (data.sem_turma) {
-                        alert("⚠️ Este aluno não está vinculado a nenhuma turma!");
+                        alert(" Este aluno nao esta vinculado a nenhuma turma!");
                         document.getElementById('turma_nome').value = '';
                         document.getElementById('turma_id').value = '';
                         return;

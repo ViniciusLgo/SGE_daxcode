@@ -3,9 +3,9 @@
     <div class="settings-card">
 
         <div class="settings-card-header">
-            <h5>📚 Configurações Acadêmicas</h5>
+            <h5> Configuracoes Academicas</h5>
             <p class="settings-card-subtitle">
-                Defina regras acadêmicas, calendário e avaliações.
+                Defina regras academicas, calendario e avaliacoes.
             </p>
         </div>
 
@@ -47,7 +47,7 @@
 
                 @default
                     <p class="text-muted">
-                        Selecione uma opção no menu acadêmico.
+                        Selecione uma opcao no menu academico.
                     </p>
 
             @endswitch

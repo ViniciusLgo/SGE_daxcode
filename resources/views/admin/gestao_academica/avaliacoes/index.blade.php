@@ -6,10 +6,10 @@
     <div class="flex items-center justify-between mb-6">
         <div>
             <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light">
-                📘 Avaliações
+                 Avaliacoes
             </h1>
             <p class="text-sm text-slate-500">
-                Gestão de avaliações por turma e disciplina.
+                Gestao de avaliacoes por turma e disciplina.
             </p>
         </div>
 
@@ -17,7 +17,7 @@
            class="inline-flex items-center gap-2 px-4 py-2 rounded-xl
                   bg-dax-green text-white font-semibold
                   hover:bg-dax-greenSoft transition">
-            ➕ Nova Avaliação
+             Nova Avaliacao
         </a>
     </div>
 
@@ -30,13 +30,13 @@
             <table class="min-w-full divide-y divide-slate-200 dark:divide-slate-800">
                 <thead class="bg-slate-50 dark:bg-slate-900/40">
                 <tr class="text-left text-sm font-semibold text-slate-600 dark:text-slate-300">
-                    <th class="px-4 py-3">Título</th>
+                    <th class="px-4 py-3">Titulo</th>
                     <th class="px-4 py-3">Turma</th>
                     <th class="px-4 py-3">Disciplina</th>
                     <th class="px-4 py-3 text-center">Tipo</th>
                     <th class="px-4 py-3 text-center">Data</th>
                     <th class="px-4 py-3 text-center">Status</th>
-                    <th class="px-4 py-3 text-right">Ações</th>
+                    <th class="px-4 py-3 text-right">Acoes</th>
                 </tr>
                 </thead>
 
@@ -44,19 +44,19 @@
                 @forelse($avaliacoes as $avaliacao)
                     <tr class="hover:bg-slate-50 dark:hover:bg-slate-900/40 transition">
 
-                        {{-- Título --}}
+                        {{-- Titulo --}}
                         <td class="px-4 py-3 font-semibold text-dax-dark dark:text-dax-light">
                             {{ $avaliacao->titulo }}
                         </td>
 
                         {{-- Turma --}}
                         <td class="px-4 py-3">
-                            {{ $avaliacao->turma->nome ?? '—' }}
+                            {{ $avaliacao->turma->nome ?? '' }}
                         </td>
 
                         {{-- Disciplina --}}
                         <td class="px-4 py-3">
-                            {{ $avaliacao->disciplina->nome ?? '—' }}
+                            {{ $avaliacao->disciplina->nome ?? '' }}
                         </td>
 
                         {{-- Tipo --}}
@@ -90,7 +90,7 @@
                             @endif
                         </td>
 
-                        {{-- Ações --}}
+                        {{-- Acoes --}}
                         <td class="px-4 py-3 text-right space-x-2">
 
                             {{-- Editar --}}
@@ -105,7 +105,7 @@
                                    {{ $avaliacao->status === 'aberta'
                                        ? 'text-emerald-600 hover:underline'
                                        : 'text-slate-500 hover:underline' }}">
-                                {{ $avaliacao->status === 'aberta' ? 'Lançar' : 'Ver' }}
+                                {{ $avaliacao->status === 'aberta' ? 'Lancar' : 'Ver' }}
                             </a>
 
                             {{-- Reabrir --}}
@@ -128,7 +128,7 @@
                                     @method('PATCH')
                                     <button
                                         class="text-sm font-semibold text-yellow-600 hover:underline"
-                                        onclick="return confirm('Deseja encerrar esta avaliação?')">
+                                        onclick="return confirm('Deseja encerrar esta avaliacao?')">
                                         Encerrar
                                     </button>
                                 </form>
@@ -141,7 +141,7 @@
                                 @method('DELETE')
                                 <button
                                     class="text-sm font-semibold text-red-600 hover:underline"
-                                    onclick="return confirm('Deseja excluir esta avaliação?')">
+                                    onclick="return confirm('Deseja excluir esta avaliacao?')">
                                     Excluir
                                 </button>
                             </form>
@@ -152,7 +152,7 @@
                     <tr>
                         <td colspan="7"
                             class="px-6 py-8 text-center text-slate-500">
-                            Nenhuma avaliação cadastrada.
+                            Nenhuma avaliacao cadastrada.
                         </td>
                     </tr>
                 @endforelse
@@ -160,7 +160,7 @@
             </table>
         </div>
 
-        {{-- ================= PAGINAÇÃO ================= --}}
+        {{-- ================= PAGINACAO ================= --}}
         @if(method_exists($avaliacoes, 'links'))
             <div class="px-4 py-3 border-t border-slate-200 dark:border-slate-800">
                 {{ $avaliacoes->links() }}

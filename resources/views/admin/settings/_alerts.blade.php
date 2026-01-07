@@ -5,7 +5,7 @@
 @if ($errors->any())
     <div class="alert alert-danger rounded-3 shadow-sm p-3 mb-4"
          style="animation: fadeIn .3s;">
-        <strong>⚠️ Existem erros no formulário:</strong>
+        <strong> Existem erros no formulario:</strong>
         <ul class="mt-2 mb-0 ps-3">
             @foreach ($errors->all() as $error)
                 <li>{{ $error }}</li>
@@ -20,7 +20,7 @@
         <div class="toast show align-items-center text-white bg-success border-0 shadow-lg" role="alert">
             <div class="d-flex">
                 <div class="toast-body">
-                    ✅ {{ session('success') }}
+                     {{ session('success') }}
                 </div>
                 <button type="button"
                         class="btn-close btn-close-white me-2 m-auto"
@@ -36,7 +36,7 @@
         <div class="toast show align-items-center text-white bg-danger border-0 shadow-lg" role="alert">
             <div class="d-flex">
                 <div class="toast-body">
-                    ❌ {{ session('error') }}
+                     {{ session('error') }}
                 </div>
                 <button type="button"
                         class="btn-close btn-close-white me-2 m-auto"

@@ -8,7 +8,7 @@
                 Editar Turma
             </h1>
             <p class="text-slate-500">
-                Atualize as informações desta turma.
+                Atualize as informacoes desta turma.
             </p>
         </div>
 

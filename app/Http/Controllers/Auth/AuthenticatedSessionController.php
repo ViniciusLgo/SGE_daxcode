@@ -20,7 +20,7 @@ class AuthenticatedSessionController extends Controller
     }
 
     /**
-     * Processa a autenticação do usuário.
+     * Processa a autenticacao do usuario.
      */
     public function store(LoginRequest $request): RedirectResponse
     {
@@ -29,12 +29,12 @@ class AuthenticatedSessionController extends Controller
 
         $user = auth()->user();
 
-        // 🔹 Se for o primeiro login, redireciona para troca de senha
+        //  Se for o primeiro login, redireciona para troca de senha
         if ($user->first_login) {
             return redirect()->route('auth.first_access');
         }
 
-        // 🔹 Redireciona conforme o tipo de usuário
+        //  Redireciona conforme o tipo de usuario
         return match ($user->tipo) {
             'admin' => redirect()->route('admin.dashboard'),
             'professor' => redirect()->route('dashboard.professor'),
@@ -45,7 +45,7 @@ class AuthenticatedSessionController extends Controller
     }
 
     /**
-     * Faz logout do usuário autenticado.
+     * Faz logout do usuario autenticado.
      */
     public function destroy(Request $request): RedirectResponse
     {

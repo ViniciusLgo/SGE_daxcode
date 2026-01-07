@@ -10,7 +10,7 @@
                 Completar Cadastro do Professor
             </h1>
             <p class="text-slate-500">
-                Usuário criado:
+                Usuario criado:
                 <strong>{{ $user->name }}</strong> ({{ $user->email }})
             </p>
         </div>

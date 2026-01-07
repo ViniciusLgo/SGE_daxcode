@@ -8,7 +8,7 @@
             Editar Atendimento
         </h1>
         <p class="text-sm text-slate-500">
-            Atualize as informações do atendimento registrado pela Secretaria.
+            Atualize as informacoes do atendimento registrado pela Secretaria.
         </p>
     </div>
 
@@ -68,20 +68,20 @@
                         class="w-full rounded-xl border border-slate-300 dark:border-slate-700
                                bg-white dark:bg-dax-dark text-dax-dark dark:text-dax-light
                                px-4 py-2.5 focus:ring-2 focus:ring-dax-green focus:outline-none">
-                        <option value="">— Selecione um aluno —</option>
+                        <option value=""> Selecione um aluno </option>
                         @foreach($alunos as $aluno)
                             <option value="{{ $aluno->id }}"
                                 @selected($atendimento->aluno_id == $aluno->id)>
-                                {{ $aluno->user->name ?? 'Aluno sem usuário' }}
+                                {{ $aluno->user->name ?? 'Aluno sem usuario' }}
                             </option>
                         @endforeach
                     </select>
                 </div>
 
-                {{-- Responsável --}}
+                {{-- Responsavel --}}
                 <div>
                     <label class="block text-sm font-semibold text-dax-dark dark:text-dax-light mb-1">
-                        Responsável
+                        Responsavel
                     </label>
                     <select
                         name="responsavel_id"
@@ -89,16 +89,16 @@
                         class="w-full rounded-xl border border-slate-300 dark:border-slate-700
                                bg-white dark:bg-dax-dark text-dax-dark dark:text-dax-light
                                px-4 py-2.5 focus:ring-2 focus:ring-dax-green focus:outline-none">
-                        <option value="">— Selecionado automaticamente —</option>
+                        <option value=""> Selecionado automaticamente </option>
                         @foreach($responsaveis as $r)
                             <option value="{{ $r->id }}"
                                 @selected($atendimento->responsavel_id == $r->id)>
-                                {{ $r->user->name ?? 'Responsável' }}
+                                {{ $r->user->name ?? 'Responsavel' }}
                             </option>
                         @endforeach
                     </select>
                     <p class="text-xs text-slate-500 mt-1">
-                        Ao alterar o aluno, o responsável principal será atualizado automaticamente.
+                        Ao alterar o aluno, o responsavel principal sera atualizado automaticamente.
                     </p>
                 </div>
 
@@ -118,7 +118,7 @@
 
             </div>
 
-            {{-- ================= AÇÕES ================= --}}
+            {{-- ================= ACOES ================= --}}
             <div class="flex justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
                 <a href="{{ route('admin.secretaria.atendimentos.index') }}"
                    class="px-4 py-2 rounded-xl border border-slate-300 dark:border-slate-700
@@ -136,7 +136,7 @@
         </form>
     </div>
 
-    {{-- ================= JS AUTO RESPONSÁVEL ================= --}}
+    {{-- ================= JS AUTO RESPONSAVEL ================= --}}
     <script>
         const alunos = @json($alunos);
 

@@ -7,10 +7,10 @@
         <div>
             <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light flex items-center gap-2">
                 <i class="bi bi-people-fill text-dax-yellow"></i>
-                Responsáveis
+                Responsaveis
             </h1>
             <p class="text-slate-500">
-                Gerencie os responsáveis e seus alunos vinculados.
+                Gerencie os responsaveis e seus alunos vinculados.
             </p>
         </div>
 
@@ -24,7 +24,7 @@
                     type="text"
                     name="search"
                     value="{{ request('search') }}"
-                    placeholder="Ex: Maria, João, email@..."
+                    placeholder="Ex: Maria, Joao, email@..."
                     class="w-full rounded-xl border px-4 py-2.5
                        bg-white dark:bg-dax-dark/60
                        border-slate-200 dark:border-slate-800">
@@ -53,11 +53,11 @@
             <table class="min-w-full text-sm">
                 <thead class="bg-slate-50 dark:bg-dax-dark">
                 <tr class="text-left text-slate-600 dark:text-slate-400">
-                    <th class="px-4 py-3">Responsável</th>
+                    <th class="px-4 py-3">Responsavel</th>
                     <th class="px-4 py-3">E-mail</th>
                     <th class="px-4 py-3">Telefone</th>
                     <th class="px-4 py-3">Alunos</th>
-                    <th class="px-4 py-3 text-right">Ações</th>
+                    <th class="px-4 py-3 text-right">Acoes</th>
                 </tr>
                 </thead>
 
@@ -74,7 +74,7 @@
                         </td>
 
                         <td class="px-4 py-3">
-                            {{ $r->telefone ?? '—' }}
+                            {{ $r->telefone ?? '' }}
                         </td>
 
                         <td class="px-4 py-3">
@@ -97,7 +97,7 @@
                             <form action="{{ route('admin.responsaveis.destroy', $r) }}"
                                   method="POST"
                                   class="inline"
-                                  onsubmit="return confirm('Excluir este responsável?')">
+                                  onsubmit="return confirm('Excluir este responsavel?')">
                                 @csrf @method('DELETE')
                                 <button class="text-red-600 hover:underline">
                                     Excluir
@@ -109,7 +109,7 @@
                 @empty
                     <tr>
                         <td colspan="5" class="px-4 py-6 text-center text-slate-500">
-                            Nenhum responsável encontrado.
+                            Nenhum responsavel encontrado.
                         </td>
                     </tr>
                 @endforelse

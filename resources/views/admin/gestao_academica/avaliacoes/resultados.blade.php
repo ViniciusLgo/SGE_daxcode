@@ -6,10 +6,10 @@
     <div class="flex justify-between mb-6">
         <div>
             <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light">
-                📝 Resultados
+                 Resultados
             </h1>
             <p class="text-sm text-slate-500">
-                {{ $avaliacao->titulo }} —
+                {{ $avaliacao->titulo }} 
                 {{ $avaliacao->disciplina->nome }}
                 | Turma {{ $avaliacao->turma->nome }}
             </p>
@@ -19,7 +19,7 @@
            class="px-4 py-2 rounded-xl border
               border-slate-300 dark:border-slate-700
               hover:bg-slate-100 dark:hover:bg-slate-800">
-            ← Voltar
+             Voltar
         </a>
     </div>
 
@@ -39,7 +39,7 @@
                         <th class="p-3 text-left">Aluno</th>
                         <th class="p-3 text-center">Nota</th>
                         <th class="p-3">Arquivo</th>
-                        <th class="p-3">Observação</th>
+                        <th class="p-3">Observacao</th>
                         <th class="p-3 text-center">Status</th>
                     </tr>
                     </thead>
@@ -75,7 +75,7 @@
                                     <a href="{{ asset('storage/'.$resultado->arquivo) }}"
                                        target="_blank"
                                        class="text-blue-600 hover:underline">
-                                        📄 Ver arquivo
+                                         Ver arquivo
                                     </a>
                                 @endif
 
@@ -86,7 +86,7 @@
                           text-dax-dark dark:text-dax-light
                           border border-slate-300 dark:border-slate-700
                           hover:bg-slate-300 dark:hover:bg-slate-700">
-                                        📎 Anexar
+                                         Anexar
                                         <input type="file"
                                                name="resultados[{{ $aluno->id }}][arquivo]"
                                                class="hidden">
@@ -94,7 +94,7 @@
                                 @endunless
                             </td>
 
-                            {{-- Observação --}}
+                            {{-- Observacao --}}
                             <td class="p-3">
                                 <input type="text"
                                        name="resultados[{{ $aluno->id }}][observacao]"
@@ -112,7 +112,7 @@
                             <td class="p-3 text-center">
                                 @if($resultado?->entregue)
                                     <span class="text-emerald-500 font-semibold">
-                Entregue ✓
+                Entregue 
             </span>
                                 @else
                                     <span class="text-slate-400">
@@ -138,7 +138,7 @@
             @unless($somenteLeitura)
                 <div class="flex justify-end mt-6">
                     <button class="px-5 py-2 rounded-xl bg-dax-green text-white font-semibold">
-                        💾 Salvar Resultados
+                         Salvar Resultados
                     </button>
                 </div>
             @endunless

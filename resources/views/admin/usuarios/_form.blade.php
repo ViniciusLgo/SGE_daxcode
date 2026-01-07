@@ -43,7 +43,7 @@
     {{-- Tipo --}}
     <div>
         <label class="block text-sm font-semibold mb-1">
-            Tipo de Usuário
+            Tipo de Usuario
         </label>
         <select name="tipo"
                 required
@@ -58,7 +58,7 @@
             <option value="admin" {{ old('tipo', $user->tipo ?? '') == 'admin' ? 'selected' : '' }}>Administrador</option>
             <option value="professor" {{ old('tipo', $user->tipo ?? '') == 'professor' ? 'selected' : '' }}>Professor</option>
             <option value="aluno" {{ old('tipo', $user->tipo ?? '') == 'aluno' ? 'selected' : '' }}>Aluno</option>
-            <option value="responsavel" {{ old('tipo', $user->tipo ?? '') == 'responsavel' ? 'selected' : '' }}>Responsável</option>
+            <option value="responsavel" {{ old('tipo', $user->tipo ?? '') == 'responsavel' ? 'selected' : '' }}>Responsavel</option>
         </select>
     </div>
 

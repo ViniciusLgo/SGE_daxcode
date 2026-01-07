@@ -22,7 +22,7 @@
 
     /* ==========================================================
        CONTAINER PRINCIPAL
-       (SIDEBAR FIXA + CONTEÚDO COM SCROLL)
+       (SIDEBAR FIXA + CONTEUDO COM SCROLL)
     ========================================================== */
     .settings-container {
         display: flex;
@@ -42,7 +42,7 @@
         overflow-y: auto;
     }
 
-    /* Título */
+    /* Titulo */
     .settings-sidebar-title {
         font-weight: 600;
         font-size: 14px;
@@ -117,7 +117,7 @@
     }
 
     /* ==========================================================
-       CONTEÚDO CENTRAL
+       CONTEUDO CENTRAL
     ========================================================== */
     .settings-content {
         flex: 1;
@@ -128,7 +128,7 @@
     }
 
     /* ==========================================================
-       FORMULÁRIO
+       FORMULARIO
     ========================================================== */
     .settings-form {
         min-height: 100%;

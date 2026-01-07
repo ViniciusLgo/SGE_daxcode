@@ -18,7 +18,7 @@ class FirstAccessController extends Controller
     }
 
     /**
-     * Atualiza a senha e libera o usuário para o sistema.
+     * Atualiza a senha e libera o usuario para o sistema.
      */
     public function update(Request $request)
     {

@@ -9,21 +9,21 @@
                 Detalhes do Atendimento
             </h1>
             <p class="text-sm text-slate-500">
-                Visualização completa do atendimento registrado pela Secretaria.
+                Visualizacao completa do atendimento registrado pela Secretaria.
             </p>
         </div>
 
-        {{-- Ações --}}
+        {{-- Acoes --}}
         <div class="flex gap-2">
             <a href="{{ route('admin.secretaria.atendimentos.index') }}"
                class="px-4 py-2 rounded-xl border border-slate-300 dark:border-slate-700
                       text-dax-dark dark:text-dax-light hover:bg-slate-100 dark:hover:bg-dax-dark/80">
-                ← Voltar
+                 Voltar
             </a>
 
             <a href="{{ route('admin.secretaria.atendimentos.edit', $atendimento) }}"
                class="px-4 py-2 rounded-xl bg-dax-green text-white font-semibold hover:bg-dax-greenSoft transition">
-                ✏️ Editar
+                 Editar
             </a>
         </div>
     </div>
@@ -35,7 +35,7 @@
         <div class="mb-6">
             @if($atendimento->status === 'concluido')
                 <span class="px-4 py-1.5 text-sm font-semibold rounded-full bg-green-100 text-green-800">
-                    Concluído
+                    Concluido
                 </span>
             @elseif($atendimento->status === 'pendente')
                 <span class="px-4 py-1.5 text-sm font-semibold rounded-full bg-yellow-100 text-yellow-800">
@@ -68,14 +68,14 @@
             <div>
                 <p class="text-xs text-slate-500">Aluno</p>
                 <p class="font-semibold text-dax-dark dark:text-dax-light">
-                    {{ $atendimento->aluno->user->name ?? '—' }}
+                    {{ $atendimento->aluno->user->name ?? '' }}
                 </p>
             </div>
 
             <div>
-                <p class="text-xs text-slate-500">Responsável</p>
+                <p class="text-xs text-slate-500">Responsavel</p>
                 <p class="font-semibold text-dax-dark dark:text-dax-light">
-                    {{ $atendimento->responsavel->user->name ?? '—' }}
+                    {{ $atendimento->responsavel->user->name ?? '' }}
                 </p>
             </div>
 
@@ -84,7 +84,7 @@
         {{-- DIVISOR --}}
         <div class="my-6 border-t border-slate-200 dark:border-slate-800"></div>
 
-        {{-- AÇÕES FINAIS --}}
+        {{-- ACOES FINAIS --}}
         <div class="flex flex-wrap justify-end gap-3">
 
             <a href="{{ route('admin.secretaria.atendimentos.edit', $atendimento) }}"

@@ -10,12 +10,12 @@ use Illuminate\Support\Facades\Storage;
 class SettingController extends Controller
 {
     /**
-     * Exibe a tela de edição de configurações globais do sistema.
+     * Exibe a tela de edicao de configuracoes globais do sistema.
      */
     public function edit()
     {
-        // Busca o primeiro (e único) registro de settings.
-        // Se não existir, cria um com valores padrão.
+        // Busca o primeiro (e unico) registro de settings.
+        // Se nao existir, cria um com valores padrao.
         $settings = Setting::first();
 
         if (! $settings) {
@@ -25,7 +25,7 @@ class SettingController extends Controller
                 'phone'              => '',
                 'address'            => '',
                 'version'            => '1.0',
-                'logo_path'          => null,
+                'logo'               => null,
                 'academic_settings'  => [
                     'ano_letivo'  => date('Y'),
                     'modelo_ano'  => 'bimestre',
@@ -41,14 +41,14 @@ class SettingController extends Controller
     }
 
     /**
-     * Atualiza as configurações globais.
+     * Atualiza as configuracoes globais.
      */
     public function update(Request $request)
     {
         $settings = Setting::firstOrFail();
 
         // -----------------------------
-        // 1) VALIDAÇÕES SIMPLES
+        // 1) VALIDACOES SIMPLES
         // -----------------------------
         $request->validate([
             'school_name' => ['nullable', 'string', 'max:255'],
@@ -60,7 +60,7 @@ class SettingController extends Controller
         ]);
 
         // -----------------------------
-        // 2) CAMPOS BÁSICOS DA INSTITUIÇÃO
+        // 2) CAMPOS BASICOS DA INSTITUICAO
         // -----------------------------
         $settings->school_name = $request->input('school_name');
         $settings->email       = $request->input('email');
@@ -73,17 +73,17 @@ class SettingController extends Controller
         // -----------------------------
         if ($request->hasFile('logo')) {
             // Apaga o logo anterior se existir
-            if ($settings->logo_path && Storage::disk('public')->exists($settings->logo_path)) {
-                Storage::disk('public')->delete($settings->logo_path);
+            if ($settings->logo && Storage::disk('public')->exists($settings->logo)) {
+                Storage::disk('public')->delete($settings->logo);
             }
 
             // Salva o novo logo em storage/app/public/settings
             $path = $request->file('logo')->store('settings', 'public');
-            $settings->logo_path = $path;
+            $settings->logo = $path;
         }
 
         // -----------------------------
-        // 4) BLOCO ACADÊMICO (JSON)
+        // 4) BLOCO ACADEMICO (JSON)
         // -----------------------------
         // Pega tudo que veio em academic_settings[...]
         $academic = $request->input('academic_settings', []);
@@ -93,19 +93,19 @@ class SettingController extends Controller
             $academic = [];
         }
 
-        // ---- LIMPEZA SIMPLES DE ARRAYS DINÂMICOS ----
+        // ---- LIMPEZA SIMPLES DE ARRAYS DINAMICOS ----
         // Remove linhas totalmente vazias de feriados
         if (!empty($academic['feriados']) && is_array($academic['feriados'])) {
             $academic['feriados'] = collect($academic['feriados'])
                 ->filter(function ($item) {
-                    // Mantém se tiver pelo menos data ou nome
+                    // Mantem se tiver pelo menos data ou nome
                     return !empty($item['data']) || !empty($item['nome']);
                 })
                 ->values()
                 ->all();
         }
 
-        // Remove módulos que não tenham nome nem carga horária
+        // Remove modulos que nao tenham nome nem carga horaria
         if (!empty($academic['modulos']) && is_array($academic['modulos'])) {
             $academic['modulos'] = collect($academic['modulos'])
                 ->filter(function ($item) {
@@ -125,7 +125,7 @@ class SettingController extends Controller
                 ->all();
         }
 
-        // Marca checkboxes que não voltam no request como false
+        // Marca checkboxes que nao voltam no request como false
         // (para evitar undefined index depois)
         $promocao = $academic['promocao'] ?? [];
         $promocao['reprovar_por_nota']       = !empty($promocao['reprovar_por_nota']);
@@ -151,6 +151,6 @@ class SettingController extends Controller
 
         return redirect()
             ->route('admin.settings.edit')
-            ->with('success', 'Configurações atualizadas com sucesso!');
+            ->with('success', 'Configuracoes atualizadas com sucesso!');
     }
 }

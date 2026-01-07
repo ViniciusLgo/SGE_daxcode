@@ -6,10 +6,10 @@
     <div class="flex items-center justify-between mb-6">
         <div>
             <h1 class="text-2xl font-black text-dax-dark dark:text-dax-light">
-                💰 Despesas do Projeto Social
+                Despesas do Projeto Social
             </h1>
             <p class="text-sm text-slate-500">
-                Lançamentos de gastos por categoria e centro de custo.
+                Lancamentos de gastos por categoria e centro de custo.
             </p>
         </div>
 
@@ -43,9 +43,9 @@
         <form method="GET">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
 
-                {{-- Data início --}}
+                {{-- Data inicio --}}
                 <div>
-                    <label class="block text-sm font-semibold mb-1">Data início</label>
+                    <label class="block text-sm font-semibold mb-1">Data inicio</label>
                     <input type="date" name="data_inicio" value="{{ request('data_inicio') }}"
                            class="w-full rounded-xl px-4 py-2.5 bg-white dark:bg-slate-900
                   text-dax-dark dark:text-dax-light
@@ -77,7 +77,7 @@
                     </select>
                 </div>
 
-                {{-- Botão --}}
+                {{-- Botao --}}
                 <div class="flex items-end">
                     <button class="w-full px-5 py-2 rounded-xl bg-dax-green text-white font-semibold">
                         Filtrar
@@ -86,7 +86,7 @@
 
             </div>
 
-            {{-- FILTROS AVANÇADOS --}}
+            {{-- FILTROS AVANCADOS --}}
             @if($filtrosAtivos)
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-5 mt-6">
                     {{-- Centro --}}
@@ -143,8 +143,8 @@
                 <th class="px-4 py-3">Categoria</th>
                 <th class="px-4 py-3">Centro</th>
                 <th class="px-4 py-3 text-right">Valor</th>
-                <th class="px-4 py-3">Responsável</th>
-                <th class="px-4 py-3 text-right">Ações</th>
+                <th class="px-4 py-3">Responsavel</th>
+                <th class="px-4 py-3 text-right">Acoes</th>
             </tr>
             </thead>
 
@@ -153,11 +153,11 @@
                 <tr class="border-t">
                     <td class="px-4 py-3">{{ \Carbon\Carbon::parse($despesa->data)->format('d/m/Y') }}</td>
                     <td class="px-4 py-3">{{ $despesa->categoria?->nome }}</td>
-                    <td class="px-4 py-3">{{ $despesa->centroCusto?->nome ?? '-' }}</td>
+                    <td class="px-4 py-3">{{ $despesa->centroCusto?->nome ??  '-' }}</td>
                     <td class="px-4 py-3 text-right font-semibold">
                         R$ {{ number_format($despesa->valor,2,',','.') }}
                     </td>
-                    <td class="px-4 py-3">{{ $despesa->user?->name ?? '-' }}</td>
+                    <td class="px-4 py-3">{{ $despesa->user?->name ??  '-' }}</td>
                     <td class="px-4 py-3 text-right space-x-2">
                         <a href="{{ route('admin.financeiro.despesas.edit',$despesa) }}"
                            class="text-blue-600 font-semibold">Editar</a>
@@ -181,7 +181,7 @@
             @empty
                 <tr>
                     <td colspan="6" class="px-6 py-8 text-center text-slate-500">
-                        Nenhuma despesa lançada ainda.
+                        Nenhuma despesa lancada ainda.
                     </td>
                 </tr>
             @endforelse

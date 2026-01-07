@@ -5,16 +5,19 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Aluno;
+use App\Models\Matricula;
 use App\Models\Professor;
 use App\Models\Responsavel;
 use App\Models\Turma;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use App\Services\CodeGenerator;
 
 class UserController extends Controller
 {
     /**
-     * LISTAGEM DE USUÁRIOS
+     * LISTAGEM DE USUARIOS
      */
     public function index()
     {
@@ -23,7 +26,7 @@ class UserController extends Controller
     }
 
     /**
-     * FORMULÁRIO DE CRIAÇÃO
+     * FORMULARIO DE CRIACAO
      */
     public function create()
     {
@@ -31,8 +34,8 @@ class UserController extends Controller
     }
 
     /**
-     * STORE — CRIA USUÁRIO E PERFIL ASSOCIADO
-     * Regra: User é a entidade primária.
+     * STORE  CRIA USUARIO E PERFIL ASSOCIADO
+     * Regra: User e a entidade primaria.
      */
     public function store(Request $request)
     {
@@ -68,7 +71,7 @@ class UserController extends Controller
 
 
     /**
-     * FORMULÁRIO DE EDIÇÃO
+     * FORMULARIO DE EDICAO
      */
     public function edit($id)
     {
@@ -77,11 +80,12 @@ class UserController extends Controller
     }
 
     /**
-     * UPDATE — ATUALIZA USUÁRIO E GARANTE PERFIL
+     * UPDATE  ATUALIZA USUARIO E GARANTE PERFIL
      */
     public function update(Request $request, $id)
     {
         $user = User::findOrFail($id);
+        $tipoAnterior = $user->tipo;
 
         $validated = $request->validate([
             'name'     => 'required|string|max:255',
@@ -98,16 +102,40 @@ class UserController extends Controller
 
         $user->update($validated);
 
-        // Garante consistência do perfil
+        if ($tipoAnterior !== $user->tipo) {
+            match ($tipoAnterior) {
+                'aluno' => $user->aluno?->delete(),
+                'professor' => $user->professor?->delete(),
+                'responsavel' => $user->responsavel?->delete(),
+                default => null,
+            };
+        }
+
+        // Garante consistencia do perfil
         if ($user->tipo === 'aluno' && !$user->aluno) {
+            DB::transaction(function () use ($user) {
+                $turmaPadrao = Turma::where('nome', 'like', 'Turma Padr%')->firstOrFail();
 
-            $turmaPadrao = Turma::where('nome', 'Turma Padrão')->firstOrFail();
+                $codigoAluno = CodeGenerator::next('aluno');
 
-            Aluno::create([
-                'user_id'   => $user->id,
-                'turma_id'  => $turmaPadrao->id,
-                'matricula' => 'A' . str_pad($user->id, 4, '0', STR_PAD_LEFT),
-            ]);
+                $aluno = Aluno::create([
+                    'user_id'   => $user->id,
+                    'turma_id'  => $turmaPadrao->id,
+                    'matricula' => $codigoAluno,
+                ]);
+
+                $codigoMatricula = CodeGenerator::next('matricula');
+
+                $aluno->matriculaModel()->create([
+                    'codigo'            => $codigoMatricula,
+                    'turma_id'          => $turmaPadrao->id,
+                    'status'            => 'ativo',
+                    'data_status'       => now(),
+                    'motivo'            => null,
+                    'observacao'        => 'Matricula inicial criada automaticamente',
+                    'user_id_alteracao' => auth()->id(),
+                ]);
+            });
         }
 
         if ($user->tipo === 'professor' && !$user->professor) {
@@ -120,11 +148,11 @@ class UserController extends Controller
 
         return redirect()
             ->route('admin.usuarios.index')
-            ->with('success', 'Usuário atualizado com sucesso!');
+            ->with('success', 'Usuario atualizado com sucesso!');
     }
 
     /**
-     * DESTROY — REMOVE USUÁRIO E PERFIL
+     * DESTROY  REMOVE USUARIO E PERFIL
      */
     public function destroy($id)
     {
@@ -141,6 +169,6 @@ class UserController extends Controller
 
         return redirect()
             ->route('admin.usuarios.index')
-            ->with('success', 'Usuário e perfil excluídos com sucesso!');
+            ->with('success', 'Usuario e perfil excluidos com sucesso!');
     }
 }
