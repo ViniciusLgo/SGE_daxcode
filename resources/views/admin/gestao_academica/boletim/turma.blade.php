@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
+  @php
+    $routePrefix = $routePrefix ?? 'admin';
+  @endphp
 
   {{-- ================= HEADER ================= --}}
   <div class="flex items-center justify-between mb-6">
@@ -13,7 +16,7 @@
       </p>
     </div>
 
-    <a href="{{ route('admin.turmas.show', $turma) }}"
+    <a href="{{ route($routePrefix . '.turmas.show', $turma) }}"
       class="px-4 py-2 rounded-xl border
        border-slate-300 dark:border-slate-700
        hover:bg-slate-100 dark:hover:bg-slate-800">
@@ -89,7 +92,7 @@
               </td>
 
               <td class="px-4 py-2 text-center">
-                <a href="{{ route('admin.boletim.aluno', $item['aluno']) }}"
+                <a href="{{ route($routePrefix . '.boletim.aluno', $item['aluno']) }}"
                   class="text-blue-600 font-semibold hover:underline">
                   Ver
                 </a>

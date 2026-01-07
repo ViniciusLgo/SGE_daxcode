@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
+    @php
+        $routePrefix = $routePrefix ?? 'admin';
+    @endphp
 
     {{-- ================= HEADER ================= --}}
     <div class="flex items-center justify-between mb-6">
@@ -13,7 +16,7 @@
             </p>
         </div>
 
-        <a href="{{ route('admin.gestao_academica.avaliacoes.index') }}"
+        <a href="{{ route($routePrefix . '.gestao_academica.avaliacoes.index') }}"
            class="px-4 py-2 rounded-xl border
               border-slate-300 dark:border-slate-700
               hover:bg-slate-100 dark:hover:bg-slate-800">
@@ -34,7 +37,7 @@
                 </div>
 
                 <form method="POST"
-                      action="{{ route('admin.gestao_academica.avaliacoes.reabrir', $avaliacao) }}">
+                      action="{{ route($routePrefix . '.gestao_academica.avaliacoes.reabrir', $avaliacao) }}">
                     @csrf
                     @method('PATCH')
                     <button class="px-4 py-2 rounded-xl bg-dax-green text-white font-semibold">
@@ -50,7 +53,7 @@
             bg-white dark:bg-dax-dark/60 p-6">
 
         <form method="POST"
-              action="{{ route('admin.gestao_academica.avaliacoes.update', $avaliacao) }}">
+              action="{{ route($routePrefix . '.gestao_academica.avaliacoes.update', $avaliacao) }}">
             @csrf
             @method('PUT')
 
@@ -171,7 +174,7 @@
 
             {{-- ACOES --}}
             <div class="flex justify-end gap-3 mt-6">
-                <a href="{{ route('admin.gestao_academica.avaliacoes.index') }}"
+                <a href="{{ route($routePrefix . '.gestao_academica.avaliacoes.index') }}"
                    class="px-4 py-2 rounded-xl border
               border-slate-300 dark:border-slate-700">
                     Cancelar
@@ -188,7 +191,7 @@
 
         {{-- EXCLUSAO --}}
         <form method="POST"
-              action="{{ route('admin.gestao_academica.avaliacoes.destroy', $avaliacao) }}"
+              action="{{ route($routePrefix . '.gestao_academica.avaliacoes.destroy', $avaliacao) }}"
               onsubmit="return confirm('Deseja excluir esta avaliacao? Esta acao nao pode ser desfeita.')">
             @csrf
             @method('DELETE')

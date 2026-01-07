@@ -1,6 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
+    @php
+        $routePrefix = $routePrefix ?? 'admin';
+        $isAluno = $isAluno ?? false;
+    @endphp
 
     {{-- ================= HEADER ================= --}}
     <div class="flex items-center justify-between mb-6">
@@ -13,12 +17,14 @@
             </p>
         </div>
 
-        <a href="{{ route('admin.gestao_academica.avaliacoes.create') }}"
-           class="inline-flex items-center gap-2 px-4 py-2 rounded-xl
-                  bg-dax-green text-white font-semibold
-                  hover:bg-dax-greenSoft transition">
-             Nova Avaliacao
-        </a>
+        @if(!$isAluno)
+            <a href="{{ route($routePrefix . '.gestao_academica.avaliacoes.create') }}"
+               class="inline-flex items-center gap-2 px-4 py-2 rounded-xl
+                      bg-dax-green text-white font-semibold
+                      hover:bg-dax-greenSoft transition">
+                 Nova Avaliacao
+            </a>
+        @endif
     </div>
 
     {{-- ================= CARD ================= --}}
@@ -36,7 +42,9 @@
                     <th class="px-4 py-3 text-center">Tipo</th>
                     <th class="px-4 py-3 text-center">Data</th>
                     <th class="px-4 py-3 text-center">Status</th>
-                    <th class="px-4 py-3 text-right">Acoes</th>
+                    @if(!$isAluno)
+                        <th class="px-4 py-3 text-right">Acoes</th>
+                    @endif
                 </tr>
                 </thead>
 
@@ -91,66 +99,68 @@
                         </td>
 
                         {{-- Acoes --}}
-                        <td class="px-4 py-3 text-right space-x-2">
+                        @if(!$isAluno)
+                            <td class="px-4 py-3 text-right space-x-2">
 
-                            {{-- Editar --}}
-                            <a href="{{ route('admin.gestao_academica.avaliacoes.edit', $avaliacao) }}"
-                               class="text-sm font-semibold text-blue-600 hover:underline">
-                                Editar
-                            </a>
+                                {{-- Editar --}}
+                                <a href="{{ route($routePrefix . '.gestao_academica.avaliacoes.edit', $avaliacao) }}"
+                                   class="text-sm font-semibold text-blue-600 hover:underline">
+                                    Editar
+                                </a>
 
-                            {{-- Resultados --}}
-                            <a href="{{ route('admin.gestao_academica.avaliacoes.resultados.index', $avaliacao) }}"
-                               class="text-sm font-semibold
-                                   {{ $avaliacao->status === 'aberta'
-                                       ? 'text-emerald-600 hover:underline'
-                                       : 'text-slate-500 hover:underline' }}">
-                                {{ $avaliacao->status === 'aberta' ? 'Lancar' : 'Ver' }}
-                            </a>
+                                {{-- Resultados --}}
+                                <a href="{{ route($routePrefix . '.gestao_academica.avaliacoes.resultados.index', $avaliacao) }}"
+                                   class="text-sm font-semibold
+                                       {{ $avaliacao->status === 'aberta'
+                                           ? 'text-emerald-600 hover:underline'
+                                           : 'text-slate-500 hover:underline' }}">
+                                    {{ $avaliacao->status === 'aberta' ? 'Lancar' : 'Ver' }}
+                                </a>
 
-                            {{-- Reabrir --}}
-                            @if($avaliacao->status === 'encerrada')
-                                <form action="{{ route('admin.gestao_academica.avaliacoes.reabrir', $avaliacao) }}"
+                                {{-- Reabrir --}}
+                                @if($avaliacao->status === 'encerrada')
+                                    <form action="{{ route($routePrefix . '.gestao_academica.avaliacoes.reabrir', $avaliacao) }}"
+                                          method="POST" class="inline">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button class="text-sm font-semibold text-emerald-600 hover:underline">
+                                            Reabrir
+                                        </button>
+                                    </form>
+                                @endif
+
+                                {{-- Encerrar --}}
+                                @if($avaliacao->status === 'aberta')
+                                    <form action="{{ route($routePrefix . '.gestao_academica.avaliacoes.encerrar', $avaliacao) }}"
+                                          method="POST" class="inline">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button
+                                            class="text-sm font-semibold text-yellow-600 hover:underline"
+                                            onclick="return confirm('Deseja encerrar esta avaliacao?')">
+                                            Encerrar
+                                        </button>
+                                    </form>
+                                @endif
+
+                                {{-- Excluir --}}
+                                <form action="{{ route($routePrefix . '.gestao_academica.avaliacoes.destroy', $avaliacao) }}"
                                       method="POST" class="inline">
                                     @csrf
-                                    @method('PATCH')
-                                    <button class="text-sm font-semibold text-emerald-600 hover:underline">
-                                        Reabrir
-                                    </button>
-                                </form>
-                            @endif
-
-                            {{-- Encerrar --}}
-                            @if($avaliacao->status === 'aberta')
-                                <form action="{{ route('admin.gestao_academica.avaliacoes.encerrar', $avaliacao) }}"
-                                      method="POST" class="inline">
-                                    @csrf
-                                    @method('PATCH')
+                                    @method('DELETE')
                                     <button
-                                        class="text-sm font-semibold text-yellow-600 hover:underline"
-                                        onclick="return confirm('Deseja encerrar esta avaliacao?')">
-                                        Encerrar
+                                        class="text-sm font-semibold text-red-600 hover:underline"
+                                        onclick="return confirm('Deseja excluir esta avaliacao?')">
+                                        Excluir
                                     </button>
                                 </form>
-                            @endif
 
-                            {{-- Excluir --}}
-                            <form action="{{ route('admin.gestao_academica.avaliacoes.destroy', $avaliacao) }}"
-                                  method="POST" class="inline">
-                                @csrf
-                                @method('DELETE')
-                                <button
-                                    class="text-sm font-semibold text-red-600 hover:underline"
-                                    onclick="return confirm('Deseja excluir esta avaliacao?')">
-                                    Excluir
-                                </button>
-                            </form>
-
-                        </td>
+                            </td>
+                        @endif
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7"
+                        <td colspan="{{ $isAluno ? 6 : 7 }}"
                             class="px-6 py-8 text-center text-slate-500">
                             Nenhuma avaliacao cadastrada.
                         </td>

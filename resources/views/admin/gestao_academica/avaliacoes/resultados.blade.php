@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
+    @php
+        $routePrefix = $routePrefix ?? 'admin';
+    @endphp
 
     {{-- HEADER --}}
     <div class="flex justify-between mb-6">
@@ -15,7 +18,7 @@
             </p>
         </div>
 
-        <a href="{{ route('admin.gestao_academica.avaliacoes.index') }}"
+        <a href="{{ route($routePrefix . '.gestao_academica.avaliacoes.index') }}"
            class="px-4 py-2 rounded-xl border
               border-slate-300 dark:border-slate-700
               hover:bg-slate-100 dark:hover:bg-slate-800">
@@ -28,7 +31,7 @@
             bg-white dark:bg-dax-dark/60 p-6">
 
         <form method="POST"
-              action="{{ route('admin.gestao_academica.avaliacoes.resultados.store', $avaliacao) }}"
+              action="{{ route($routePrefix . '.gestao_academica.avaliacoes.resultados.store', $avaliacao) }}"
               enctype="multipart/form-data">
             @csrf
 

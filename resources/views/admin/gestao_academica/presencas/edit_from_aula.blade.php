@@ -3,6 +3,9 @@
 @extends('layouts.app')
 
 @section('content')
+    @php
+        $routePrefix = $routePrefix ?? 'admin';
+    @endphp
     <div class="space-y-6">
 
         {{-- ============================================================
@@ -22,7 +25,7 @@
             </div>
 
             <div class="flex items-center gap-2">
-                <a href="{{ route('admin.aulas.show', $aula) }}"
+                <a href="{{ route($routePrefix . '.aulas.show', $aula) }}"
                    class="inline-flex items-center gap-2
                       px-4 py-2 rounded-xl border
                       border-slate-300 dark:border-slate-700
@@ -38,7 +41,7 @@
             - Mantem integridade: 1 presenca por aula
         ============================================================ --}}
         <form method="POST"
-              action="{{ route('admin.aulas.presenca.update', $aula) }}"
+              action="{{ route($routePrefix . '.aulas.presenca.update', $aula) }}"
               class="rounded-2xl
                  bg-white dark:bg-dax-dark/60
                  border border-slate-200 dark:border-slate-800
