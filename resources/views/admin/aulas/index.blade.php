@@ -1,6 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
+    @php
+        $routePrefix = $routePrefix ?? 'admin';
+        $isProfessor = $isProfessor ?? false;
+        $isAluno = $isAluno ?? false;
+    @endphp
     <div class="space-y-6">
 
         {{-- ================= HEADER ================= --}}
@@ -17,18 +22,20 @@
                 </p>
             </div>
 
-            <a href="{{ route('admin.aulas.create') }}"
-               class="inline-flex items-center gap-2
-                  px-4 py-2 rounded-xl
-                  bg-dax-green text-white font-semibold
-                  hover:bg-dax-greenSoft transition">
-                 Nova Aula
-            </a>
+            @if(!$isAluno)
+                <a href="{{ route($routePrefix . '.aulas.create') }}"
+                   class="inline-flex items-center gap-2
+                      px-4 py-2 rounded-xl
+                      bg-dax-green text-white font-semibold
+                      hover:bg-dax-greenSoft transition">
+                     Nova Aula
+                </a>
+            @endif
         </div>
 
         {{-- ================= FILTROS ================= --}}
         <form method="GET"
-              class="grid grid-cols-1 md:grid-cols-6 gap-4
+              class="grid grid-cols-1 md:grid-cols-7 gap-4
                  bg-white dark:bg-dax-dark/60
                  border border-slate-200 dark:border-slate-800
                  rounded-2xl p-5">
@@ -46,20 +53,22 @@
             </div>
 
             {{-- Professor --}}
-            <div>
-                <label class="block text-sm font-semibold mb-1">Professor</label>
-                <select name="professor_id"
-                        class="w-full rounded-xl border px-4 py-2.5
+            @if(!$isProfessor && !$isAluno)
+                <div>
+                    <label class="block text-sm font-semibold mb-1">Professor</label>
+                    <select name="professor_id"
+                            class="w-full rounded-xl border px-4 py-2.5
                            bg-white dark:bg-dax-dark">
-                    <option value="">Todos</option>
-                    @foreach    ($professores as $prof)
-                        <option value="{{ $prof->id }}"
-                            {{ request('professor_id') == $prof->id ? 'selected' : '' }}>
-                            {{ $prof->user->name }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
+                        <option value="">Todos</option>
+                        @foreach($professores as $prof)
+                            <option value="{{ $prof->id }}"
+                                {{ request('professor_id') == $prof->id ? 'selected' : '' }}>
+                                {{ $prof->user->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            @endif
 
             {{-- Tipo --}}
             <div>
@@ -77,15 +86,36 @@
                 </select>
             </div>
 
-            {{-- Turma (preparado para filtro avancado) --}}
+            {{-- Turma --}}
             <div>
                 <label class="block text-sm font-semibold mb-1">Turma</label>
-                <input type="text"
-                       name="turma"
-                       placeholder="Ex: TI25"
-                       value="{{ request('turma') }}"
-                       class="w-full rounded-xl border px-4 py-2.5
-                          bg-white dark:bg-dax-dark">
+                <select name="turma_id"
+                        class="w-full rounded-xl border px-4 py-2.5
+                           bg-white dark:bg-dax-dark">
+                    <option value="">Todas</option>
+                    @foreach(($turmas ?? []) as $turma)
+                        <option value="{{ $turma->id }}"
+                            {{ request('turma_id') == $turma->id ? 'selected' : '' }}>
+                            {{ $turma->nome }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            {{-- Disciplina --}}
+            <div>
+                <label class="block text-sm font-semibold mb-1">Disciplina</label>
+                <select name="disciplina_id"
+                        class="w-full rounded-xl border px-4 py-2.5
+                           bg-white dark:bg-dax-dark">
+                    <option value="">Todas</option>
+                    @foreach(($disciplinas ?? []) as $disciplina)
+                        <option value="{{ $disciplina->id }}"
+                            {{ request('disciplina_id') == $disciplina->id ? 'selected' : '' }}>
+                            {{ $disciplina->nome }}
+                        </option>
+                    @endforeach
+                </select>
             </div>
 
             {{-- Ordenacao --}}
@@ -115,7 +145,7 @@
 
 
             @if(request()->query())
-                    <a href="{{ route('admin.aulas.index') }}"
+                    <a href="{{ route($routePrefix . '.aulas.index') }}"
                        class="px-4 py-2.5 rounded-xl border text-slate-500">
                         Limpar
                     </a>
@@ -133,7 +163,9 @@
                 <thead class="bg-slate-50 dark:bg-slate-900/60 text-slate-500">
                 <tr>
                     <th class="px-4 py-3 text-left">Data</th>
-                    <th class="px-4 py-3 text-left">Professor</th>
+                    @if(!$isProfessor)
+                        <th class="px-4 py-3 text-left">Professor</th>
+                    @endif
                     <th class="px-4 py-3 text-left">Turma</th>
                     <th class="px-4 py-3 text-left">Disciplina</th>
                     <th class="px-4 py-3 text-left">Tipo</th>
@@ -154,7 +186,7 @@
                     <div class="flex flex-wrap items-center gap-3">
 
                         {{-- Atalho Presencas --}}
-                        <a href="{{ route('admin.presencas.index') }}"
+                        <a href="{{ route($routePrefix . '.presencas.index') }}"
                            class="inline-flex items-center gap-2
                   px-4 py-2 rounded-xl
                   border border-slate-300 dark:border-slate-700
@@ -187,9 +219,11 @@
                         </td>
 
                         {{-- Professor --}}
-                        <td class="px-4 py-3 font-semibold">
-                            {{ $aula->professor->user->name }}
-                        </td>
+                        @if(!$isProfessor)
+                            <td class="px-4 py-3 font-semibold">
+                                {{ $aula->professor->user->name }}
+                            </td>
+                        @endif
 
                         {{-- Turma --}}
                         <td class="px-4 py-3">
@@ -217,19 +251,21 @@
 
                         {{-- Acoes --}}
                         <td class="px-4 py-3 text-right space-x-3 font-semibold">
-                            <a href="{{ route('admin.aulas.show', $aula) }}"
+                            <a href="{{ route($routePrefix . '.aulas.show', $aula) }}"
                                class="text-sky-600 hover:underline">
                                 Ver
                             </a>
-                            <a href="{{ route('admin.aulas.edit', $aula) }}"
-                               class="text-amber-600 hover:underline">
-                                Editar
-                            </a>
+                            @if(!$isAluno)
+                                <a href="{{ route($routePrefix . '.aulas.edit', $aula) }}"
+                                   class="text-amber-600 hover:underline">
+                                    Editar
+                                </a>
+                            @endif
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7"
+                        <td colspan="{{ $isProfessor ? 6 : 7 }}"
                             class="px-4 py-8 text-center text-slate-500">
                             Nenhuma aula registrada ate o momento.
                         </td>

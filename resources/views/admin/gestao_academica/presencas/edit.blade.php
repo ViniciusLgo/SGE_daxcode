@@ -28,6 +28,9 @@
 @extends('layouts.app')
 
 @section('content')
+    @php
+        $routePrefix = $routePrefix ?? 'admin';
+    @endphp
     <div class="space-y-6">
 
         {{-- ============================================================
@@ -44,7 +47,7 @@
             </div>
 
             <div class="flex items-center gap-2">
-                <a href="{{ route('admin.presencas.show', $presenca) }}"
+                <a href="{{ route($routePrefix . '.presencas.show', $presenca) }}"
                    class="inline-flex items-center gap-2
                       px-4 py-2 rounded-xl border
                       border-slate-300 dark:border-slate-700
@@ -58,7 +61,7 @@
             FORM
         ============================================================ --}}
         <form method="POST"
-              action="{{ route('admin.presencas.update', $presenca) }}"
+              action="{{ route($routePrefix . '.presencas.update', $presenca) }}"
               class="rounded-2xl
                  bg-white dark:bg-dax-dark/60
                  border border-slate-200 dark:border-slate-800
@@ -266,7 +269,7 @@
                 ACOES
             ============================================================ --}}
             <div class="flex justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
-                <a href="{{ route('admin.presencas.show', $presenca) }}"
+                <a href="{{ route($routePrefix . '.presencas.show', $presenca) }}"
                    class="px-4 py-2.5 rounded-xl border
                       border-slate-300 dark:border-slate-700
                       hover:bg-slate-100 dark:hover:bg-slate-800 transition">

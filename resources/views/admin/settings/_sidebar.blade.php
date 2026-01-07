@@ -9,10 +9,12 @@
         {{-- =============================== --}}
         {{-- GERAL --}}
         {{-- =============================== --}}
+        <li class="settings-menu-title">Base</li>
         <li class="settings-item">
             <a href="{{ route('admin.settings.edit', ['sec' => 'geral']) }}"
                class="settings-link {{ request('sec', 'geral') === 'geral' ? 'active' : '' }}">
-                 Gerais
+                <span>Gerais</span>
+                <i class="bi bi-gear"></i>
             </a>
         </li>
 
@@ -29,7 +31,7 @@
                     class="settings-link has-submenu"
                     data-toggle="submenu"
                     aria-expanded="{{ $academicoOpen ? 'true' : 'false' }}">
-                 Academicas
+                <span>Academicas</span>
                 <span class="chevron"></span>
             </button>
 
@@ -61,31 +63,69 @@
         {{-- =============================== --}}
         {{-- OUTRAS SECOES --}}
         {{-- =============================== --}}
+        <li class="settings-menu-title">Gestao</li>
         <li class="settings-item">
             <a href="{{ route('admin.settings.edit', ['sec'=>'documentos']) }}"
                class="settings-link {{ request('sec') === 'documentos' ? 'active' : '' }}">
-                 Documentos & PDFs
+                <span>Documentos & PDFs</span>
+                <i class="bi bi-file-earmark-text"></i>
             </a>
         </li>
 
         <li class="settings-item">
             <a href="{{ route('admin.settings.edit', ['sec'=>'usuarios']) }}"
                class="settings-link {{ request('sec') === 'usuarios' ? 'active' : '' }}">
-                 Usuarios & Acesso
+                <span>Usuarios & Acesso</span>
+                <i class="bi bi-people"></i>
             </a>
         </li>
 
         <li class="settings-item">
             <a href="{{ route('admin.settings.edit', ['sec'=>'notificacoes']) }}"
                class="settings-link {{ request('sec') === 'notificacoes' ? 'active' : '' }}">
-                 Notificacoes
+                <span>Notificacoes</span>
+                <i class="bi bi-bell"></i>
             </a>
         </li>
 
         <li class="settings-item">
             <a href="{{ route('admin.settings.edit', ['sec'=>'financeiro']) }}"
                class="settings-link {{ request('sec') === 'financeiro' ? 'active' : '' }}">
-                 Financeiro
+                <span>Financeiro</span>
+                <i class="bi bi-cash-coin"></i>
+            </a>
+        </li>
+
+        <li class="settings-menu-title">Sistema</li>
+        <li class="settings-item">
+            <a href="{{ route('admin.settings.edit', ['sec'=>'comunicacao']) }}"
+               class="settings-link {{ request('sec') === 'comunicacao' ? 'active' : '' }}">
+                <span>Comunicacao</span>
+                <i class="bi bi-broadcast"></i>
+            </a>
+        </li>
+
+        <li class="settings-item">
+            <a href="{{ route('admin.settings.edit', ['sec'=>'logs']) }}"
+               class="settings-link {{ request('sec') === 'logs' ? 'active' : '' }}">
+                <span>Logs & Auditoria</span>
+                <i class="bi bi-journal-text"></i>
+            </a>
+        </li>
+
+        <li class="settings-item">
+            <a href="{{ route('admin.settings.edit', ['sec'=>'backup']) }}"
+               class="settings-link {{ request('sec') === 'backup' ? 'active' : '' }}">
+                <span>Backup</span>
+                <i class="bi bi-hdd"></i>
+            </a>
+        </li>
+
+        <li class="settings-item">
+            <a href="{{ route('admin.settings.edit', ['sec'=>'avancado']) }}"
+               class="settings-link {{ request('sec') === 'avancado' ? 'active' : '' }}">
+                <span>Avancado</span>
+                <i class="bi bi-sliders"></i>
             </a>
         </li>
 

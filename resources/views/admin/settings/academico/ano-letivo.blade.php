@@ -2,20 +2,19 @@
 {{-- ACADEMICO: ANO LETIVO                               --}}
 {{-- ===================================================== --}}
 
-<div class="settings-card mb-4">
+@php($isOpen = $open ?? false)
+<details class="settings-card settings-collapse" {{ $isOpen ? 'open' : '' }}>
 
-    {{-- HEADER --}}
-    <div class="settings-card-header">
-        <h5>
-             Ano Letivo & Avaliacoes
-        </h5>
+    <summary class="settings-card-header">
+        <div>
+            <h5>Ano Letivo & Avaliacoes</h5>
+            <p class="settings-card-subtitle">
+                Configuracao do ano letivo, periodos avaliativos e regras academicas globais.
+            </p>
+        </div>
+        <span class="settings-collapse-icon"></span>
+    </summary>
 
-        <p class="settings-card-subtitle">
-            Configuracao do ano letivo, periodos avaliativos e regras academicas globais.
-        </p>
-    </div>
-
-    {{-- BODY --}}
     <div class="settings-card-body">
         <p class="text-muted mb-0">
             Nesta secao sera possivel cadastrar e gerenciar os anos letivos,
@@ -24,4 +23,4 @@
         </p>
     </div>
 
-</div>
+</details>

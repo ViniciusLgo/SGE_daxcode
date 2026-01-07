@@ -15,6 +15,37 @@ use App\Http\Controllers\{
 
 /*
 |--------------------------------------------------------------------------
+| Controllers Professor
+|--------------------------------------------------------------------------
+*/
+use App\Http\Controllers\Professor\{
+    DashboardController as ProfessorDashboardController,
+    TurmaController as ProfessorTurmaController,
+    AulaController as ProfessorAulaController,
+    PresencaController as ProfessorPresencaController,
+    AvaliacaoController as ProfessorAvaliacaoController,
+    AvaliacaoResultadoController as ProfessorAvaliacaoResultadoController,
+    BoletimController as ProfessorBoletimController,
+    RelatorioHorasController as ProfessorRelatorioHorasController,
+    CargaHorariaController as ProfessorCargaHorariaController
+};
+
+/*
+|--------------------------------------------------------------------------
+| Controllers Aluno
+|--------------------------------------------------------------------------
+*/
+use App\Http\Controllers\Aluno\{
+    DashboardController as AlunoDashboardController,
+    TurmaController as AlunoTurmaController,
+    AulaController as AlunoAulaController,
+    PresencaController as AlunoPresencaController,
+    AvaliacaoController as AlunoAvaliacaoController,
+    BoletimController as AlunoBoletimController
+};
+
+/*
+|--------------------------------------------------------------------------
 | Controllers Admin – Gerais
 |--------------------------------------------------------------------------
 */
@@ -76,6 +107,7 @@ use App\Http\Controllers\Admin\GestaoAcademica\{
 use App\Http\Controllers\Admin\Relatorios\RelatoriosEvasaoController;
 use App\Http\Controllers\Admin\Relatorios\CargaHorariaProfessorController;
 use App\Http\Controllers\Admin\Relatorios\RelatorioHorasController;
+use App\Http\Controllers\Admin\Relatorios\RelatoriosDashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -107,16 +139,132 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 
     Route::middleware('is_professor')
-        ->get('/dashboard/professor', fn () => view('professores.dashboard'))
+        ->get('/dashboard/professor', [ProfessorDashboardController::class, 'index'])
         ->name('dashboard.professor');
 
     Route::middleware('is_aluno')
-        ->get('/dashboard/aluno', fn () => view('alunos.dashboard'))
+        ->get('/dashboard/aluno', [AlunoDashboardController::class, 'index'])
         ->name('dashboard.aluno');
 
     Route::middleware('is_responsavel')
         ->get('/dashboard/responsavel', fn () => view('responsaveis.dashboard'))
         ->name('dashboard.responsavel');
+
+    /*
+    |--------------------------------------------------------------------------
+    | AREA DO PROFESSOR
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('professor')
+        ->middleware('is_professor')
+        ->name('professor.')
+        ->group(function () {
+
+            Route::get('dashboard', [ProfessorDashboardController::class, 'index'])
+                ->name('dashboard');
+
+            Route::resource('turmas', ProfessorTurmaController::class)
+                ->only(['index', 'show'])
+                ->parameters(['turmas' => 'turma']);
+
+            Route::resource('aulas', ProfessorAulaController::class)
+                ->parameters(['aulas' => 'aula']);
+
+            Route::get('presencas', [ProfessorPresencaController::class, 'index'])
+                ->name('presencas.index');
+
+            Route::get('presencas/{presenca}', [ProfessorPresencaController::class, 'show'])
+                ->name('presencas.show');
+
+            Route::get('presencas/{presenca}/edit', [ProfessorPresencaController::class, 'edit'])
+                ->name('presencas.edit');
+
+            Route::put('presencas/{presenca}', [ProfessorPresencaController::class, 'update'])
+                ->name('presencas.update');
+
+            Route::get('aulas/{aula}/presenca', [ProfessorPresencaController::class, 'editFromAula'])
+                ->name('aulas.presenca.edit');
+
+            Route::put('aulas/{aula}/presenca', [ProfessorPresencaController::class, 'updateFromAula'])
+                ->name('aulas.presenca.update');
+
+            Route::prefix('gestao-academica')->name('gestao_academica.')->group(function () {
+                Route::resource('avaliacoes', ProfessorAvaliacaoController::class)
+                    ->parameters(['avaliacoes' => 'avaliacao']);
+
+                Route::patch(
+                    'avaliacoes/{avaliacao}/reabrir',
+                    [ProfessorAvaliacaoController::class, 'reabrir']
+                )->name('avaliacoes.reabrir');
+
+                Route::patch(
+                    'avaliacoes/{avaliacao}/encerrar',
+                    [ProfessorAvaliacaoController::class, 'encerrar']
+                )->name('avaliacoes.encerrar');
+
+                Route::get(
+                    'avaliacoes/{avaliacao}/resultados',
+                    [ProfessorAvaliacaoResultadoController::class, 'index']
+                )->name('avaliacoes.resultados.index');
+
+                Route::post(
+                    'avaliacoes/{avaliacao}/resultados',
+                    [ProfessorAvaliacaoResultadoController::class, 'store']
+                )->name('avaliacoes.resultados.store');
+            });
+
+            Route::prefix('boletim')->name('boletim.')->group(function () {
+                Route::get('/', [ProfessorBoletimController::class, 'index'])
+                    ->name('index');
+
+                Route::get('alunos/{aluno}', [ProfessorBoletimController::class, 'aluno'])
+                    ->name('aluno');
+
+                Route::get('turmas/{turma}', [ProfessorBoletimController::class, 'turma'])
+                    ->name('turma');
+            });
+
+            Route::prefix('relatorios')->name('relatorios.')->group(function () {
+                Route::get('horas', [ProfessorRelatorioHorasController::class, 'index'])
+                    ->name('horas.index');
+
+                Route::get('carga-horaria', [ProfessorCargaHorariaController::class, 'index'])
+                    ->name('carga_horaria.index');
+            });
+        });
+
+    /*
+    |--------------------------------------------------------------------------
+    | AREA DO ALUNO
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('aluno')
+        ->middleware('is_aluno')
+        ->name('aluno.')
+        ->group(function () {
+
+            Route::get('dashboard', [AlunoDashboardController::class, 'index'])
+                ->name('dashboard');
+
+            Route::get('turma', [AlunoTurmaController::class, 'show'])
+                ->name('turma.show');
+
+            Route::resource('aulas', AlunoAulaController::class)
+                ->only(['index', 'show'])
+                ->parameters(['aulas' => 'aula']);
+
+            Route::get('presencas', [AlunoPresencaController::class, 'index'])
+                ->name('presencas.index');
+
+            Route::get('presencas/{presenca}', [AlunoPresencaController::class, 'show'])
+                ->name('presencas.show');
+
+            Route::get('avaliacoes', [AlunoAvaliacaoController::class, 'index'])
+                ->name('avaliacoes.index');
+
+            Route::get('boletim', [AlunoBoletimController::class, 'index'])
+                ->name('boletim.index');
+        });
 
     /*
     |--------------------------------------------------------------------------
@@ -197,6 +345,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             | FINANCEIRO
             |--------------------------------------------------------------------------
             */
+
             Route::prefix('financeiro')->name('financeiro.')->group(function () {
 
                 Route::get('/', [FinanceiroDashboardController::class, 'index'])
@@ -277,6 +426,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
             */
             Route::prefix('relatorios')->name('relatorios.')->group(function () {
 
+                Route::get('/', [RelatoriosDashboardController::class, 'index'])
+                    ->name('index');
+
                 Route::get('evasao', [RelatoriosEvasaoController::class, 'index'])
                     ->name('evasao.index');
 
@@ -338,6 +490,46 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 'alunos/{aluno}/documentos',
                 [AlunoDocumentController::class, 'store']
             )->name('alunos.documentos.store');
+
+            Route::get(
+                'alunos/{aluno}/documentos',
+                [AlunoDocumentController::class, 'index']
+            )->name('alunos.documentos.index');
+
+            Route::get(
+                'alunos/{aluno}/documentos/create',
+                [AlunoDocumentController::class, 'create']
+            )->name('alunos.documentos.create');
+
+            Route::get(
+                'documentos',
+                [AlunoDocumentController::class, 'indexAll']
+            )->name('documentos.index');
+
+            Route::get(
+                'documentos/create',
+                [AlunoDocumentController::class, 'createAll']
+            )->name('documentos.create');
+
+            Route::post(
+                'documentos',
+                [AlunoDocumentController::class, 'storeAll']
+            )->name('documentos.store');
+
+            Route::get(
+                'documentos/{documento}',
+                [AlunoDocumentController::class, 'show']
+            )->name('documentos.show');
+
+            Route::get(
+                'documentos/{documento}/edit',
+                [AlunoDocumentController::class, 'edit']
+            )->name('documentos.edit');
+
+            Route::put(
+                'documentos/{documento}',
+                [AlunoDocumentController::class, 'update']
+            )->name('documentos.update');
 
             Route::delete(
                 'documentos/{documento}',

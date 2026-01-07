@@ -19,7 +19,7 @@ class SecretariaDashboardController extends Controller
         $totalTurmas = Turma::count();
 
 
-        $pendencias = Aluno::whereHas('documents', function ($q) {
+        $pendencias = Aluno::whereHas('documentos', function ($q) {
             $q->whereNull('arquivo');
         })->count();
 

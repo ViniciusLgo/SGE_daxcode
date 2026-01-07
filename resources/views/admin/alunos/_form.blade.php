@@ -13,10 +13,10 @@
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
     {{-- ============================================================
-| DADOS DO USUARIO (IDENTIDADE)
-| Esses dados vem do User e NAO devem ser editados aqui
-| Servem apenas para visualizacao e vinculo
-============================================================ --}}
+    | DADOS DO USUARIO (IDENTIDADE)
+    | Esses dados vem do User e NAO devem ser editados aqui
+    | Servem apenas para visualizacao e vinculo
+    ============================================================ --}}
     @if(isset($user))
         <div>
             <label class="block text-sm font-semibold mb-1">
@@ -50,10 +50,12 @@
         <input type="hidden" name="user_id" value="{{ $user->id }}">
 
     @elseif(isset($aluno))
-        {{-- ==========={{-- ============================================================
-| DADOS ACADEMICOS DO ALUNO
-| Esses campos pertencem exclusivamente a entidade Aluno
-============================================================ --}}           <label class="block text-sm font-semibold mb-1">
+        {{-- ============================================================
+        | CENARIO DE EDICAO
+        | Nome e e-mail vem do relacionamento aluno -> user
+        ============================================================ --}}
+        <div>
+            <label class="block text-sm font-semibold mb-1">
                 Nome do Aluno
             </label>
             <input type="text"
@@ -79,9 +81,13 @@
         </div>
     @endif
 
-    {{-- =========================================================={{-- ============================================================
-| ACOES DO FORMULARIO
-============================================================ --}}"block text-sm font-semibold mb-1">
+    {{-- ============================================================
+    | DADOS ACADEMICOS DO ALUNO
+    | Esses campos pertencem exclusivamente a entidade Aluno
+    ============================================================ --}}
+    @if(isset($aluno))
+        <div>
+            <label class="block text-sm font-semibold mb-1">
                 Matricula
             </label>
             <input type="text"
@@ -145,7 +151,7 @@
             <option value="">Selecione a turma</option>
             @foreach($turmas as $turma)
                 <option value="{{ $turma->id }}"
-                    {{ (string)$turma->id === (string)$currentTurma ? 'selected' : '' }}>
+                    {{ (string) $turma->id === (string) $currentTurma ? 'selected' : '' }}>
                     {{ $turma->nome }}
                 </option>
             @endforeach
@@ -175,8 +181,7 @@
 </div>
 
 {{-- ============================================================
-| DADOS ACADEMICOS DO ALUNO
-| Esses campos pertencem exclusivamente a entidade Aluno
+| ACOES DO FORMULARIO
 ============================================================ --}}
 <div class="mt-8 flex justify-end gap-4">
     <a href="{{ route('admin.alunos.index') }}"

@@ -32,7 +32,13 @@
 <div class="min-h-screen flex">
 
     {{-- SIDEBAR ADMIN (DAX) --}}
-    <x-admin.sidebar />
+    @if(auth()->check() && auth()->user()->tipo === 'professor')
+        <x-professor.sidebar />
+    @elseif(auth()->check() && auth()->user()->tipo === 'aluno')
+        <x-aluno.sidebar />
+    @else
+        <x-admin.sidebar />
+    @endif
 
     {{-- AREA PRINCIPAL --}}
     <div class="flex-1 flex flex-col">
@@ -55,12 +61,20 @@
                         DX
                     </div>
 
+                    @php
+                        $panelLabel = match(auth()->user()->tipo ?? 'admin') {
+                            'professor' => 'Area do Professor',
+                            'aluno' => 'Area do Aluno',
+                            'responsavel' => 'Area do Responsavel',
+                            default => 'Painel Administrativo',
+                        };
+                    @endphp
                     <div class="leading-tight hidden sm:block">
                         <div class="font-black text-dax-dark dark:text-dax-light">
                             SGE DaxCode
                         </div>
                         <div class="text-xs text-slate-500 dark:text-slate-400">
-                            Painel Administrativo
+                            {{ $panelLabel }}
                         </div>
                     </div>
                 </div>

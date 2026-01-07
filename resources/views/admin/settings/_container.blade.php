@@ -5,6 +5,33 @@
 @php
     $sec = request('sec', 'geral');
     $sub = request('sub');
+
+    $secLabels = [
+        'geral' => 'Gerais',
+        'academico' => 'Academicas',
+        'documentos' => 'Documentos & PDFs',
+        'usuarios' => 'Usuarios & Acesso',
+        'notificacoes' => 'Notificacoes',
+        'financeiro' => 'Financeiro',
+        'comunicacao' => 'Comunicacao',
+        'logs' => 'Logs & Auditoria',
+        'backup' => 'Backup',
+        'avancado' => 'Avancado',
+    ];
+
+    $academicoSubs = [
+        'ano-letivo'  => 'Ano letivo & Avaliacoes',
+        'calendario'  => 'Calendario escolar',
+        'feriados'    => 'Feriados & dias nao letivos',
+        'turnos'      => 'Turnos da escola',
+        'modulos'     => 'Estrutura modular',
+        'carga-curso' => 'Carga horaria / curso',
+        'fechamento'  => 'Fechamento de notas',
+        'promocao'    => 'Promocao & globais',
+    ];
+
+    $secTitle = $secLabels[$sec] ?? 'Configuracoes';
+    $subTitle = $sec === 'academico' && $sub ? ($academicoSubs[$sub] ?? null) : null;
 @endphp
 
 <div class="settings-container">
@@ -25,6 +52,32 @@
             @csrf
             @method('PUT')
 
+            {{-- BARRA FIXA DE ACAO --}}
+            <div class="settings-topbar">
+                <div class="settings-topbar-info">
+                    <strong>Edicao ativa:</strong>
+                    <span>{{ $secTitle }}@if($subTitle) / {{ $subTitle }}@endif</span>
+                </div>
+                <button type="submit" class="btn btn-primary btn-save-settings">
+                    Salvar alteracoes
+                </button>
+            </div>
+
+            {{-- CABECALHO DA SECAO --}}
+            <div class="settings-section-header">
+                <div>
+                    <div class="settings-section-title">
+                        {{ $secTitle }}@if($subTitle) <span class="settings-section-sub">/ {{ $subTitle }}</span>@endif
+                    </div>
+                    <div class="settings-section-desc">
+                        Ajuste as configuracoes desta area e salve ao final.
+                    </div>
+                </div>
+                <div class="settings-section-badge">
+                    {{ strtoupper($sec) }}
+                </div>
+            </div>
+
             {{-- ================================================= --}}
             {{-- SECAO: GERAL                                     --}}
             {{-- ================================================= --}}
@@ -36,13 +89,7 @@
             {{-- SECAO: ACADEMICO                                 --}}
             {{-- ================================================= --}}
             @if ($sec === 'academico')
-
-                @if ($sub)
-                    @includeIf('admin.settings.academico.' . $sub)
-                @else
-                    {{-- fallback: visao geral academica --}}
-                    @include('admin.settings.tabs.academico')
-                @endif
+                @include('admin.settings.tabs.academico')
 
             @endif
 

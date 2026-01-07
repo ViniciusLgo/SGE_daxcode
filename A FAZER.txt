@@ -1,339 +1,39 @@
-
-Perfeito. Abaixo está **TUDO convertido em um checklist técnico completo**, estruturado para você **copiar e colar direto no bloco de notas** e ir marcando item por item.
-Nada está considerado como feito. O objetivo é **auditoria total do sistema**, arquivo por arquivo.
-
----
-
-# ✅ CHECKLIST GERAL DE CORREÇÕES — SGE DAXCODE
-
-*Status inicial: **0% feito***
-
----
-
-## 🔴 CRÍTICOS — QUEBRAM FLUXO / GERAM ERRO 500 / DADOS INCONSISTENTES
-
-### Rotas e Controllers
-
-* [ ] Verificar rotas que chamam métodos inexistentes
-
-  * `routes/web.php`
-  * Rotas chamam:
-
-    * `clonarMesAnterior`
-    * `excluirMultiplas`
-  * Métodos existem em `FinanceiroDashboardController`
-  * Rotas apontam para `DespesaController`
-* [ ] Decidir:
-
-  * [ ] Mover métodos para `DespesaController`
-  * [ ] OU corrigir rotas para `FinanceiroDashboardController`
-* [ ] Testar todas as rotas afetadas após ajuste
-
----
-
-### Histórico de Matrícula (erro grave de insert)
-
-* [ ] Abrir `app/Models/Matricula.php`
-* [ ] Localizar método de desistência
-* [ ] Corrigir campos gravados no histórico:
-
-  * [ ] Inserir `tipo_evento`
-  * [ ] Remover campos inexistentes
-* [ ] Ajustar campo:
-
-  * Código usa `user_id_alteracao`
-  * Tabela tem `user_id`
-* [ ] Conferir migration:
-
-  * `database/migrations/2025_12_29_220544_create_matricula_historicos_table.php`
-* [ ] Garantir compatibilidade model ↔ schema
-* [ ] Testar desistência de matrícula
-
----
-
-### Settings (coluna inexistente)
-
-* [ ] Abrir `SettingController.php`
-* [ ] Localizar uso de `logo_path`
-* [ ] Conferir migrations:
-
-  * `create_settings_table`
-  * `add_basic_fields_to_settings_table`
-* [ ] Confirmar nome real da coluna (`logo`)
-* [ ] Ajustar controller e model
-* [ ] Testar upload e exibição de logo
-
----
-
-## 🟠 ALTA PRIORIDADE — BUGS DE NEGÓCIO / DADOS ERRADOS
-
-### Usuário → Aluno → Matrícula
-
-* [ ] Abrir `UserController.php`
-* [ ] Verificar criação de usuário com tipo `aluno`
-* [ ] Confirmar se cria:
-
-  * [ ] Registro em `alunos`
-  * [ ] Registro em `matriculas`
-* [ ] Se não cria matrícula:
-
-  * [ ] Implementar criação automática
-* [ ] Garantir matrícula ativa padrão
-* [ ] Testar impacto em:
-
-  * Relatórios
-  * Boletim
-  * Presença
-
----
-
-### Troca de Turma (inconsistência grave)
-
-* [ ] Abrir `TurmaController.php`
-* [ ] Localizar lógica de troca de turma
-* [ ] Verificar se altera `alunos.turma_id`
-* [ ] Confirmar regra do sistema:
-
-  * Filtros usam `matriculas.turma_id`
-* [ ] Corrigir:
-
-  * [ ] Atualizar matrícula ativa
-  * [ ] NÃO alterar `alunos.turma_id` diretamente
-* [ ] Testar listagens e filtros
-
----
-
-### Financeiro — agregações erradas
-
-* [ ] Abrir `FinanceiroDashboardController.php`
-* [ ] Identificar reutilização do mesmo `$query`
-* [ ] Separar queries por agregado:
-
-  * Total mensal
-  * Total por categoria
-  * Indicadores
-* [ ] Evitar contaminação de joins/selects
-* [ ] Validar números do dashboard
-
----
-
-### Disciplina → Professor (coluna errada)
-
-* [ ] Abrir `DisciplinaController.php`
-* [ ] Verificar busca por professor
-* [ ] Confirmar:
-
-  * Não existe `professores.nome`
-* [ ] Ajustar para `users.name`
-* [ ] Conferir relação em `Professor.php`
-* [ ] Testar autocomplete / busca
-
----
-
-## 🟡 MÉDIA PRIORIDADE — CONCORRÊNCIA / INTEGRIDADE / MANUTENÇÃO
-
-### Transações (Aluno + Matrícula)
-
-* [ ] Abrir `AlunoController.php`
-* [ ] Localizar criação de aluno
-* [ ] Envolver criação em:
-
-  * `DB::transaction`
-* [ ] Garantir rollback em falha
-* [ ] Testar falha proposital
-
----
-
-### Geração de códigos (concorrência)
-
-* [ ] Ver geração de:
-
-  * `ALU-`
-  * `MAT-`
-* [ ] Identificar uso de `ultimo ID`
-* [ ] Substituir por:
-
-  * [ ] UUID
-  * [ ] Sequence
-  * [ ] Lock transacional
-* [ ] Testar criação simultânea
-
----
-
-### Despesa — arquivos órfãos
-
-* [ ] Abrir `DespesaController.php`
-* [ ] Ver update de arquivo
-* [ ] Confirmar se:
-
-  * Arquivo antigo é removido
-* [ ] Implementar `Storage::delete`
-* [ ] Verificar storage por lixo acumulado
-
----
-
-### Avaliações — tipo inconsistente
-
-* [ ] Abrir `AvaliacaoController.php`
-* [ ] Ver `store`
-
-  * Tipo livre
-* [ ] Ver `update`
-
-  * Tipo restrito
-* [ ] Padronizar validação
-* [ ] Garantir consistência de dados
-
----
-
-### Turmas — alunos sem matrícula
-
-* [ ] Abrir `TurmaController.php`
-* [ ] Ver listagem de alunos disponíveis
-* [ ] Confirma se busca apenas por matrícula
-* [ ] Avaliar:
-
-  * Alunos recém-criados sem matrícula
-* [ ] Ajustar regra ou fluxo
-
----
-
-## 🔵 BAIXA / REFATORAÇÃO / DUPLICAÇÕES
-
-### Model Aluno — relações duplicadas
-
-* [ ] Abrir `Aluno.php`
-* [ ] Localizar:
-
-  * `documents()`
-  * `documentos()`
-* [ ] Escolher UM padrão
-* [ ] Remover duplicado
-* [ ] Atualizar chamadas no sistema
-
----
-
-### Responsável — relação obsoleta
-
-* [ ] Abrir `Responsavel.php`
-* [ ] Ver relação `usuario()`
-* [ ] Confirmar coluna atual (`user_id`)
-* [ ] Atualizar relação
-* [ ] Verificar migrations de update
-
----
-
-### Controllers duplicados
-
-* [ ] Comparar:
-
-  * `FinanceiroDashboardController`
-* [ ] Decidir:
-
-  * [ ] Unificar
-  * [ ] Remover código morto
-* [ ] Ajustar rotas se necessário
-
----
-
-### Encoding / UX
-
-* [ ] Procurar textos quebrados:
-
-  * “nÆo”
-  * “matr¡cula”
-* [ ] Arquivos:
-
-  * `MatriculaStatusController.php`
-  * `BoletimController.php`
-* [ ] Ajustar encoding para UTF-8
-* [ ] Padronizar mensagens
-
----
-
-### UserProfileService — fallback errado
-
-* [ ] Abrir `UserProfileService.php`
-* [ ] Corrigir precedência do `??`
-* [ ] Evitar notice / nome vazio
-* [ ] Testar usuários sem perfil
-
----
-
-## 🧱 DUPLICIDADES DE LÓGICA (REFATORAÇÃO)
-
-### Filtros nome/email
-
-* [ ] AlunoController
-* [ ] ProfessorController
-* [ ] ResponsavelController
-* [ ] Extrair para:
-
-  * scope
-  * trait
-  * helper
-
----
-
-### Upload de foto de perfil
-
-* [ ] AlunoController
-* [ ] ProfessorController
-* [ ] Criar service único:
-
-  * upload
-  * update
-  * delete
-
----
-
-### Cálculo de médias / boletim
-
-* [ ] BoletimController
-* [ ] Centralizar lógica em service
-* [ ] Usar tanto por aluno quanto por turma
-
----
-
-## 🗃️ MIGRATIONS / SCHEMA
-
-* [ ] Migration “add_tipo” cria tabela inteira
-
-  * Renomear ou refazer
-* [ ] Migration sem `down` correto
-
-  * Implementar rollback
-* [ ] Testar rollback geral do projeto
-
----
-
-## 📂 ARQUIVOS-CHAVE PARA AUDITORIA
-
-* [ ] `routes/web.php`
-* [ ] `Matricula.php`
-* [ ] `Aluno.php`
-* [ ] `UserController.php`
-* [ ] `AlunoController.php`
-* [ ] `TurmaController.php`
-* [ ] `FinanceiroDashboardController.php`
-* [ ] `DespesaController.php`
-* [ ] `SettingController.php`
-* [ ] `DisciplinaController.php`
-* [ ] `Professor.php`
-* [ ] `Responsavel.php`
-* [ ] `UserProfileService.php`
-* [ ] Todas migrations citadas
-
----
-
-Se quiser, no próximo passo posso:
-
-* Quebrar isso em **sprints**
-* Priorizar por **ordem segura de correção**
-* Ou transformar em **Kanban (Backlog / Doing / Done)** pronto para Trello / Notion / GitHub Projects
-
-
-
+ Segue a lista apenas dos pendentes, ordenada numericamente e dividida em blocos (crítico/alto/médio/baixo):
+                                                                                                                                                                   
+  ———
+                                                                                                                                                                   
+  CRÍTICO                                                                                                                                                          
+                                                                                                                                                                   
+  1. Ajustar Matricula.php para gravar user_id (e não user_id_alteracao) no histórico de matrícula.                                                                
+  2. Corrigir campos do histórico de matrícula para bater com o schema (tipo_evento, status_*, turma_*, etc.).                                                     
+  3. Testar fluxo de desistência de matrícula após correção.                                                                                                       
+                                                                                                                                                                   
+  ———                                                                                                                                                              
+                                                                                                                                                                   
+  ALTO                                                                                                                                                             
+  4. TurmaController: quando aluno não tem matrícula, não alterar alunos.turma_id direto; criar matrícula ativa ou regra consistente.
+  5. Testar impacto da criação automática de matrícula em relatórios/boletim/presença.
+  6. Validar números do dashboard financeiro na prática (com filtros).                                                                                             
+                                                                                                                                                                   
+  ———                                                                                                                                                              
+                                                                                                                                                                   
+  MÉDIO                                                                                                                                                            
+  7. DespesaController (store): variável $despesa inexistente ao tentar deletar arquivo.                                                                           
+  8. DespesaController (update): não remove arquivo antigo ao trocar.
+  9. Testar upload/exibição do logo em settings.                                                                                                                   
+                                                                                                                                                                   
+  ———                                                                                                                                                              
+                                                                                                                                                                   
+  BAIXO / REFATORAÇÃO                                                                                                                                              
+  10. Corrigir textos quebrados/encoding (muda‡a, usu rio, etc.).                                                                                                  
+  11. Corrigir precedência de fallback no UserProfileService para name (bug do ??).                                                                                
+  12. Remover duplicidade de filtros nome/email (Aluno/Professor/Responsavel).                                                                                     
+  13. Unificar upload de foto (Aluno/Professor).                                                                                                                   
+  14. Centralizar cálculo de médias/boletim em service.                                                                                                            
+  15. Confirmar e ajustar migrations sem down correto.                                                                                                             
+  16. Verificar migration “add_tipo” (não encontrada no repo atual).
+                                                                                                                                                                   
+  Se quiser, sigo resolvendo na ordem 1→N.                           
 
  ver dps os relatórios 
 ver dps os certificados

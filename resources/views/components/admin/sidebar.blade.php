@@ -16,6 +16,8 @@
     $isSecretaria  = request()->routeIs('admin.secretaria.*');
     $isAtendimentos= request()->routeIs('admin.secretaria.atendimentos.*');
     $isRegistros   = request()->routeIs('admin.aluno_registros.*');
+    $isDocumentos  = request()->routeIs('admin.documentos.*')
+                    || request()->routeIs('admin.alunos.documentos.*');
 
     $isPresencas   = request()->routeIs('admin.presencas.*')
                     || request()->routeIs('admin.aulas.presenca.*');
@@ -25,8 +27,10 @@
     $isFinanceiro  = request()->routeIs('admin.financeiro.*');
 
     $isRelatorios  = request()->routeIs('admin.relatorios.*');
+    $isIndicadores = request()->routeIs('admin.relatorios.index');
     $isEvasao      = request()->routeIs('admin.relatorios.evasao.*');
     $isCargaHoraria= request()->routeIs('admin.relatorios.carga_horaria_professores.*');
+    $isHoras       = request()->routeIs('admin.relatorios.horas.*');
 
     $isSettings    = request()->routeIs('admin.settings.*');
 @endphp
@@ -142,7 +146,7 @@
         </div>
 
         {{-- ================= SECRETARIA ================= --}}
-        <div x-data="{ open: {{ $isSecretaria || $isAtendimentos || $isRegistros ? 'true' : 'false' }} }">
+        <div x-data="{ open: {{ $isSecretaria || $isAtendimentos || $isRegistros || $isDocumentos ? 'true' : 'false' }} }">
 
             <button @click="open = !open"
                     class="w-full flex items-center justify-between px-4 py-2
@@ -167,6 +171,7 @@
                    class="sidebar-link {{ $isRegistros ? 'sidebar-link-active' : '' }}">
                     <i class="bi bi-file-earmark-text"></i> Registros de Alunos
                 </a>
+
             </div>
         </div>
 
@@ -205,7 +210,7 @@
         </div>
 
         {{-- ================= RELATORIOS ================= --}}
-        <div x-data="{ open: {{ $isRelatorios || $isEvasao || $isCargaHoraria ? 'true' : 'false' }} }">
+        <div x-data="{ open: {{ $isRelatorios || $isIndicadores || $isEvasao || $isCargaHoraria || $isHoras ? 'true' : 'false' }} }">
 
             <button @click="open = !open"
                     class="w-full flex items-center justify-between px-4 py-2
@@ -217,6 +222,11 @@
 
             <div x-show="open" x-collapse class="space-y-1">
 
+                <a href="{{ route('admin.relatorios.index') }}"
+                   class="sidebar-link {{ $isIndicadores ? 'sidebar-link-active' : '' }}">
+                    <i class="bi bi-clipboard-data"></i> Indicadores
+                </a>
+
                 <a href="{{ route('admin.relatorios.evasao.index') }}"
                    class="sidebar-link {{ $isEvasao ? 'sidebar-link-active' : '' }}">
                     <i class="bi bi-graph-up"></i> Evasao Escolar
@@ -227,13 +237,20 @@
                     <i class="bi bi-clock-history"></i> Carga Horaria
                 </a>
 
-                <span class="sidebar-link opacity-50 cursor-not-allowed">
-                    <i class="bi bi-bar-chart"></i> Indicadores (em breve)
-                </span>
+                <a href="{{ route('admin.relatorios.horas.index') }}"
+                   class="sidebar-link {{ $isHoras ? 'sidebar-link-active' : '' }}">
+                    <i class="bi bi-bar-chart"></i> Horas
+                </a>
 
-                <span class="sidebar-link opacity-50 cursor-not-allowed">
-                    <i class="bi bi-file-earmark-bar-graph"></i> Exportacoes (em breve)
-                </span>
+                <a href="{{ route('admin.documentos.index') }}"
+                   class="sidebar-link {{ $isDocumentos ? 'sidebar-link-active' : '' }}">
+                    <i class="bi bi-folder2-open"></i> Documentos
+                </a>
+
+                <a href="{{ route('admin.financeiro.dashboard') }}"
+                   class="sidebar-link {{ request()->routeIs('admin.financeiro.*') ? 'sidebar-link-active' : '' }}">
+                    <i class="bi bi-cash-coin"></i> Financeiro
+                </a>
 
             </div>
         </div>

@@ -27,6 +27,10 @@
 @extends('layouts.app')
 
 @section('content')
+    @php
+        $routePrefix = $routePrefix ?? 'admin';
+        $isAluno = $isAluno ?? false;
+    @endphp
     <div class="space-y-6">
 
         {{-- ============================================================
@@ -43,15 +47,17 @@
             </div>
 
             <div class="flex items-center gap-2">
-                <a href="{{ route('admin.presencas.edit', $presenca) }}"
-                   class="inline-flex items-center gap-2
-                      px-4 py-2 rounded-xl
-                      bg-amber-500 text-white font-semibold
-                      hover:bg-amber-600 transition">
-                     Editar
-                </a>
+                @if(!$isAluno)
+                    <a href="{{ route($routePrefix . '.presencas.edit', $presenca) }}"
+                       class="inline-flex items-center gap-2
+                          px-4 py-2 rounded-xl
+                          bg-amber-500 text-white font-semibold
+                          hover:bg-amber-600 transition">
+                         Editar
+                    </a>
+                @endif
 
-                <a href="{{ route('admin.presencas.index') }}"
+                <a href="{{ route($routePrefix . '.presencas.index') }}"
                    class="inline-flex items-center gap-2
                       px-4 py-2 rounded-xl border
                       border-slate-300 dark:border-slate-700

@@ -12,10 +12,17 @@
 ============================================================================ --}}
 
 <table class="min-w-full text-sm">
+    @php
+        $routePrefix = $routePrefix ?? 'admin';
+        $isProfessor = $isProfessor ?? false;
+        $isAluno = $isAluno ?? false;
+    @endphp
     <thead class="bg-slate-50 dark:bg-slate-900/60 text-slate-500">
     <tr>
         <th class="px-4 py-3 text-left">Data</th>
-        <th class="px-4 py-3 text-left">Professor</th>
+        @if(!$isProfessor)
+            <th class="px-4 py-3 text-left">Professor</th>
+        @endif
         <th class="px-4 py-3 text-left">Turma</th>
         <th class="px-4 py-3 text-left">Disciplina</th>
         <th class="px-4 py-3 text-center">h/a</th>
@@ -40,7 +47,9 @@
                 </div>
             </td>
 
-            <td class="px-4 py-3">{{ $aula->professor->user->name }}</td>
+            @if(!$isProfessor)
+                <td class="px-4 py-3">{{ $aula->professor->user->name }}</td>
+            @endif
             <td class="px-4 py-3">{{ $aula->turma->nome }}</td>
             <td class="px-4 py-3">{{ $aula->disciplina->nome }}</td>
 
@@ -59,18 +68,22 @@
             </td>
 
             <td class="px-4 py-3 text-right space-x-3 font-semibold">
-                <a href="{{ route('admin.aulas.show', $aula) }}" class="text-sky-600 hover:underline">Ver aula</a>
-                <a href="{{ route('admin.aulas.presenca.edit', $aula) }}" class="text-amber-600 hover:underline">Presenca</a>
+                <a href="{{ route($routePrefix . '.aulas.show', $aula) }}" class="text-sky-600 hover:underline">Ver aula</a>
+                @if(!$isAluno)
+                    <a href="{{ route($routePrefix . '.aulas.presenca.edit', $aula) }}" class="text-amber-600 hover:underline">Presenca</a>
+                @endif
 
                 @if($p)
-                    <a href="{{ route('admin.presencas.show', $p) }}" class="text-slate-600 hover:underline">Ver</a>
+                    <a href="{{ route($routePrefix . '.presencas.show', $p) }}" class="text-slate-600 hover:underline">Ver</a>
+                @elseif($isAluno)
+                    <span class="text-slate-400">Aguardando</span>
                 @endif
             </td>
         </tr>
 
     @empty
         <tr>
-            <td colspan="7" class="px-4 py-8 text-center text-slate-500">
+            <td colspan="{{ $isProfessor ? 6 : 7 }}" class="px-4 py-8 text-center text-slate-500">
                 Nenhuma aula encontrada no periodo.
             </td>
         </tr>

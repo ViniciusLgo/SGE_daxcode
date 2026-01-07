@@ -1,6 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
+    @php
+        $routePrefix = $routePrefix ?? 'admin';
+        $isAluno = $isAluno ?? false;
+    @endphp
     <div class="space-y-6">
 
         {{-- ================= HEADER ================= --}}
@@ -18,15 +22,17 @@
             </div>
 
             <div class="flex items-center gap-2">
-                <a href="{{ route('admin.aulas.edit', $aula) }}"
-                   class="inline-flex items-center gap-2
-                      px-4 py-2 rounded-xl
-                      bg-amber-500 text-white font-semibold
-                      hover:bg-amber-600 transition">
-                     Editar
-                </a>
+                @if(!$isAluno)
+                    <a href="{{ route($routePrefix . '.aulas.edit', $aula) }}"
+                       class="inline-flex items-center gap-2
+                          px-4 py-2 rounded-xl
+                          bg-amber-500 text-white font-semibold
+                          hover:bg-amber-600 transition">
+                         Editar
+                    </a>
+                @endif
 
-                <a href="{{ route('admin.aulas.index') }}"
+                <a href="{{ route($routePrefix . '.aulas.index') }}"
                    class="inline-flex items-center gap-2
                       px-4 py-2 rounded-xl border
                       border-slate-300 dark:border-slate-700
@@ -165,22 +171,30 @@
                 </span>
                         </div>
 
-                        <a href="{{ route('admin.aulas.presenca.edit', $aula) }}"
-                           class="inline-flex items-center gap-2
-                      px-4 py-2 rounded-xl
-                      bg-sky-600 text-white font-semibold
-                      hover:bg-sky-700 transition">
-                             Editar Presenca
-                        </a>
+                        @if(!$isAluno)
+                            <a href="{{ route($routePrefix . '.aulas.presenca.edit', $aula) }}"
+                               class="inline-flex items-center gap-2
+                          px-4 py-2 rounded-xl
+                          bg-sky-600 text-white font-semibold
+                          hover:bg-sky-700 transition">
+                                 Editar Presenca
+                            </a>
+                        @endif
                     </div>
                 @else
-                    <a href="{{ route('admin.aulas.presenca.edit', $aula) }}"
-                       class="inline-flex items-center gap-2
-                  px-4 py-2 rounded-xl
-                  bg-dax-green text-white font-semibold
-                  hover:bg-dax-greenSoft transition">
-                         Registrar Presenca
-                    </a>
+                    @if(!$isAluno)
+                        <a href="{{ route($routePrefix . '.aulas.presenca.edit', $aula) }}"
+                           class="inline-flex items-center gap-2
+                      px-4 py-2 rounded-xl
+                      bg-dax-green text-white font-semibold
+                      hover:bg-dax-greenSoft transition">
+                             Registrar Presenca
+                        </a>
+                    @else
+                        <div class="text-sm text-slate-500">
+                            Presenca ainda nao registrada.
+                        </div>
+                    @endif
                 @endif
             </div>
 

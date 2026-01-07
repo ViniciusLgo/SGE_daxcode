@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
+    @php
+        $routePrefix = $routePrefix ?? 'admin';
+    @endphp
     <div class="space-y-6" x-data="aulaFormEdit()">
 
         {{-- ================= HEADER ================= --}}
@@ -17,7 +20,7 @@
                 </p>
             </div>
 
-            <a href="{{ route('admin.aulas.show', $aula) }}"
+            <a href="{{ route($routePrefix . '.aulas.show', $aula) }}"
                class="px-4 py-2 rounded-xl border
                   border-slate-300 dark:border-slate-700
                   hover:bg-slate-100 dark:hover:bg-slate-800 transition">
@@ -27,7 +30,7 @@
 
         {{-- ================= FORMULARIO ================= --}}
         <form method="POST"
-              action="{{ route('admin.aulas.update', $aula) }}"
+              action="{{ route($routePrefix . '.aulas.update', $aula) }}"
               class="rounded-2xl border
                  bg-white dark:bg-dax-dark/60
                  border-slate-200 dark:border-slate-800
@@ -170,7 +173,7 @@
                          Salvar Alteracoes
                     </button>
 
-                    <a href="{{ route('admin.aulas.show', $aula) }}"
+                    <a href="{{ route($routePrefix . '.aulas.show', $aula) }}"
                        class="px-4 py-2.5 rounded-xl border
                       border-slate-300 dark:border-slate-700
                       hover:bg-slate-100 dark:hover:bg-slate-800 transition">
@@ -180,7 +183,7 @@
 
                 {{-- EXCLUSAO --}}
                 <form method="POST"
-                      action="{{ route('admin.aulas.destroy', $aula) }}"
+                      action="{{ route($routePrefix . '.aulas.destroy', $aula) }}"
                       onsubmit="return confirm('Tem certeza que deseja excluir este registro de aula? Esta acao nao podera ser desfeita.')">
                     @csrf
                     @method('DELETE')

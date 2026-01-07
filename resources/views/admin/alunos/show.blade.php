@@ -137,10 +137,16 @@
             border border-slate-200 dark:border-slate-800
             shadow-sm mb-6">
 
-        <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800">
+        <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800
+                flex justify-between items-center">
             <h3 class="font-black flex items-center gap-2">
                 <i class="bi bi-folder2"></i> Documentos
             </h3>
+
+            <a href="{{ route('admin.alunos.documentos.index', $aluno) }}"
+               class="text-sm font-semibold text-dax-green hover:underline">
+                Gerenciar
+            </a>
         </div>
 
         <div class="p-6">

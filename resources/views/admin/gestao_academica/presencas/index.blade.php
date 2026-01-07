@@ -17,6 +17,11 @@
 @extends('layouts.app')
 
 @section('content')
+    @php
+        $routePrefix = $routePrefix ?? 'admin';
+        $isProfessor = $isProfessor ?? false;
+        $isAluno = $isAluno ?? false;
+    @endphp
     <div class="space-y-6">
 
         {{-- =========================================================
@@ -148,6 +153,32 @@
                         </select>
                     </div>
 
+                    {{-- Turma --}}
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Turma</label>
+                        <select name="turma_id" class="w-full rounded-xl border px-4 py-2.5 bg-white dark:bg-dax-dark">
+                            <option value="">Todas</option>
+                            @foreach($turmas as $turma)
+                                <option value="{{ $turma->id }}" {{ request('turma_id') == $turma->id ? 'selected' : '' }}>
+                                    {{ $turma->nome }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    {{-- Disciplina --}}
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Disciplina</label>
+                        <select name="disciplina_id" class="w-full rounded-xl border px-4 py-2.5 bg-white dark:bg-dax-dark">
+                            <option value="">Todas</option>
+                            @foreach($disciplinas as $disciplina)
+                                <option value="{{ $disciplina->id }}" {{ request('disciplina_id') == $disciplina->id ? 'selected' : '' }}>
+                                    {{ $disciplina->nome }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
                     {{-- Acoes --}}
                     <div class="flex gap-2 pt-2">
                         <button class="px-4 py-2.5 rounded-xl border font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 transition">
@@ -155,7 +186,7 @@
                         </button>
 
                         @if(request()->query())
-                            <a href="{{ route('admin.presencas.index') }}"
+                            <a href="{{ route($routePrefix . '.presencas.index') }}"
                                class="px-4 py-2.5 rounded-xl border text-slate-500">
                                 Limpar
                             </a>
@@ -205,17 +236,19 @@
                     </div>
 
                     {{-- Professor --}}
-                    <div>
-                        <label class="block text-sm font-semibold mb-1">Professor</label>
-                        <select name="professor_id" class="w-full rounded-xl border px-4 py-2.5 bg-white dark:bg-dax-dark">
-                            <option value="">Todos</option>
-                            @foreach($professores as $prof)
-                                <option value="{{ $prof->id }}" {{ request('professor_id') == $prof->id ? 'selected' : '' }}>
-                                    {{ $prof->user->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
+                    @if(!$isProfessor && !$isAluno)
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Professor</label>
+                            <select name="professor_id" class="w-full rounded-xl border px-4 py-2.5 bg-white dark:bg-dax-dark">
+                                <option value="">Todos</option>
+                                @foreach($professores as $prof)
+                                    <option value="{{ $prof->id }}" {{ request('professor_id') == $prof->id ? 'selected' : '' }}>
+                                        {{ $prof->user->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    @endif
 
                     {{-- Disciplina --}}
                     <div>
@@ -235,7 +268,7 @@
                         <button class="px-4 py-2.5 rounded-xl border font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 transition">
                             Aplicar
                         </button>
-                        <a href="{{ route('admin.presencas.index') }}"
+                        <a href="{{ route($routePrefix . '.presencas.index') }}"
                            class="px-4 py-2.5 rounded-xl border text-slate-500">
                             Limpar
                         </a>
@@ -256,7 +289,9 @@
                 <thead class="bg-slate-50 dark:bg-slate-900/60 text-slate-500">
                 <tr>
                     <th class="px-4 py-3 text-left">Data</th>
-                    <th class="px-4 py-3 text-left">Professor</th>
+                    @if(!$isProfessor)
+                        <th class="px-4 py-3 text-left">Professor</th>
+                    @endif
                     <th class="px-4 py-3 text-left">Turma</th>
                     <th class="px-4 py-3 text-left">Disciplina</th>
                     <th class="px-4 py-3 text-center">h/a</th>
@@ -279,7 +314,9 @@
                             <div class="text-xs text-slate-500">{{ $aula->hora_inicio }}  {{ $aula->hora_fim }}</div>
                         </td>
 
-                        <td class="px-4 py-3 font-semibold">{{ $aula->professor->user->name }}</td>
+                        @if(!$isProfessor)
+                            <td class="px-4 py-3 font-semibold">{{ $aula->professor->user->name }}</td>
+                        @endif
                         <td class="px-4 py-3">{{ $aula->turma->nome }}</td>
                         <td class="px-4 py-3">{{ $aula->disciplina->nome }}</td>
                         <td class="px-4 py-3 text-center font-bold">{{ $aula->quantidade_blocos }}</td>
@@ -297,17 +334,22 @@
 
                         {{-- Acoes --}}
                         <td class="px-4 py-3 text-right space-x-3 font-semibold">
-                            <a href="{{ route('admin.aulas.show', $aula) }}" class="text-sky-600 hover:underline">Ver aula</a>
-                            <a href="{{ route('admin.aulas.presenca.edit', $aula) }}" class="text-amber-600 hover:underline">Presenca</a>
+                            <a href="{{ route($routePrefix . '.aulas.show', $aula) }}" class="text-sky-600 hover:underline">Ver aula</a>
+
+                            @if(!$isAluno)
+                                <a href="{{ route($routePrefix . '.aulas.presenca.edit', $aula) }}" class="text-amber-600 hover:underline">Presenca</a>
+                            @endif
 
                             @if($p)
-                                <a href="{{ route('admin.presencas.show', $p) }}" class="text-slate-600 hover:underline">Ver</a>
+                                <a href="{{ route($routePrefix . '.presencas.show', $p) }}" class="text-slate-600 hover:underline">Ver</a>
+                            @elseif($isAluno)
+                                <span class="text-slate-400">Aguardando</span>
                             @endif
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="px-4 py-8 text-center text-slate-500">
+                        <td colspan="{{ $isProfessor ? 6 : 7 }}" class="px-4 py-8 text-center text-slate-500">
                             Nenhuma aula encontrada no periodo.
                         </td>
                     </tr>

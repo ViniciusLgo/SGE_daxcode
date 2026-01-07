@@ -34,6 +34,14 @@ class AulaController extends Controller
             $query->where('professor_id', $request->professor_id);
         }
 
+        if ($request->filled('turma_id')) {
+            $query->where('turma_id', $request->turma_id);
+        }
+
+        if ($request->filled('disciplina_id')) {
+            $query->where('disciplina_id', $request->disciplina_id);
+        }
+
         if ($request->filled('tipo')) {
             $query->where('tipo', $request->tipo);
         }
@@ -45,8 +53,10 @@ class AulaController extends Controller
 
         $aulas = $query->paginate(15)->withQueryString();
         $professores = Professor::with('user')->orderBy('id')->get();
+        $turmas = Turma::orderBy('nome')->get();
+        $disciplinas = Disciplina::orderBy('nome')->get();
 
-        return view('admin.aulas.index', compact('aulas', 'professores'));
+        return view('admin.aulas.index', compact('aulas', 'professores', 'turmas', 'disciplinas'));
     }
 
     /**

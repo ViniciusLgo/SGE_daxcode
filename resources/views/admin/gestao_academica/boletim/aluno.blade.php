@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
+  @php
+    $routePrefix = $routePrefix ?? 'admin';
+  @endphp
 
   {{-- ================= HEADER ================= --}}
   <div class="flex items-center justify-between mb-6">
@@ -9,16 +12,32 @@
         Boletim do Aluno
       </h1>
       <p class="text-sm text-slate-500">
-        {{ $aluno->user->name }} | Turma {{ $aluno->turma->nome '' }}
+        {{ $aluno->user->name }} | Turma {{ $aluno->turma->nome ?? '' }}
       </p>
     </div>
 
-    <a href="{{ route('admin.alunos.show', $aluno) }}"
-      class="px-4 py-2 rounded-xl border
-       border-slate-300 dark:border-slate-700
-       hover:bg-slate-100 dark:hover:bg-slate-800">
-      <- Voltar
-    </a>
+    @if($routePrefix === 'admin')
+        <a href="{{ route('admin.alunos.show', $aluno) }}"
+           class="px-4 py-2 rounded-xl border
+                  border-slate-300 dark:border-slate-700
+                  hover:bg-slate-100 dark:hover:bg-slate-800">
+            Voltar
+        </a>
+    @elseif($routePrefix === 'aluno')
+        <a href="{{ route('aluno.boletim.index') }}"
+           class="px-4 py-2 rounded-xl border
+                  border-slate-300 dark:border-slate-700
+                  hover:bg-slate-100 dark:hover:bg-slate-800">
+            Voltar
+        </a>
+    @else
+        <a href="{{ route('professor.turmas.show', $aluno->turma_id) }}"
+           class="px-4 py-2 rounded-xl border
+                  border-slate-300 dark:border-slate-700
+                  hover:bg-slate-100 dark:hover:bg-slate-800">
+            Voltar
+        </a>
+    @endif
   </div>
 
   {{-- ================= CONTEUDO ================= --}}
